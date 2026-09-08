@@ -173,27 +173,27 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
       <div 
         onClick={step === 4 ? handleFinish : onClose} 
         className="fixed inset-0"
       />
 
-      <div className="relative w-full max-w-2xl bg-[#131d38] border border-[#26365a] rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[92vh]">
+      <div className="relative w-full max-w-2xl bg-[#131d38] border border-[#26365a] rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[92vh]">
         {/* Neon top accent */}
         <div className="h-1 w-full bg-gradient-to-r from-amber-500 via-[#FCA311] to-amber-600" />
 
         {/* Modal Header */}
-        <div className="p-5 border-b border-[#26365a] bg-[#16223f] flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-[#26365a] bg-[#16223f] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#FCA311]/15 text-[#FCA311] border border-[#FCA311]/30 flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-xl bg-[#FCA311]/15 text-[#FCA311] border border-[#FCA311]/30 flex items-center justify-center font-bold flex-shrink-0">
               <QrCode className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white tracking-tight">
+              <h2 className="text-sm sm:text-base font-bold text-white tracking-tight">
                 {step === 4 ? 'Order Placed & Confirmation' : 'RigForge UPI Payment Gateway'}
               </h2>
-              <div className="text-[11px] font-mono text-zinc-400">
+              <div className="text-[10px] sm:text-[11px] font-mono text-zinc-400">
                 {step === 1 && 'Step 1 of 3: Order Review & Pricing'}
                 {step === 2 && 'Step 2 of 3: Scan UPI QR Code'}
                 {step === 3 && 'Step 3 of 3: UTR Verification'}
@@ -204,14 +204,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
           <button
             onClick={step === 4 ? handleFinish : onClose}
-            className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-[#1e2d4f] transition-colors"
+            className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-[#1e2d4f] transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
           {/* STEP 1: ORDER REVIEW */}
           {step === 1 && (
             <div className="space-y-5">
@@ -374,7 +374,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <img
                       src={merchantConfig.qrCodePath}
                       alt="RigForge UPI QR Code"
-                      className="w-56 h-56 object-contain rounded-xl"
+                      className="w-44 h-44 sm:w-56 sm:h-56 max-w-full object-contain rounded-xl"
                       onError={(e) => {
                         // Fallback image generator if static asset fails to load
                         (e.target as HTMLImageElement).src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=upi://pay?pa=9819319689@nyes%26pn=Arth%20Rakesh%20Jadav%26cu=INR%26am=${grandTotal}`;
@@ -409,7 +409,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       </span>
                       <button
                         onClick={handleCopyUpi}
-                        className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#1e2d4f] hover:bg-[#FCA311] hover:text-black text-zinc-300 flex items-center gap-1 transition-colors border border-[#26365a]"
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-[#1e2d4f] hover:bg-[#FCA311] hover:text-black text-zinc-300 flex items-center gap-1 transition-colors border border-[#26365a] min-h-[36px]"
                       >
                         {copiedUpi ? (
                           <>
@@ -450,11 +450,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               </div>
 
               {/* Navigation buttons */}
-              <div className="flex gap-3 pt-2">
+              <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="py-3 px-4 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-300 border border-[#26365a] flex items-center justify-center gap-2 transition-colors"
+                  className="py-3 px-4 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-300 border border-[#26365a] flex items-center justify-center gap-2 transition-colors min-h-[44px]"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back</span>
@@ -463,7 +463,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setStep(3)}
-                  className="flex-1 py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#FCA311] hover:bg-[#e5920a] text-black flex items-center justify-center gap-2 shadow-glow-orange transition-all active:scale-[0.99] cursor-pointer"
+                  className="flex-1 py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#FCA311] hover:bg-[#e5920a] text-black flex items-center justify-center gap-2 shadow-glow-orange transition-all active:scale-[0.99] cursor-pointer min-h-[44px]"
                 >
                   <span>I Have Paid · Enter UTR</span>
                   <ArrowRight className="w-4 h-4" />
@@ -558,12 +558,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               </div>
 
               {/* Action buttons */}
-              <div className="flex gap-3 pt-2">
+              <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-2">
                 <button
                   type="button"
                   disabled={isSubmitting}
                   onClick={() => setStep(2)}
-                  className="py-3 px-4 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-300 border border-[#26365a] flex items-center justify-center gap-2 transition-colors"
+                  className="py-3 px-4 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-300 border border-[#26365a] flex items-center justify-center gap-2 transition-colors min-h-[44px]"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to QR</span>
@@ -573,7 +573,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   type="button"
                   disabled={isSubmitting || utrNumber.length !== 12}
                   onClick={validateAndProceedToConfirm}
-                  className="flex-1 py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#FCA311] hover:bg-[#e5920a] text-black flex items-center justify-center gap-2 shadow-glow-orange transition-all active:scale-[0.99] disabled:opacity-50 cursor-pointer"
+                  className="flex-1 py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#FCA311] hover:bg-[#e5920a] text-black flex items-center justify-center gap-2 shadow-glow-orange transition-all active:scale-[0.99] disabled:opacity-50 cursor-pointer min-h-[44px]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

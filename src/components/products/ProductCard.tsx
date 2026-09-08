@@ -221,7 +221,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
             <button
               onClick={handleAddToCart}
               disabled={isOutOfStock}
-              className={`py-2 px-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 border transition-colors ${
+              className={`py-2 px-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 border transition-colors min-h-[40px] ${
                 isOutOfStock
                   ? 'bg-[#131d38] text-zinc-600 border-[#26365a] cursor-not-allowed'
                   : 'bg-[#1e2d4f] hover:bg-[#233359] text-zinc-200 hover:text-white border-[#26365a] active:scale-95'
@@ -234,7 +234,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
             <button
               onClick={handleAddToBuild}
               disabled={isOutOfStock}
-              className={`py-2 px-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+              className={`py-2 px-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[40px] ${
                 isOutOfStock
                   ? 'bg-[#131d38] text-zinc-600 border border-[#26365a] cursor-not-allowed'
                   : isCurrentBuildSelection

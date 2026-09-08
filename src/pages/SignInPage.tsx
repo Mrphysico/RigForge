@@ -166,19 +166,19 @@ export const SignInPage: React.FC<SignInPageProps> = ({
       </div>
 
       {/* Top-Right: BUILD PLAY CONNECT — */}
-      <div className="absolute top-6 right-8 text-xs font-mono font-bold tracking-[0.25em] text-white/80 flex items-center gap-2 pointer-events-none z-20 hidden sm:flex">
+      <div className="absolute top-6 right-8 text-xs font-mono font-bold tracking-[0.25em] text-white/80 flex items-center gap-2 pointer-events-none z-20 hidden lg:flex">
         <span>BUILD PLAY CONNECT</span>
         <span className="w-6 h-[1.5px] bg-[#f2b705]" />
       </div>
 
       {/* Bottom-Left: NEXT GEN GAMING — */}
-      <div className="absolute bottom-6 left-8 text-xs font-mono font-bold tracking-[0.25em] text-white/80 flex items-center gap-2 pointer-events-none z-20 hidden sm:flex">
+      <div className="absolute bottom-6 left-8 text-xs font-mono font-bold tracking-[0.25em] text-white/80 flex items-center gap-2 pointer-events-none z-20 hidden lg:flex">
         <span>NEXT GEN GAMING</span>
         <span className="w-6 h-[1.5px] bg-[#e2231a]" />
       </div>
 
       {/* Bottom-Right: POWERED BY COMMUNITY — */}
-      <div className="absolute bottom-6 right-8 text-xs font-mono font-bold tracking-[0.25em] text-white/80 flex items-center gap-2 pointer-events-none z-20 hidden sm:flex">
+      <div className="absolute bottom-6 right-8 text-xs font-mono font-bold tracking-[0.25em] text-white/80 flex items-center gap-2 pointer-events-none z-20 hidden lg:flex">
         <span>POWERED BY COMMUNITY</span>
         <span className="w-6 h-[1.5px] bg-[#1c3f8f]" />
       </div>
@@ -186,13 +186,14 @@ export const SignInPage: React.FC<SignInPageProps> = ({
       {/* ========================================================= */}
       {/* CENTERED AUTH CARD (SECTION 5.2) */}
       {/* ========================================================= */}
-      <div className="auth-card relative w-full max-w-5xl rounded-[28px] sm:rounded-[32px] shadow-[0_25px_60px_rgba(0,0,0,0.85)] overflow-hidden z-10 flex flex-col md:flex-row border border-white/10 bg-[#0a0a0a] min-h-[580px] lg:min-h-[620px]">
+      <div className="auth-card relative w-full max-w-5xl rounded-[24px] sm:rounded-[32px] shadow-[0_25px_60px_rgba(0,0,0,0.85)] overflow-hidden z-10 flex flex-col md:flex-row border border-white/10 bg-[#0a0a0a] min-h-[520px] lg:min-h-[620px]">
         
         {/* Back to Home Button on mobile */}
         <button
           onClick={() => onNavigate('home')}
-          className="absolute top-4 left-4 z-30 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 md:hidden transition-colors"
+          className="absolute top-4 left-4 z-30 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 md:hidden transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center"
           title="Back to Home"
+          aria-label="Back to Home"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
@@ -231,8 +232,8 @@ export const SignInPage: React.FC<SignInPageProps> = ({
           </div>
 
           {/* Headline Stacked 3 Lines: BUILD (white) / YOUR (blue) / LEGACY (yellow) */}
-          <div className="relative z-10 my-4 space-y-3.5 max-w-sm">
-            <div className="font-barlow font-black tracking-tight leading-[0.88] uppercase text-4xl sm:text-5xl lg:text-6xl">
+          <div className="relative z-10 my-3 sm:my-4 space-y-2.5 sm:space-y-3.5 max-w-sm">
+            <div className="font-barlow font-black tracking-tight leading-[0.88] uppercase text-3xl sm:text-5xl lg:text-6xl">
               <span className="text-[#ffffff] block">BUILD</span>
               <span className="text-[#1c3f8f] block drop-shadow-[0_0_12px_rgba(28,63,143,0.8)]">YOUR</span>
               <span className="text-[#f2b705] block drop-shadow-[0_0_12px_rgba(242,183,5,0.6)]">LEGACY</span>
@@ -242,8 +243,8 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               Join a growing community of gamers, creators and builders. Manage your rigs, connect with others and take your setup to the next level.
             </p>
 
-            {/* Row of 4 Icon + Label Mini-Features */}
-            <div className="grid grid-cols-4 gap-2 pt-3 text-center">
+            {/* Row of 4 Icon + Label Mini-Features (Hidden on mobile <640px to prevent vertical bloat) */}
+            <div className="hidden sm:grid grid-cols-4 gap-2 pt-3 text-center">
               {/* 1. Red gear icon */}
               <div className="flex flex-col items-center space-y-1">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#e2231a] text-white flex items-center justify-center shadow-[0_0_15px_rgba(226,35,26,0.5)]">
@@ -488,14 +489,14 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               </div>
             </div>
 
-            {/* 3 Equal-Width Outline Social Buttons */}
-            <div className="grid grid-cols-3 gap-2.5">
+            {/* 3 Social Buttons: full width stacked on mobile, 3-col on sm+ */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5">
               {/* Google Button */}
               <button
                 type="button"
                 onClick={handleGoogleClick}
                 disabled={loading || googleLoading}
-                className="col-span-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold transition-all disabled:opacity-50"
+                className="flex items-center justify-center gap-2 py-3 sm:py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold transition-all disabled:opacity-50 min-h-[44px]"
               >
                 {googleLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin text-[#1c3f8f]" />
@@ -514,7 +515,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               <button
                 type="button"
                 onClick={() => onNotification?.('GitHub authentication coming soon.')}
-                className="col-span-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold transition-all"
+                className="flex items-center justify-center gap-1.5 py-3 sm:py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold transition-all min-h-[44px]"
               >
                 <svg className="w-4 h-4 fill-slate-900" viewBox="0 0 24 24">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
@@ -526,7 +527,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               <button
                 type="button"
                 onClick={() => onNotification?.('Discord authentication coming soon.')}
-                className="col-span-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold transition-all"
+                className="flex items-center justify-center gap-1.5 py-3 sm:py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold transition-all min-h-[44px]"
               >
                 <span className="text-[#5865F2] font-black text-sm">#</span>
                 <span>Discord</span>

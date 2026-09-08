@@ -281,7 +281,7 @@ export const BuildsPage: React.FC<BuildsPageProps> = ({ onNavigate, onNotificati
               {selectedBuild.description}
             </p>
 
-            <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-[#050a14] border border-[#1e2d4f] text-xs font-mono">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-[#050a14] border border-[#1e2d4f] text-xs font-mono">
               <div>
                 <span className="text-slate-500 block">PROCESSOR</span>
                 <span className="text-white font-bold">{selectedBuild.cpu}</span>
@@ -300,7 +300,7 @@ export const BuildsPage: React.FC<BuildsPageProps> = ({ onNavigate, onNotificati
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-[#1e2d4f]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[#1e2d4f]">
               <div>
                 <span className="text-xs text-slate-400 block">Estimated Price</span>
                 <span className="text-xl font-mono font-black text-[#ffd000]">
@@ -308,10 +308,10 @@ export const BuildsPage: React.FC<BuildsPageProps> = ({ onNavigate, onNotificati
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
                 <button
                   onClick={() => setSelectedBuild(null)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white"
+                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white min-h-[44px]"
                 >
                   Close
                 </button>
@@ -321,7 +321,7 @@ export const BuildsPage: React.FC<BuildsPageProps> = ({ onNavigate, onNotificati
                     setSelectedBuild(null);
                     handleOpenInBuilder(b);
                   }}
-                  className="px-6 py-2.5 rounded-xl bg-[#ff1e2d] hover:bg-[#e50914] text-white text-xs font-bold shadow-glow-red flex items-center gap-2"
+                  className="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl bg-[#ff1e2d] hover:bg-[#e50914] text-white text-xs font-bold shadow-glow-red flex items-center justify-center gap-2 min-h-[44px]"
                 >
                   <Wrench className="w-4 h-4" />
                   <span>Open in Configurator</span>

@@ -53,20 +53,20 @@ export const CartDrawer: React.FC = () => {
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity animate-fadeIn"
           />
 
-          <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
-            <div className="w-screen max-w-md bg-[#131d38] border-l border-[#26365a] text-zinc-100 flex flex-col shadow-2xl animate-slideLeft">
+          <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
+            <div className="w-screen max-w-full sm:max-w-md bg-[#131d38] border-l border-[#26365a] text-zinc-100 flex flex-col shadow-2xl animate-slideLeft">
               {/* Header */}
-              <div className="p-5 border-b border-[#26365a] flex items-center justify-between bg-[#16223f]">
+              <div className="p-4 sm:p-5 border-b border-[#26365a] flex items-center justify-between bg-[#16223f]">
                 <div className="flex items-center gap-2.5">
                   <ShoppingBag className="w-5 h-5 text-[#FCA311]" />
-                  <h2 className="text-lg font-bold tracking-tight text-white">Your Hardware Cart</h2>
+                  <h2 className="text-base sm:text-lg font-bold tracking-tight text-white">Your Hardware Cart</h2>
                   <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-[#1e2d4f] text-[#FCA311] border border-[#26365a]">
                     {items.length} {items.length === 1 ? 'item' : 'items'}
                   </span>
                 </div>
                 <button
                   onClick={closeCart}
-                  className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-[#1e2d4f] transition-colors"
+                  className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-[#1e2d4f] transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center"
                   aria-label="Close cart"
                 >
                   <X className="w-5 h-5" />
@@ -154,23 +154,25 @@ export const CartDrawer: React.FC = () => {
                             {formatINR(item.product.price * item.quantity)}
                           </span>
 
-                          <div className="flex items-center gap-1.5 bg-[#1e2d4f] border border-[#26365a] rounded-xl p-0.5">
+                          <div className="flex items-center gap-1 bg-[#1e2d4f] border border-[#26365a] rounded-xl p-1">
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                              className="p-1 text-zinc-400 hover:text-white transition-colors"
+                              className="p-1.5 min-w-[32px] min-h-[32px] flex items-center justify-center text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-[#26365a]"
                               title="Decrease quantity"
+                              aria-label="Decrease quantity"
                             >
-                              <Minus className="w-3 h-3" />
+                              <Minus className="w-3.5 h-3.5" />
                             </button>
-                            <span className="text-xs font-mono font-medium px-1.5 min-w-[20px] text-center text-zinc-200">
+                            <span className="text-xs font-mono font-bold px-2 min-w-[24px] text-center text-zinc-100">
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                              className="p-1 text-zinc-400 hover:text-white transition-colors"
+                              className="p-1.5 min-w-[32px] min-h-[32px] flex items-center justify-center text-zinc-400 hover:text-white transition-colors rounded-lg hover:bg-[#26365a]"
                               title="Increase quantity"
+                              aria-label="Increase quantity"
                             >
-                              <Plus className="w-3 h-3" />
+                              <Plus className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </div>
@@ -182,7 +184,7 @@ export const CartDrawer: React.FC = () => {
 
               {/* Footer Summary & Checkout */}
               {items.length > 0 && (
-                <div className="p-5 border-t border-[#26365a] bg-[#16223f] space-y-3.5">
+                <div className="p-4 sm:p-5 border-t border-[#26365a] bg-[#16223f] space-y-3.5">
                   <div className="space-y-1.5 text-xs text-zinc-400">
                     <div className="flex justify-between">
                       <span>Subtotal (Inclusive of GST)</span>
@@ -226,7 +228,7 @@ export const CartDrawer: React.FC = () => {
                   <div className="space-y-2 pt-1">
                     <button
                       onClick={handleCheckout}
-                      className="w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#FCA311] hover:bg-[#e5920a] text-black shadow-glow-orange flex items-center justify-center gap-2 transition-all active:scale-95"
+                      className="w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#FCA311] hover:bg-[#e5920a] text-black shadow-glow-orange flex items-center justify-center gap-2 transition-all active:scale-95 min-h-[48px]"
                     >
                       <span>Proceed to Indian Gateway</span>
                       <ArrowRight className="w-4 h-4" />

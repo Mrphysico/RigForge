@@ -426,24 +426,24 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                   return (
                     <div
                       key={part.id}
-                      className={`p-4 rounded-2xl border transition-all flex items-center justify-between gap-4 ${
+                      className={`p-3.5 sm:p-4 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 ${
                         isCurrentSelected
                           ? 'bg-[#142244] border-[#0066ff]'
                           : 'bg-[#050a14] border-[#1e2d4f] hover:border-slate-500'
                       }`}
                     >
                       {/* Image & Title */}
-                      <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="flex items-center gap-3 min-w-0">
                         <img
                           src={part.image}
                           alt={part.name}
-                          className="w-14 h-14 object-cover rounded-xl border border-[#1e2d4f] bg-[#0d172e] flex-shrink-0"
+                          className="w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-xl border border-[#1e2d4f] bg-[#0d172e] flex-shrink-0"
                         />
                         <div className="min-w-0 space-y-0.5">
                           <h4 className="font-bold text-sm text-white truncate max-w-sm">
                             {part.name}
                           </h4>
-                          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-2">
+                          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-2 flex-wrap">
                             <span>{part.brand}</span>
                             {part.specs.socket && <span>· {part.specs.socket}</span>}
                             {part.specs.ramType && <span>· {part.specs.ramType}</span>}
@@ -462,14 +462,14 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                       </div>
 
                       {/* Price & Add Action */}
-                      <div className="text-right flex-shrink-0 space-y-1.5">
+                      <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center flex-shrink-0 pt-2 sm:pt-0 border-t border-[#1e2d4f]/50 sm:border-0 gap-2">
                         <div className="text-sm font-mono font-bold text-white">
                           {formatINR(part.price)}
                         </div>
                         <button
                           disabled={!part.inStock}
                           onClick={() => handleSelectPart(part)}
-                          className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                          className={`px-4 py-2 sm:py-1.5 rounded-xl text-xs font-bold transition-all min-h-[38px] flex items-center justify-center ${
                             isCurrentSelected
                               ? 'bg-emerald-600 text-white'
                               : part.inStock
@@ -508,46 +508,48 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
       {/* ========================================================= */}
       {/* BOTTOM STICKY TELEMETRY & CHECKOUT STRIP */}
       {/* ========================================================= */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-[#08111f]/95 backdrop-blur-md border-t border-[#1e2d4f] px-4 py-3 shadow-2xl">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Telemetry (Wattage + Compatibility) */}
-          <div className="flex items-center gap-6 text-xs font-mono">
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-[#08111f]/95 backdrop-blur-md border-t border-[#1e2d4f] px-3 sm:px-6 py-2.5 sm:py-3 shadow-2xl">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4">
+          {/* Telemetry (Wattage + Compatibility + Total Price) */}
+          <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-6 text-xs font-mono">
             <div>
-              <span className="text-slate-400 block text-[10px]">ESTIMATED TDP</span>
-              <span className="text-[#ffd000] font-bold text-sm flex items-center gap-1">
+              <span className="text-slate-400 block text-[9px] sm:text-[10px]">ESTIMATED TDP</span>
+              <span className="text-[#ffd000] font-bold text-xs sm:text-sm flex items-center gap-1">
                 <Zap className="w-3.5 h-3.5" />
-                {estimatedWattage} W (Rec: {recommendedPsu}W)
+                <span>{estimatedWattage}W <span className="hidden sm:inline">(Rec: {recommendedPsu}W)</span></span>
               </span>
             </div>
 
             <div>
-              <span className="text-slate-400 block text-[10px]">COMPATIBILITY</span>
+              <span className="text-slate-400 block text-[9px] sm:text-[10px]">COMPATIBILITY</span>
               {hasErrors ? (
-                <span className="text-rose-400 font-bold flex items-center gap-1">
+                <span className="text-rose-400 font-bold flex items-center gap-1 text-xs">
                   <AlertTriangle className="w-3.5 h-3.5" />
-                  Issue Detected
+                  <span className="hidden sm:inline">Issue Detected</span>
+                  <span className="sm:hidden">Check</span>
                 </span>
               ) : (
-                <span className="text-emerald-400 font-bold flex items-center gap-1">
+                <span className="text-emerald-400 font-bold flex items-center gap-1 text-xs">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  100% Compatible
+                  <span className="hidden sm:inline">100% Compatible</span>
+                  <span className="sm:hidden">Pass</span>
                 </span>
               )}
             </div>
 
-            <div className="hidden md:block">
-              <span className="text-slate-400 block text-[10px]">ESTIMATED TOTAL</span>
-              <span className="text-xl font-black font-mono text-[#ffd000]">
+            <div className="text-right sm:text-left">
+              <span className="text-slate-400 block text-[9px] sm:text-[10px]">TOTAL</span>
+              <span className="text-sm sm:text-xl font-black font-mono text-[#ffd000]">
                 {formatINR(totalPrice)}
               </span>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
             <button
               onClick={handleShareBuild}
-              className="p-2.5 rounded-xl bg-[#0d172e] hover:bg-[#142244] border border-[#1e2d4f] text-slate-300 hover:text-white"
+              className="p-2.5 rounded-xl bg-[#0d172e] hover:bg-[#142244] border border-[#1e2d4f] text-slate-300 hover:text-white min-h-[40px] min-w-[40px] flex items-center justify-center"
               title="Share Build Link"
             >
               {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
@@ -555,7 +557,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
 
             <button
               onClick={() => setShowSaveDialog(true)}
-              className="px-4 py-2.5 rounded-xl bg-[#0d172e] hover:bg-[#142244] border border-[#1e2d4f] text-xs font-bold text-white flex items-center gap-1.5"
+              className="px-3.5 sm:px-4 py-2.5 rounded-xl bg-[#0d172e] hover:bg-[#142244] border border-[#1e2d4f] text-xs font-bold text-white flex items-center justify-center gap-1.5 min-h-[40px]"
             >
               <Save className="w-3.5 h-3.5 text-[#0066ff]" />
               <span className="hidden sm:inline">Save Build</span>
@@ -563,7 +565,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
 
             <button
               onClick={handleAddAllToCart}
-              className="px-6 py-2.5 rounded-xl bg-[#ff1e2d] hover:bg-[#e50914] text-white font-bold text-xs shadow-glow-red flex items-center gap-2"
+              className="flex-1 sm:flex-initial px-5 sm:px-6 py-2.5 rounded-xl bg-[#ff1e2d] hover:bg-[#e50914] text-white font-bold text-xs shadow-glow-red flex items-center justify-center gap-2 min-h-[40px]"
             >
               <ShoppingCart className="w-4 h-4" />
               <span>Add All to Cart</span>

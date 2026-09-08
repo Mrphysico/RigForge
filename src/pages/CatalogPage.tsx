@@ -127,7 +127,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id as any)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all min-h-[40px] flex items-center justify-center ${
                   selectedCategory === cat.id
                     ? 'bg-[#ff1e2d] text-white shadow-glow-red font-bold'
                     : 'bg-[#0d172e] text-slate-300 hover:text-white hover:bg-[#142244] border border-[#1e2d4f]'
@@ -139,7 +139,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
           </div>
 
           {/* Search bar & Sort Controls */}
-          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
+          <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 pt-4">
             <div className="relative w-full sm:w-96">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -147,12 +147,12 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder="Search RTX 4080, Ryzen 7800X3D, B650, DDR5..."
-                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-[#0d172e] text-white placeholder-slate-400 rounded-xl border border-[#1e2d4f] focus:outline-none focus:border-[#ff1e2d]"
+                className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-[#0d172e] text-white placeholder-slate-400 rounded-xl border border-[#1e2d4f] focus:outline-none focus:border-[#ff1e2d] min-h-[44px]"
               />
               {searchQuery && (
                 <button
                   onClick={() => onSearchChange('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white p-1 min-w-[32px] min-h-[32px] flex items-center justify-center"
                 >
                   Clear
                 </button>
@@ -160,12 +160,12 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-              <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none">
+              <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none min-h-[40px]">
                 <input
                   type="checkbox"
                   checked={inStockOnly}
                   onChange={(e) => setInStockOnly(e.target.checked)}
-                  className="rounded border-[#1e2d4f] bg-[#0d172e] text-[#ff1e2d] focus:ring-0"
+                  className="rounded border-[#1e2d4f] bg-[#0d172e] text-[#ff1e2d] focus:ring-0 w-4 h-4"
                 />
                 <span>In Stock Only</span>
               </label>
@@ -175,7 +175,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
-                  className="px-3 py-2 rounded-xl bg-[#0d172e] border border-[#1e2d4f] text-xs font-semibold text-white focus:outline-none focus:border-[#ff1e2d]"
+                  className="px-3 py-2.5 rounded-xl bg-[#0d172e] border border-[#1e2d4f] text-xs font-semibold text-white focus:outline-none focus:border-[#ff1e2d] min-h-[44px]"
                 >
                   <option value="featured">Popular / Featured</option>
                   <option value="price-asc">Price: Low to High</option>

@@ -87,7 +87,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
         {/* DECORATIVE FRAMING TEXT (LEFT & RIGHT EDGES) */}
         {/* ========================================================= */}
         {/* Left Band Vertical Stacked Copy: PLAY, BUILD, CONNECT (with red underline) */}
-        <div className="absolute left-6 sm:left-10 top-1/2 -translate-y-1/2 flex flex-col items-start gap-1 z-20 pointer-events-none">
+        <div className="absolute left-6 sm:left-10 top-1/2 -translate-y-1/2 flex-col items-start gap-1 z-20 pointer-events-none hidden lg:flex">
           <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
             PLAY
           </span>
@@ -101,7 +101,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
         </div>
 
         {/* Right Band Vertical Stacked Copy: BUILD, STREAM, GAME, REPEAT (with blue underline) */}
-        <div className="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 flex flex-col items-end gap-1 z-20 pointer-events-none">
+        <div className="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 flex-col items-end gap-1 z-20 pointer-events-none hidden lg:flex">
           <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
             BUILD
           </span>
@@ -118,7 +118,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
         </div>
 
         {/* Right Band Floating Eyebrow: MORE THAN GAMING (with yellow underline) */}
-        <div className="absolute top-20 right-16 sm:right-32 lg:right-48 flex flex-col items-start z-20 pointer-events-none hidden md:flex">
+        <div className="absolute top-20 right-16 sm:right-32 lg:right-48 flex-col items-start z-20 pointer-events-none hidden xl:flex">
           <span className="font-barlow font-bold text-xs tracking-[0.25em] text-white uppercase leading-tight">
             MORE
           </span>
@@ -137,31 +137,31 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10 pt-4 space-y-4">
           
           {/* 1. Small Eyebrow Line */}
-          <div className="text-xs sm:text-[13px] font-mono font-bold tracking-[0.3em] text-white/90 uppercase">
+          <div className="text-[11px] sm:text-[13px] font-mono font-bold tracking-[0.25em] sm:tracking-[0.3em] text-white/90 uppercase">
             GEAR &nbsp;|&nbsp; BUILD &nbsp;|&nbsp; PLAY &nbsp;|&nbsp; TOGETHER
           </div>
 
           {/* 2. Giant Logo Lockup: RIGFORGE (RIG white, FORGE red) */}
-          <h1 className="font-barlow font-black text-7xl sm:text-8xl md:text-9xl uppercase italic tracking-tighter leading-none text-white drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)]">
+          <h1 className="font-barlow font-black text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase italic tracking-tighter leading-none text-white drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)]">
             RIG<span className="text-[#e2231a]">FORGE</span>
           </h1>
 
           {/* 3. Subheading Line: POWER YOUR PASSION */}
-          <div className="font-barlow font-bold uppercase tracking-wider text-2xl sm:text-3xl md:text-4xl text-white">
+          <div className="font-barlow font-bold uppercase tracking-wider text-xl sm:text-2xl md:text-4xl text-white">
             POWER YOUR PASSION
           </div>
 
           {/* 4. Body Paragraph */}
-          <p className="text-xs sm:text-sm text-slate-300 max-w-[500px] mx-auto leading-relaxed font-sans">
+          <p className="text-xs sm:text-sm text-slate-300 max-w-[500px] mx-auto leading-relaxed font-sans px-2">
             A community-driven platform for gamers, creators, and PC builders. Share builds, get support, explore gear, and take your setup to the next level.
           </p>
 
-          {/* 5. Two CTA Buttons Side by Side */}
-          <div className="flex items-center justify-center gap-4 pt-2">
+          {/* 5. Two CTA Buttons: Stacks on mobile, side-by-side on sm+ */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 w-full max-w-xs sm:max-w-none mx-auto">
             {/* Primary Red CTA: Get Started → */}
             <button
               onClick={() => onNavigate('signin')}
-              className="rounded-full px-8 py-3 bg-[#e2231a] hover:bg-[#b71c17] text-white font-bold text-sm tracking-wide shadow-[0_0_25px_rgba(226,35,26,0.6)] hover:shadow-[0_0_35px_rgba(226,35,26,0.8)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto min-h-[44px] rounded-full px-8 py-3 bg-[#e2231a] hover:bg-[#b71c17] text-white font-bold text-sm tracking-wide shadow-[0_0_25px_rgba(226,35,26,0.6)] hover:shadow-[0_0_35px_rgba(226,35,26,0.8)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Get Started</span>
               <ArrowRight className="w-4 h-4" />
@@ -170,7 +170,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
             {/* Dark Outlined CTA: Explore Builds */}
             <button
               onClick={() => onNavigate('builds')}
-              className="rounded-full px-8 py-3 bg-black/60 hover:bg-white hover:text-black text-white font-semibold text-sm border border-white/30 hover:border-white transition-all flex items-center justify-center gap-2 backdrop-blur-md cursor-pointer"
+              className="w-full sm:w-auto min-h-[44px] rounded-full px-8 py-3 bg-black/60 hover:bg-white hover:text-black text-white font-semibold text-sm border border-white/30 hover:border-white transition-all flex items-center justify-center gap-2 backdrop-blur-md cursor-pointer"
             >
               <span>Explore Builds</span>
             </button>
@@ -180,12 +180,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
         {/* ========================================================= */}
         {/* 6. GAMING DESK SETUP HERO STAGE (OVERLAPPING COLOR BANDS) */}
         {/* ========================================================= */}
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 pt-8 sm:pt-10 flex justify-center">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 pt-6 sm:pt-10 flex justify-center">
           <div className="relative w-full overflow-hidden flex justify-center">
             <img
               src="/images/hero-desk-setup.jpg"
               alt="RigForge Custom Battlestation Desk Setup"
-              className="w-full h-auto max-h-[360px] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.95)]"
+              className="w-full h-auto max-h-[220px] sm:max-h-[300px] lg:max-h-[360px] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.95)]"
             />
             <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none" />
           </div>
@@ -360,17 +360,17 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
       {/* MARKETPLACE HARDWARE SHOWCASE */}
       {/* ========================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6 pb-4 border-b border-white/10">
           <div>
             <span className="text-xs font-mono font-bold text-[#e2231a] uppercase tracking-wider">HOT DEALS</span>
-            <h2 className="font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+            <h2 className="font-barlow text-2xl sm:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight">
               FEATURED HARDWARE
             </h2>
           </div>
 
           <button
             onClick={() => onNavigate('marketplace')}
-            className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#e2231a] hover:text-white transition-colors cursor-pointer"
+            className="self-start sm:self-auto inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#e2231a] hover:text-white transition-colors cursor-pointer py-1.5 min-h-[40px]"
           >
             <span>View All Components</span>
             <ChevronRight className="w-4 h-4" />
