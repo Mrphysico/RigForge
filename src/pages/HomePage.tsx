@@ -275,23 +275,25 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
           {/* Card 1: Red Card — FEATURED BUILDS / INSANE SETUPS */}
           <div
             onClick={() => onNavigate('builds')}
-            className="group relative rounded-2xl overflow-hidden border border-[#e2231a]/40 hover:border-[#e2231a] cursor-pointer shadow-xl transition-all duration-300 min-h-[220px] bg-cover bg-center flex flex-col justify-between p-6 sm:p-7 hover:scale-[1.025]"
-            style={{ backgroundImage: `url('/images/card-pc-build-red.jpg')` }}
+            className="red-card insane-setups-card group relative rounded-2xl overflow-hidden border border-[#e2231a]/40 hover:border-[#e2231a] cursor-pointer shadow-xl transition-all duration-300 min-h-[220px] flex flex-col justify-between p-6 sm:p-7 hover:scale-[1.025]"
+            style={{
+              backgroundImage: `url('/images/card-pc-build-red.jpg')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'right center',
+              backgroundRepeat: 'no-repeat',
+            }}
           >
-            {/* Dark gradient overlay bottom-to-top */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40 group-hover:bg-black/60 transition-colors duration-400" />
-
-            <div className="relative z-10 space-y-1">
-              <span className="text-[11px] font-mono tracking-widest font-bold text-[#e2231a] uppercase">
+            <div className="relative z-[2] space-y-1">
+              <span className="relative z-[2] text-[11px] font-mono tracking-widest font-bold text-[#e2231a] uppercase block">
                 FEATURED BUILDS
               </span>
-              <h3 className="font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
+              <h3 className="relative z-[2] font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
                 INSANE<br />SETUPS
               </h3>
             </div>
 
-            <div className="relative z-10 flex items-center justify-between pt-4">
-              <div className="w-9 h-9 rounded-full bg-[#e2231a] text-white flex items-center justify-center shadow-[0_0_15px_rgba(226,35,26,0.6)] group-hover:translate-x-1 transition-transform">
+            <div className="relative z-[2] flex items-center justify-between pt-4">
+              <div className="relative z-[2] w-9 h-9 rounded-full bg-[#e2231a] text-white flex items-center justify-center shadow-[0_0_15px_rgba(226,35,26,0.6)] group-hover:translate-x-1 transition-transform">
                 <ArrowRight className="w-4 h-4" />
               </div>
             </div>
