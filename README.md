@@ -4,6 +4,8 @@ RigForge is a modern, full-stack custom PC hardware e-commerce and interactive P
 
 ![RigForge Banner](public/images/rigforge-logo.png)
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Mrphysico/RigForge)
+
 ---
 
 ## 🌟 Key Features
