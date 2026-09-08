@@ -29,6 +29,9 @@ _archive/
 # Temporary test scripts
 server/test-api.js
 
+# Nested folders
+my own website/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
