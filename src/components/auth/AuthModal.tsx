@@ -60,7 +60,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onNotification }) => {
       </div>
 
       {/* Main Split Modal Card */}
-      <div className="relative w-full max-w-5xl rounded-[32px] shadow-2xl overflow-hidden z-10 grid grid-cols-1 md:grid-cols-12 max-h-[94vh] border border-white/10">
+      <div className="auth-card relative w-full max-w-5xl rounded-[28px] sm:rounded-[32px] shadow-2xl overflow-hidden z-10 flex flex-col md:flex-row max-h-[94vh] border border-white/10 bg-[#0a0a0a]">
         {/* Close Button */}
         <button
           onClick={closeAuthModal}
@@ -71,19 +71,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onNotification }) => {
         </button>
 
         {/* ========================================================= */}
-        {/* LEFT COLUMN: DARK CYBER DISPLAY (~45% WIDTH, 6 COLS) */}
+        {/* LEFT COLUMN: DARK CYBER DISPLAY (~48% WIDTH) */}
         {/* ========================================================= */}
-        <div className="hidden md:flex md:col-span-6 flex-col justify-between p-8 sm:p-10 bg-[#0a0a0a] text-white relative overflow-hidden">
+        <div className="auth-card__left hidden md:flex md:w-[48%] flex-col justify-between p-8 sm:p-10 bg-[#0a0a0a] text-white relative overflow-hidden flex-shrink-0">
           {/* PC Tower Background Artwork Bleeding in from right edge */}
           <div 
-            className="absolute -top-10 -right-10 w-80 h-full bg-no-repeat bg-cover bg-center opacity-65 pointer-events-none mix-blend-screen"
+            className="absolute top-0 right-0 w-[55%] h-full bg-no-repeat bg-cover bg-right-bottom pointer-events-none z-0 opacity-90"
             style={{
-              backgroundImage: `url('/images/login-pc-tower.jpg')`,
-              maskImage: 'linear-gradient(to right, transparent 0%, black 50%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 50%)'
+              backgroundImage: `url('/images/login-pc-tower.jpg')`
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent pointer-events-none z-0" />
 
           {/* Top Brand Header */}
           <div className="relative z-10 space-y-1">
@@ -157,9 +155,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onNotification }) => {
         </div>
 
         {/* ========================================================= */}
-        {/* RIGHT COLUMN: CRISP WHITE CARD (6 COLS) */}
+        {/* RIGHT COLUMN: CRISP WHITE CARD */}
         {/* ========================================================= */}
-        <div className="md:col-span-6 bg-white text-slate-900 p-8 sm:p-10 flex flex-col justify-between overflow-y-auto">
+        <div className="auth-card__right w-full md:w-[52%] bg-white text-slate-900 p-8 sm:p-10 flex flex-col justify-between overflow-y-auto">
           <div>
             {/* Top Switcher Link */}
             {authModalView !== 'forgot' && (

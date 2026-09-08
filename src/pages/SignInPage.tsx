@@ -186,32 +186,31 @@ export const SignInPage: React.FC<SignInPageProps> = ({
       {/* ========================================================= */}
       {/* CENTERED AUTH CARD (SECTION 5.2) */}
       {/* ========================================================= */}
-      <div className="relative w-full max-w-5xl rounded-[28px] shadow-[0_25px_60px_rgba(0,0,0,0.85)] overflow-hidden z-10 grid grid-cols-1 md:grid-cols-12 border border-white/10 bg-[#0a0a0a] min-h-[580px]">
+      <div className="auth-card relative w-full max-w-5xl rounded-[28px] sm:rounded-[32px] shadow-[0_25px_60px_rgba(0,0,0,0.85)] overflow-hidden z-10 flex flex-col md:flex-row border border-white/10 bg-[#0a0a0a] min-h-[580px] lg:min-h-[620px]">
         
         {/* Back to Home Button on mobile */}
         <button
           onClick={() => onNavigate('home')}
-          className="absolute top-4 left-4 z-30 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 md:hidden"
+          className="absolute top-4 left-4 z-30 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 md:hidden transition-colors"
           title="Back to Home"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
 
         {/* ========================================================= */}
-        {/* LEFT PANEL: DARK CYBER DISPLAY (~45% WIDTH, 5.5 COLS) */}
+        {/* LEFT PANEL: DARK CYBER DISPLAY (~48% WIDTH) */}
         {/* ========================================================= */}
-        <div className="hidden md:flex md:col-span-6 lg:col-span-6 flex-col justify-between p-8 sm:p-10 bg-[#0a0a0a] text-white relative overflow-hidden">
+        <div className="auth-card__left w-full md:w-[48%] flex flex-col justify-between p-6 sm:p-8 md:p-10 bg-[#0a0a0a] text-white relative overflow-hidden flex-shrink-0">
           
-          {/* PC Tower Background Artwork Bleeding in from right edge */}
+          {/* RGB PC Tower Background Artwork Bleeding in from right edge */}
           <div 
-            className="absolute -top-10 -right-10 w-80 h-full bg-no-repeat bg-cover bg-center opacity-65 pointer-events-none mix-blend-screen"
+            className="absolute top-0 right-0 w-[55%] h-full bg-no-repeat bg-cover bg-right-bottom pointer-events-none z-0 opacity-90"
             style={{
-              backgroundImage: `url('/images/login-pc-tower.jpg')`,
-              maskImage: 'linear-gradient(to right, transparent 0%, black 50%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 50%)'
+              backgroundImage: `url('/images/login-pc-tower.jpg')`
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent pointer-events-none" />
+          {/* Subtle left-to-right gradient so typography remains razor-sharp */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent pointer-events-none z-0" />
 
           {/* Top Logo Lockup & Eyebrow */}
           <div className="relative z-10 space-y-1">
@@ -219,10 +218,10 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               onClick={() => onNavigate('home')} 
               className="flex items-center gap-2.5 cursor-pointer group select-none"
             >
-              <div className="w-9 h-9 rounded-lg bg-[#e2231a] flex items-center justify-center font-barlow font-black text-white text-xl">
+              <div className="w-9 h-9 rounded-lg bg-[#e2231a] flex items-center justify-center font-barlow font-black text-white text-xl shadow-[0_0_12px_rgba(226,35,26,0.6)]">
                 R
               </div>
-              <span className="font-barlow font-black text-2xl tracking-wider uppercase italic text-white">
+              <span className="font-barlow font-black text-2xl tracking-wider uppercase italic text-white group-hover:text-[#e2231a] transition-colors">
                 RIG<span className="text-[#e2231a]">FORGE</span>
               </span>
             </div>
@@ -233,7 +232,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
 
           {/* Headline Stacked 3 Lines: BUILD (white) / YOUR (blue) / LEGACY (yellow) */}
           <div className="relative z-10 my-4 space-y-3.5 max-w-sm">
-            <div className="font-barlow font-black tracking-tight leading-[0.88] uppercase text-5xl lg:text-6xl">
+            <div className="font-barlow font-black tracking-tight leading-[0.88] uppercase text-4xl sm:text-5xl lg:text-6xl">
               <span className="text-[#ffffff] block">BUILD</span>
               <span className="text-[#1c3f8f] block drop-shadow-[0_0_12px_rgba(28,63,143,0.8)]">YOUR</span>
               <span className="text-[#f2b705] block drop-shadow-[0_0_12px_rgba(242,183,5,0.6)]">LEGACY</span>
@@ -247,40 +246,40 @@ export const SignInPage: React.FC<SignInPageProps> = ({
             <div className="grid grid-cols-4 gap-2 pt-3 text-center">
               {/* 1. Red gear icon */}
               <div className="flex flex-col items-center space-y-1">
-                <div className="w-10 h-10 rounded-full bg-[#e2231a] text-white flex items-center justify-center shadow-[0_0_15px_rgba(226,35,26,0.5)]">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#e2231a] text-white flex items-center justify-center shadow-[0_0_15px_rgba(226,35,26,0.5)]">
                   <Settings className="w-4 h-4" />
                 </div>
-                <span className="text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
+                <span className="text-[8.5px] sm:text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
                   MANAGE<br />YOUR RIG
                 </span>
               </div>
 
               {/* 2. White people icon */}
               <div className="flex flex-col items-center space-y-1">
-                <div className="w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-md">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-md">
                   <Users className="w-4 h-4" />
                 </div>
-                <span className="text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
+                <span className="text-[8.5px] sm:text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
                   JOIN<br />COMMUNITY
                 </span>
               </div>
 
               {/* 3. Blue bar-chart icon */}
               <div className="flex flex-col items-center space-y-1">
-                <div className="w-10 h-10 rounded-full bg-[#1c3f8f] text-white flex items-center justify-center shadow-[0_0_15px_rgba(28,63,143,0.6)]">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1c3f8f] text-white flex items-center justify-center shadow-[0_0_15px_rgba(28,63,143,0.6)]">
                   <BarChart3 className="w-4 h-4" />
                 </div>
-                <span className="text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
+                <span className="text-[8.5px] sm:text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
                   TRACK<br />PROGRESS
                 </span>
               </div>
 
               {/* 4. Yellow controller icon */}
               <div className="flex flex-col items-center space-y-1">
-                <div className="w-10 h-10 rounded-full bg-[#f2b705] text-slate-950 flex items-center justify-center shadow-[0_0_15px_rgba(242,183,5,0.6)]">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#f2b705] text-slate-950 flex items-center justify-center shadow-[0_0_15px_rgba(242,183,5,0.6)]">
                   <Gamepad2 className="w-4 h-4" />
                 </div>
-                <span className="text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
+                <span className="text-[8.5px] sm:text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
                   EXPLORE<br />MORE
                 </span>
               </div>
@@ -288,16 +287,16 @@ export const SignInPage: React.FC<SignInPageProps> = ({
           </div>
 
           {/* Bottom Tagline with short rule */}
-          <div className="relative z-10 pt-4 border-t border-white/10 text-[10px] font-mono tracking-wider text-slate-400 uppercase">
+          <div className="relative z-10 pt-4 border-t border-white/10 text-[10px] font-mono tracking-wider text-slate-400 uppercase hidden sm:block">
             <div className="w-8 h-[1.5px] bg-slate-500 mb-2" />
             <span>MORE THAN A PLATFORM / A COMMUNITY</span>
           </div>
         </div>
 
         {/* ========================================================= */}
-        {/* RIGHT PANEL: LIGHT FORM CONTAINER (~55% WIDTH, 6.5 COLS) */}
+        {/* RIGHT PANEL: LIGHT FORM CONTAINER (~52% WIDTH) */}
         {/* ========================================================= */}
-        <div className="md:col-span-6 lg:col-span-6 bg-[#ffffff] text-slate-900 p-8 sm:p-10 flex flex-col justify-between overflow-y-auto">
+        <div className="auth-card__right w-full md:w-[52%] bg-[#ffffff] text-slate-900 p-6 sm:p-8 md:p-10 flex flex-col justify-between overflow-y-auto">
           <div>
             {/* Top-Right Toggle Link */}
             <div className="flex items-center justify-between mb-6">
@@ -538,8 +537,18 @@ export const SignInPage: React.FC<SignInPageProps> = ({
           {/* Footer Microcopy */}
           <div className="text-[11px] text-slate-500 text-center pt-4 leading-relaxed">
             By signing in, you agree to our{' '}
-            <span className="text-[#1c3f8f] hover:underline cursor-pointer font-medium">Terms of Service</span> and{' '}
-            <span className="text-[#1c3f8f] hover:underline cursor-pointer font-medium">Privacy Policy</span>.
+            <span 
+              onClick={() => onNotification?.('RigForge Terms: Standard fair use and customer protection policies apply.')}
+              className="text-[#1c3f8f] hover:underline cursor-pointer font-medium"
+            >
+              Terms of Service
+            </span> and{' '}
+            <span 
+              onClick={() => onNotification?.('RigForge Privacy Policy: Encrypted authentication and zero data sharing guaranteed.')}
+              className="text-[#1c3f8f] hover:underline cursor-pointer font-medium"
+            >
+              Privacy Policy
+            </span>.
           </div>
         </div>
 
