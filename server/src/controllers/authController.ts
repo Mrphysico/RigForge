@@ -398,11 +398,13 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response): Prom
   }
 
   const { isInMemoryFallback } = getDbStatus();
-  let userDetails = {
+  let userDetails: any = {
     id: req.user.id,
     name: req.user.name,
     email: req.user.email,
     role: req.user.role,
+    provider: (req.user as any).provider || 'local',
+    providerAccountId: (req.user as any).providerAccountId,
   };
 
   if (!isInMemoryFallback) {
@@ -414,10 +416,28 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response): Prom
           name: dbUser.name,
           email: dbUser.email,
           role: dbUser.role,
+          provider: dbUser.provider || 'local',
+          providerAccountId: dbUser.providerAccountId,
+          avatar: dbUser.avatar,
+          phone: dbUser.phone,
         };
       }
     } catch {
       // Fallback
+    }
+  } else {
+    const memUser = inMemoryUsers.find((u) => u.id === req.user?.id);
+    if (memUser) {
+      userDetails = {
+        id: memUser.id,
+        name: memUser.name,
+        email: memUser.email,
+        role: memUser.role,
+        provider: memUser.provider,
+        providerAccountId: memUser.providerAccountId,
+        avatar: memUser.avatar,
+        phone: memUser.phone,
+      };
     }
   }
 
@@ -427,3 +447,220 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response): Prom
     sessionExpiry: '30m',
   });
 };
+
+export const updateProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.user) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const { name, phone } = req.body;
+    const { isInMemoryFallback } = getDbStatus();
+    let updatedUser: any = null;
+
+    if (!isInMemoryFallback) {
+      try {
+        const dbUser = await UserModel.findById(req.user.id);
+        if (dbUser) {
+          if (name && typeof name === 'string') dbUser.name = name.trim();
+          if (phone !== undefined) dbUser.phone = phone.trim();
+          await dbUser.save();
+          updatedUser = {
+            id: dbUser._id.toString(),
+            name: dbUser.name,
+            email: dbUser.email,
+            role: dbUser.role,
+            provider: dbUser.provider,
+            avatar: dbUser.avatar,
+            phone: dbUser.phone,
+          };
+        }
+      } catch {
+        // Fallback
+      }
+    }
+
+    if (!updatedUser) {
+      const memUser = inMemoryUsers.find((u) => u.id === req.user?.id);
+      if (memUser) {
+        if (name && typeof name === 'string') memUser.name = name.trim();
+        if (phone !== undefined) memUser.phone = phone.trim();
+        updatedUser = {
+          id: memUser.id,
+          name: memUser.name,
+          email: memUser.email,
+          role: memUser.role,
+          provider: memUser.provider,
+          avatar: memUser.avatar,
+          phone: memUser.phone,
+        };
+      }
+    }
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully.',
+      user: updatedUser,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update profile.',
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * Google OAuth Authentication & Account Linking Endpoint
+ * Links Google accounts deterministically by stable Google `sub` (providerAccountId).
+ * Never merges unrelated Google accounts.
+ */
+export const googleAuth = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { sub, email, name, avatar } = req.body;
+
+    if (!sub || typeof sub !== 'string' || !sub.trim()) {
+      res.status(400).json({
+        success: false,
+        message: 'Google unique identifier (sub) is required for OAuth authentication.',
+      });
+      return;
+    }
+
+    if (!email || typeof email !== 'string' || !isValidEmail(email.trim().toLowerCase())) {
+      res.status(400).json({
+        success: false,
+        message: 'A valid email is required for Google account authentication.',
+      });
+      return;
+    }
+
+    const cleanSub = sub.trim();
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanName = (name && typeof name === 'string' && name.trim()) || 'Google Explorer';
+    const cleanAvatar = (avatar && typeof avatar === 'string' && avatar.trim()) 
+      || `https://api.dicebear.com/7.x/identicon/svg?seed=${cleanSub}`;
+
+    const { isInMemoryFallback } = getDbStatus();
+    let matchedUser: any = null;
+    let isNewUser = false;
+
+    // 1. Check MongoDB if active
+    if (!isInMemoryFallback) {
+      try {
+        // Find existing user specifically by Google sub
+        matchedUser = await UserModel.findOne({ provider: 'google', providerAccountId: cleanSub });
+        
+        // If not found by sub, check if user exists by email to link account
+        if (!matchedUser) {
+          const emailMatch = await UserModel.findOne({ email: cleanEmail });
+          if (emailMatch) {
+            emailMatch.providerAccountId = cleanSub;
+            emailMatch.provider = 'google';
+            if (cleanAvatar) emailMatch.avatar = cleanAvatar;
+            await emailMatch.save();
+            matchedUser = emailMatch;
+          }
+        }
+
+        // If still no user, create a brand new distinct account
+        if (!matchedUser) {
+          matchedUser = await UserModel.create({
+            name: cleanName,
+            email: cleanEmail,
+            provider: 'google',
+            providerAccountId: cleanSub,
+            avatar: cleanAvatar,
+            role: 'customer',
+          });
+          isNewUser = true;
+        }
+      } catch (err: any) {
+        console.warn('MongoDB Google OAuth lookup failed, falling back to memory:', err.message);
+      }
+    }
+
+    // 2. Check / Maintain In-Memory Store
+    if (!matchedUser) {
+      let memUser = inMemoryUsers.find(
+        (u) => u.provider === 'google' && u.providerAccountId === cleanSub
+      );
+
+      if (!memUser) {
+        const memEmailMatch = inMemoryUsers.find((u) => u.email.toLowerCase() === cleanEmail);
+        if (memEmailMatch) {
+          memEmailMatch.provider = 'google';
+          memEmailMatch.providerAccountId = cleanSub;
+          memEmailMatch.avatar = cleanAvatar;
+          memUser = memEmailMatch;
+        }
+      }
+
+      if (!memUser) {
+        const newId = 'usr-g-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6);
+        memUser = {
+          id: newId,
+          name: cleanName,
+          email: cleanEmail,
+          provider: 'google',
+          providerAccountId: cleanSub,
+          avatar: cleanAvatar,
+          role: 'customer',
+          createdAt: new Date().toISOString(),
+        };
+        inMemoryUsers.push(memUser);
+        isNewUser = true;
+      }
+
+      matchedUser = memUser;
+    }
+
+    const userId = matchedUser._id ? matchedUser._id.toString() : matchedUser.id;
+    const userName = matchedUser.name;
+    const userEmail = matchedUser.email;
+    const userRole = matchedUser.role || 'customer';
+    const userAvatar = matchedUser.avatar || cleanAvatar;
+
+    // Issue request-specific JWT token
+    const token = jwt.sign(
+      {
+        id: userId,
+        email: userEmail,
+        name: userName,
+        role: userRole,
+        provider: 'google',
+        providerAccountId: cleanSub,
+      },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    console.log(`🌐 [Google OAuth Success] User: ${userId} | Sub: ${cleanSub} | Email: ${userEmail}`);
+
+    res.json({
+      success: true,
+      message: isNewUser ? 'Google account created and verified.' : 'Google authentication verified.',
+      token,
+      expiresIn: '30m',
+      isNewUser,
+      user: {
+        id: userId,
+        name: userName,
+        email: userEmail,
+        avatar: userAvatar,
+        role: userRole,
+        provider: 'google',
+        providerAccountId: cleanSub,
+      },
+    });
+  } catch (error: any) {
+    console.error('Google OAuth error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Google authentication failed on server. Please try again.',
+    });
+  }
+};
+

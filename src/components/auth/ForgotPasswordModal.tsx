@@ -41,13 +41,13 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
   return (
     <div className="space-y-5">
       <div className="text-center space-y-1">
-        <div className="w-10 h-10 mx-auto rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mb-2">
+        <div className="w-10 h-10 mx-auto rounded-xl bg-[#151515] border border-[#262626] text-[#FCA311] flex items-center justify-center mb-2 shadow-glow-orange">
           <KeyRound className="w-5 h-5" />
         </div>
         <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
           Reset Account Password
         </h3>
-        <p className="text-xs text-zinc-400">
+        <p className="text-xs text-[#A0A0A0]">
           Enter your registered email address and we will dispatch password reset instructions.
         </p>
       </div>
@@ -66,7 +66,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
           <button
             type="button"
             onClick={onBackToSignIn}
-            className="w-full py-2.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 transition-colors"
+            className="w-full py-2.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#151515] hover:bg-zinc-800 text-white border border-[#262626] transition-colors"
           >
             Back to Sign In
           </button>
@@ -74,7 +74,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1.5 font-medium">
+            <label className="block text-xs font-mono uppercase tracking-wider text-[#A0A0A0] mb-1.5 font-medium">
               Registered Email Address <span className="text-red-400">*</span>
             </label>
             <div className="relative">
@@ -86,7 +86,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+                className="w-full pl-10 pr-4 py-2.5 text-xs bg-[#0D0D0D] text-white placeholder-zinc-500 rounded-xl border border-[#262626] focus:outline-none focus:border-[#FCA311] focus:ring-1 focus:ring-[#FCA311]"
                 autoFocus
               />
             </div>
@@ -96,13 +96,13 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 flex items-center justify-center gap-2 shadow-glow-cyan transition-all active:scale-[0.99] disabled:opacity-50"
+              className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#FCA311] hover:bg-[#E59200] text-zinc-950 flex items-center justify-center gap-2 shadow-glow-orange transition-all active:scale-[0.99] disabled:opacity-50"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <>
-                  <span>Dispatch Reset Link</span>
+                  <span>Send Reset Instructions</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </>
               )}
@@ -111,7 +111,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             <button
               type="button"
               onClick={onBackToSignIn}
-              className="w-full py-2.5 text-xs text-zinc-400 hover:text-white flex items-center justify-center gap-1.5 transition-colors"
+              className="w-full py-2.5 px-4 rounded-xl font-medium text-xs text-[#A0A0A0] hover:text-white flex items-center justify-center gap-1.5 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Sign In</span>

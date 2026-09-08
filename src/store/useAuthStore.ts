@@ -9,6 +9,7 @@ import {
   registerSocialUser 
 } from '../credentials/userStorage';
 import { sendSuccessEmail } from '../services/mailer/emailService';
+import { authenticateWithGoogleBackend } from '../services/auth/googleOAuth';
 import { API_BASE_URL } from '../config/api';
 
 interface AuthState {
@@ -16,16 +17,22 @@ interface AuthState {
   isAuthenticated: boolean;
   authModalOpen: boolean;
   authModalView: 'signin' | 'signup' | 'forgot';
+  accountChooserOpen: boolean;
   latestDispatchedEmail: string | null;
 
   openAuthModal: (view?: 'signin' | 'signup' | 'forgot') => void;
   closeAuthModal: () => void;
   setAuthModalView: (view: 'signin' | 'signup' | 'forgot') => void;
+  openAccountChooser: () => void;
+  closeAccountChooser: () => void;
   clearEmailAlert: () => void;
 
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (data: { name: string; email: string; phone?: string; password: string; confirmPassword?: string }) => Promise<{ success: boolean; message?: string; error?: string }>;
   socialLogin: (provider: 'google' | 'facebook', overrideEmail?: string, overrideName?: string) => Promise<{ success: boolean; isNewUser: boolean; message: string }>;
+  loginWithGoogle: (profile: { sub: string; email: string; name: string; avatar?: string; idToken?: string; accessToken?: string }) => Promise<{ success: boolean; isNewUser?: boolean; message: string; error?: string }>;
+  switchAccount: () => void;
+  updateProfile: (data: { name?: string; phone?: string }) => Promise<{ success: boolean; message: string }>;
   forgotPassword: (email: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
 }
@@ -39,11 +46,14 @@ export const useAuthStore = create<AuthState>((set) => {
     isAuthenticated: !!existingSession,
     authModalOpen: false,
     authModalView: 'signin',
+    accountChooserOpen: false,
     latestDispatchedEmail: null,
 
     openAuthModal: (view = 'signin') => set({ authModalOpen: true, authModalView: view }),
     closeAuthModal: () => set({ authModalOpen: false }),
     setAuthModalView: (view) => set({ authModalView: view }),
+    openAccountChooser: () => set({ accountChooserOpen: true, authModalOpen: false }),
+    closeAccountChooser: () => set({ accountChooserOpen: false }),
     clearEmailAlert: () => set({ latestDispatchedEmail: null }),
 
     login: async (email, password) => {
@@ -210,6 +220,93 @@ export const useAuthStore = create<AuthState>((set) => {
       };
     },
 
+    loginWithGoogle: async (profile) => {
+      // 1. Primary: Authenticate with RigForge backend for strict database/JWT isolation
+      const backendResult = await authenticateWithGoogleBackend(profile);
+
+      if (backendResult.success && backendResult.user) {
+        const session = setUserSession({
+          id: backendResult.user.id,
+          name: backendResult.user.name,
+          email: backendResult.user.email,
+          role: backendResult.user.role,
+          provider: 'google',
+          providerAccountId: backendResult.user.providerAccountId,
+          avatar: backendResult.user.avatar,
+          token: backendResult.user.token,
+        });
+
+        set({
+          user: session,
+          isAuthenticated: true,
+          authModalOpen: false,
+          accountChooserOpen: false,
+        });
+
+        return {
+          success: true,
+          message: `Logged in with Google as ${session.name}!`,
+        };
+      }
+
+      // 2. Resilient local fallback if backend is momentarily unreachable
+      const { session, isNewUser } = registerSocialUser('google', profile.email, profile.name);
+      session.providerAccountId = profile.sub;
+      session.avatar = profile.avatar;
+
+      setUserSession(session);
+      set({
+        user: session,
+        isAuthenticated: true,
+        authModalOpen: false,
+        accountChooserOpen: false,
+      });
+
+      return {
+        success: true,
+        isNewUser,
+        message: `Connected with Google (${session.name})!`,
+      };
+    },
+
+    switchAccount: () => {
+      // Opens the Google account chooser without forcing full site logout first
+      set({ accountChooserOpen: true, authModalOpen: false });
+    },
+
+    updateProfile: async (data: { name?: string; phone?: string }) => {
+      const current = getUserSession();
+      if (!current || !current.token) {
+        return { success: false, message: 'Not authenticated.' };
+      }
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${current.token}`,
+          },
+          body: JSON.stringify(data),
+        });
+
+        const resData = await res.json();
+        if (res.ok && resData.success && resData.user) {
+          const updatedSession = setUserSession({
+            ...current,
+            name: resData.user.name || current.name,
+            phone: resData.user.phone || current.phone,
+          });
+          set({ user: updatedSession });
+          return { success: true, message: 'Profile updated successfully.' };
+        }
+      } catch (err) {
+        console.warn('Backend profile update failed:', err);
+      }
+
+      return { success: false, message: 'Failed to update profile.' };
+    },
+
     forgotPassword: async (email: string) => {
       try {
         const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
@@ -232,9 +329,14 @@ export const useAuthStore = create<AuthState>((set) => {
 
     logout: () => {
       clearSession();
+      try {
+        sessionStorage.clear();
+      } catch {}
       set({
         user: null,
         isAuthenticated: false,
+        authModalOpen: false,
+        accountChooserOpen: false,
         latestDispatchedEmail: null,
       });
       console.log('🚪 [User Logged Out] Session cleared successfully.');

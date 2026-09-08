@@ -8,69 +8,71 @@
 
 body {
   margin: 0;
-  background-color: #09090b;
+  background-color: #050505;
   color: #f4f4f5;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
 }
 
-/* Custom cyber/dark scrollbar */
+/* Custom dark technical scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0d0d12;
+  background: #080808;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #272732;
+  background: #262626;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #06b6d4;
+  background: #fca311;
 }
 
-/* Background Cyber Grid */
+/* Background Technical Grid */
 .bg-grid-pattern {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 }
 
 .bg-radial-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.15), transparent 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(252, 163, 17, 0.12), transparent 70%);
 }
 
 .glass-panel {
-  background: rgba(18, 18, 22, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(13, 13, 13, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .glass-card {
-  background: rgba(24, 24, 31, 0.65);
+  background: rgba(17, 17, 17, 0.75);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(6, 182, 212, 0.4);
-  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.25);
+  border-color: rgba(252, 163, 17, 0.45);
+  box-shadow: 0 0 25px -5px rgba(252, 163, 17, 0.25);
   transform: translateY(-2px);
 }
 
-/* Neon Glow utilities */
+/* RigForge Technical Orange Accents */
+.text-neon-orange,
 .text-neon-cyan {
-  color: #22d3ee;
-  text-shadow: 0 0 12px rgba(34, 211, 238, 0.5);
+  color: #fca311;
+  text-shadow: 0 0 14px rgba(252, 163, 17, 0.4);
 }
 
+.border-neon-orange,
 .border-neon-cyan {
-  border-color: #06b6d4;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+  border-color: #fca311;
+  box-shadow: 0 0 15px rgba(252, 163, 17, 0.3);
 }

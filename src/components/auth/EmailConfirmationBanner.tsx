@@ -32,15 +32,15 @@ export const EmailConfirmationBanner: React.FC = () => {
     <>
       {/* Toast Alert */}
       <div className="fixed top-20 right-6 z-50 max-w-md animate-bounce">
-        <div className="p-4 rounded-2xl bg-zinc-900 border border-cyan-500/60 shadow-glow-cyan text-white backdrop-blur-xl">
+        <div className="p-4 rounded-2xl bg-[#0D0D0D] border border-[#FCA311]/60 shadow-glow-orange text-white backdrop-blur-xl">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center flex-shrink-0 border border-cyan-500/30">
+            <div className="w-9 h-9 rounded-xl bg-[#FCA311]/15 text-[#FCA311] flex items-center justify-center flex-shrink-0 border border-[#FCA311]/30">
               <Mail className="w-5 h-5 animate-pulse" />
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-cyan-400 mb-0.5">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+              <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#FCA311] mb-0.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#FCA311]" />
                 <span>CONFIRMATION EMAIL DISPATCHED</span>
               </div>
               <p className="text-xs text-zinc-200 leading-relaxed font-medium">
@@ -50,7 +50,7 @@ export const EmailConfirmationBanner: React.FC = () => {
               <div className="mt-2.5 flex items-center gap-2">
                 <button
                   onClick={() => setShowEmailPreview(true)}
-                  className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 flex items-center gap-1 transition-colors"
+                  className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#FCA311]/15 hover:bg-[#FCA311]/25 text-[#FCA311] border border-[#FCA311]/30 flex items-center gap-1 transition-colors"
                 >
                   <ExternalLink className="w-3 h-3" />
                   <span>Preview Automated Email</span>
@@ -60,7 +60,7 @@ export const EmailConfirmationBanner: React.FC = () => {
 
             <button
               onClick={clearEmailAlert}
-              className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+              className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-[#151515] transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -70,22 +70,22 @@ export const EmailConfirmationBanner: React.FC = () => {
 
       {/* Simulated Email Client Preview Modal */}
       {showEmailPreview && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="relative w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-4">
-            <div className="flex justify-between items-center pb-3 border-b border-zinc-800">
-              <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 font-bold">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+          <div className="relative w-full max-w-lg bg-[#0D0D0D] border border-[#262626] rounded-3xl shadow-2xl overflow-hidden p-6 space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b border-[#262626]">
+              <div className="flex items-center gap-2 text-xs font-mono text-[#FCA311] font-bold">
                 <Mail className="w-4 h-4" />
                 <span>RigForge Mailer Engine</span>
               </div>
               <button
                 onClick={() => setShowEmailPreview(false)}
-                className="p-1 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800"
+                className="p-1.5 text-zinc-400 hover:text-white rounded-xl hover:bg-[#151515] transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="bg-zinc-900/90 rounded-xl p-4 border border-zinc-800 text-xs space-y-2">
+            <div className="bg-[#111111] rounded-2xl p-4 border border-[#262626] text-xs space-y-2">
               <div className="flex justify-between text-zinc-400">
                 <span>To:</span>
                 <span className="font-mono text-zinc-100 font-semibold">{recipientName} &lt;{recipientEmail}&gt;</span>
@@ -96,7 +96,7 @@ export const EmailConfirmationBanner: React.FC = () => {
               </div>
               <div className="flex justify-between text-zinc-400">
                 <span>Subject:</span>
-                <span className="font-semibold text-cyan-300">🎉 Welcome to RigForge! Your Account has been Successfully Created</span>
+                <span className="font-semibold text-[#FCA311]">🎉 Welcome to RigForge! Your Account has been Successfully Created</span>
               </div>
               <div className="flex justify-between text-zinc-400">
                 <span>Status:</span>
@@ -108,12 +108,12 @@ export const EmailConfirmationBanner: React.FC = () => {
             </div>
 
             {/* Email Body Content */}
-            <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 text-xs space-y-3 leading-relaxed text-zinc-300">
+            <div className="p-4 rounded-2xl bg-[#111111]/70 border border-[#262626] text-xs space-y-3 leading-relaxed text-zinc-300">
               <h4 className="text-base font-bold text-white">Hello {recipientName},</h4>
               <p className="leading-relaxed">
                 Your RigForge hardware account has been successfully created. Welcome to the ultimate custom PC building platform in India! You can now configure, price, and save your custom battle rigs with 100% verified component compatibility.
               </p>
-              <div className="p-3 rounded-lg bg-zinc-950 border border-zinc-850 font-mono text-[11px] text-zinc-400 space-y-1">
+              <div className="p-3 rounded-xl bg-[#151515] border border-[#262626] font-mono text-[11px] text-zinc-400 space-y-1">
                 <div>• Verified Indian Courier: BlueDart / Delhivery Express Transit</div>
                 <div>• GST Invoicing with Input Tax Credit Enabled</div>
                 <div>• 100% Genuine Manufacturer Silicon Warranty</div>
@@ -121,8 +121,8 @@ export const EmailConfirmationBanner: React.FC = () => {
             </div>
 
             {/* Note regarding real EmailJS sending */}
-            <div className="p-3 rounded-xl bg-amber-950/20 border border-amber-500/30 text-xs text-amber-300 flex items-center gap-2">
-              <KeyRound className="w-4 h-4 flex-shrink-0 text-amber-400" />
+            <div className="p-3 rounded-2xl bg-[#FCA311]/10 border border-[#FCA311]/30 text-xs text-[#FCA311] flex items-center gap-2">
+              <KeyRound className="w-4 h-4 flex-shrink-0 text-[#FCA311]" />
               <span>
                 {hasEmailJsKeys ? (
                   <strong className="text-emerald-400">EmailJS Active: Real emails are dispatched to your inbox!</strong>
@@ -137,7 +137,7 @@ export const EmailConfirmationBanner: React.FC = () => {
                 setShowEmailPreview(false);
                 clearEmailAlert();
               }}
-              className="w-full py-2.5 rounded-xl bg-cyan-500 text-zinc-950 font-bold text-xs uppercase tracking-wider hover:bg-cyan-400 shadow-glow-cyan"
+              className="w-full py-3 rounded-xl bg-[#FCA311] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#e5920a] shadow-glow-orange transition-all"
             >
               Close Preview
             </button>

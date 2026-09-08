@@ -62,7 +62,7 @@ export function App() {
   }, [toastMessage]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#09090b] text-zinc-100 bg-grid-pattern selection:bg-cyan-500/30 selection:text-cyan-300">
+    <div className="min-h-screen flex flex-col bg-[#050505] text-zinc-100 bg-grid-pattern selection:bg-[#FCA311]/30 selection:text-[#FCA311]">
       {/* Top Navigation */}
       <Navbar
         currentPage={currentPage}

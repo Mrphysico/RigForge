@@ -1,114 +1,112 @@
 import React from 'react';
-import { X, ShieldCheck, Cpu } from 'lucide-react';
+import { X, ShieldCheck } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
 import { ForgotPasswordModal } from './ForgotPasswordModal';
+import { GoogleAccountChooserModal } from './GoogleAccountChooserModal';
 
 interface AuthModalProps {
   onNotification?: (msg: string) => void;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({ onNotification }) => {
-  const { authModalOpen, authModalView, closeAuthModal, setAuthModalView } = useAuthStore();
-
-  if (!authModalOpen) return null;
+  const { 
+    authModalOpen, 
+    authModalView, 
+    closeAuthModal, 
+    setAuthModalView,
+    accountChooserOpen,
+    closeAccountChooser,
+  } = useAuthStore();
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-      {/* Dimmed backdrop */}
-      <div 
-        onClick={closeAuthModal} 
-        className="fixed inset-0"
+    <>
+      {/* Google Account Chooser Modal (supports prompt='select_account') */}
+      <GoogleAccountChooserModal
+        isOpen={accountChooserOpen}
+        onClose={closeAccountChooser}
+        onSuccess={onNotification}
       />
 
-      {/* Modal Card */}
-      <div className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-3xl shadow-2xl overflow-hidden z-10 p-6 sm:p-8 max-h-[92vh] overflow-y-auto">
-        {/* Neon Glow accent */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+      {/* Main Authentication Modal */}
+      {authModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
+          {/* Dimmed backdrop */}
+          <div onClick={closeAuthModal} className="fixed inset-0" />
 
-        {/* Close Button */}
-        <button
-          onClick={closeAuthModal}
-          className="absolute top-5 right-5 p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
+          {/* Modal Card */}
+          <div className="relative w-full max-w-md bg-[#111111] border border-[#262626] rounded-3xl shadow-2xl overflow-hidden z-10 p-6 sm:p-8 max-h-[92vh] overflow-y-auto">
+            {/* Subtle Brand Accent Line */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-[#FCA311] to-transparent" />
 
-        {/* Brand Header */}
-        <div className="flex flex-col items-center text-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-glow-cyan mb-3">
-            <Cpu className="w-7 h-7 text-zinc-950 stroke-[2.2]" />
-          </div>
-          <h2 className="text-xl font-extrabold text-white">
-            {authModalView === 'signin' && 'Welcome Back to RigForge'}
-            {authModalView === 'signup' && 'Join the RigForge Community'}
-            {authModalView === 'forgot' && 'Account Recovery'}
-          </h2>
-          <p className="text-xs text-zinc-400 mt-1 max-w-xs">
-            {authModalView === 'signin' && 'Sign in to access your personal builds, cart, and verified order tracking.'}
-            {authModalView === 'signup' && 'Create your personal account to configure battle rigs and track orders.'}
-            {authModalView === 'forgot' && 'Reset your password securely to regain access to your personal account.'}
-          </p>
-        </div>
-
-        {/* View Switcher Tabs (Only shown on signin / signup) */}
-        {authModalView !== 'forgot' && (
-          <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-900 border border-zinc-800 mb-6 text-xs font-semibold">
+            {/* Close Button */}
             <button
-              type="button"
-              onClick={() => setAuthModalView('signin')}
-              className={`py-2 rounded-lg transition-all ${
-                authModalView === 'signin'
-                  ? 'bg-zinc-800 text-cyan-400 shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-200'
-              }`}
+              onClick={closeAuthModal}
+              className="absolute top-5 right-5 p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
             >
-              Sign In
+              <X className="w-5 h-5" />
             </button>
-            <button
-              type="button"
-              onClick={() => setAuthModalView('signup')}
-              className={`py-2 rounded-lg transition-all ${
-                authModalView === 'signup'
-                  ? 'bg-zinc-800 text-cyan-400 shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              Create Account
-            </button>
+
+            {/* View Switcher Tabs (Only shown on signin / signup) */}
+            {authModalView !== 'forgot' && (
+              <div className="grid grid-cols-2 p-1 rounded-xl bg-[#0D0D0D] border border-[#262626] mb-5 text-xs font-semibold">
+                <button
+                  type="button"
+                  onClick={() => setAuthModalView('signin')}
+                  className={`py-2 rounded-lg transition-all ${
+                    authModalView === 'signin'
+                      ? 'bg-[#151515] text-[#FCA311] shadow-sm font-bold'
+                      : 'text-[#A0A0A0] hover:text-white'
+                  }`}
+                >
+                  Sign In
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAuthModalView('signup')}
+                  className={`py-2 rounded-lg transition-all ${
+                    authModalView === 'signup'
+                      ? 'bg-[#151515] text-[#FCA311] shadow-sm font-bold'
+                      : 'text-[#A0A0A0] hover:text-white'
+                  }`}
+                >
+                  Create Account
+                </button>
+              </div>
+            )}
+
+            {/* Dynamic Forms */}
+            {authModalView === 'signin' && (
+              <SignInForm
+                onSwitchToSignUp={() => setAuthModalView('signup')}
+                onForgotPassword={() => setAuthModalView('forgot')}
+                onNotification={onNotification}
+              />
+            )}
+
+            {authModalView === 'signup' && (
+              <SignUpForm
+                onSwitchToSignIn={() => setAuthModalView('signin')}
+                onNotification={onNotification}
+              />
+            )}
+
+            {authModalView === 'forgot' && (
+              <ForgotPasswordModal
+                onBackToSignIn={() => setAuthModalView('signin')}
+                onNotification={onNotification}
+              />
+            )}
+
+            {/* Security Guarantee Badge */}
+            <div className="mt-6 pt-4 border-t border-[#262626] flex items-center justify-center gap-2 text-[10px] font-mono text-[#A0A0A0]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#FCA311]" />
+              <span>RigForge 256-bit TLS Encrypted &amp; Isolated Sessions</span>
+            </div>
           </div>
-        )}
-
-        {/* Dynamic Forms */}
-        {authModalView === 'signin' && (
-          <SignInForm
-            onSwitchToSignUp={() => setAuthModalView('signup')}
-            onForgotPassword={() => setAuthModalView('forgot')}
-            onNotification={onNotification}
-          />
-        )}
-
-        {authModalView === 'signup' && (
-          <SignUpForm
-            onSwitchToSignIn={() => setAuthModalView('signin')}
-            onNotification={onNotification}
-          />
-        )}
-
-        {authModalView === 'forgot' && (
-          <ForgotPasswordModal
-            onBackToSignIn={() => setAuthModalView('signin')}
-            onNotification={onNotification}
-          />
-        )}
-
-        {/* Security badge footer */}
-        <div className="mt-6 pt-4 border-t border-zinc-850 flex items-center justify-center gap-1.5 text-[11px] text-zinc-500 font-mono">
-          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-          <span>256-Bit Encrypted Credentials Storage</span>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };

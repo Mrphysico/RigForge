@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import { connectDB, getDbStatus } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import buildRoutes from './routes/buildRoutes.js';
 
 dotenv.config();
 
@@ -62,6 +63,7 @@ app.get('/api/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/builds', buildRoutes);
 
 // In Production (Render), serve built client static files if dist exists
 const possibleDistPaths = [

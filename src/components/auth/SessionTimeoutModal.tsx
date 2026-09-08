@@ -15,19 +15,19 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
       <div 
         onClick={onDismiss} 
         className="fixed inset-0"
       />
 
-      <div className="relative w-full max-w-md bg-zinc-950 border border-amber-500/40 rounded-3xl shadow-2xl p-6 text-center z-10 animate-scaleUp">
+      <div className="relative w-full max-w-md bg-[#0D0D0D] border border-[#FCA311]/40 rounded-3xl shadow-2xl p-6 text-center z-10 animate-scaleUp">
         {/* Glow Header */}
-        <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mb-4 ring-8 ring-amber-500/5">
+        <div className="w-16 h-16 mx-auto rounded-2xl bg-[#FCA311]/10 border border-[#FCA311]/30 text-[#FCA311] flex items-center justify-center mb-4 ring-8 ring-[#FCA311]/5">
           <Clock className="w-8 h-8 animate-pulse" />
         </div>
 
-        <div className="flex items-center justify-center gap-1.5 text-xs font-mono font-bold text-amber-400 uppercase tracking-wider mb-1">
+        <div className="flex items-center justify-center gap-1.5 text-xs font-mono font-bold text-[#FCA311] uppercase tracking-wider mb-1">
           <ShieldAlert className="w-4 h-4" />
           <span>Security Protocol Enforced</span>
         </div>
@@ -40,10 +40,10 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
           You have been inactive for more than <span className="text-zinc-200 font-semibold">30 minutes</span>. To safeguard your account, saved custom rigs, and order data, RigForge has automatically logged you out.
         </p>
 
-        <div className="bg-zinc-900/80 rounded-2xl p-4 border border-zinc-850 text-left text-xs text-zinc-300 space-y-2 mb-6">
+        <div className="bg-[#111111] rounded-2xl p-4 border border-[#262626] text-left text-xs text-zinc-300 space-y-2 mb-6">
           <div className="flex justify-between">
             <span className="text-zinc-400">Idle Duration:</span>
-            <span className="font-mono text-amber-300 font-semibold">30 Minutes</span>
+            <span className="font-mono text-[#FCA311] font-semibold">30 Minutes</span>
           </div>
           <div className="flex justify-between">
             <span className="text-zinc-400">Session Status:</span>
@@ -58,7 +58,7 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
         <div className="space-y-2.5">
           <button
             onClick={onSignInAgain}
-            className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 flex items-center justify-center gap-2 shadow-glow transition-all active:scale-[0.99]"
+            className="w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#FCA311] hover:bg-[#e5920a] text-black flex items-center justify-center gap-2 shadow-glow-orange transition-all active:scale-[0.99] cursor-pointer"
           >
             <LogIn className="w-4 h-4" />
             <span>Sign In Again</span>
@@ -66,7 +66,7 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
 
           <button
             onClick={onDismiss}
-            className="w-full py-2.5 px-4 rounded-xl text-xs text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors"
+            className="w-full py-2.5 px-4 rounded-xl text-xs text-zinc-400 hover:text-zinc-200 hover:bg-[#151515] transition-colors"
           >
             Continue Browsing as Guest
           </button>

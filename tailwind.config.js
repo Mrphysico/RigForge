@@ -8,22 +8,34 @@ export default {
   theme: {
     extend: {
       colors: {
+        brand: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#fca311',
+          DEFAULT: '#fca311',
+          hover: '#e59200',
+          dark: '#b45309',
+          light: '#ffb74d',
+        },
         rig: {
-          bg: '#09090b',
-          surface: '#121216',
-          card: '#18181f',
-          border: '#272732',
-          muted: '#71717a',
-          cyan: '#06b6d4',
-          neon: '#22d3ee',
-          glow: '#0891b2',
-          accent: '#3b82f6',
+          bg: '#050505',
+          surface: '#0d0d0d',
+          card: '#111111',
+          elevated: '#151515',
+          border: '#262626',
+          muted: '#a0a0a0',
+          orange: '#fca311',
+          accent: '#fca311',
+          glow: 'rgba(252, 163, 17, 0.4)',
         }
       },
       boxShadow: {
-        'glow-cyan': '0 0 25px -5px rgba(6, 182, 212, 0.3)',
-        'glow-neon': '0 0 35px -5px rgba(34, 211, 238, 0.4)',
-        'glow-accent': '0 0 25px -5px rgba(59, 130, 246, 0.3)',
+        'glow-orange': '0 0 25px -5px rgba(252, 163, 17, 0.35)',
+        'glow-brand': '0 0 35px -5px rgba(252, 163, 17, 0.45)',
+        'glow-cyan': '0 0 25px -5px rgba(252, 163, 17, 0.35)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

@@ -1,10 +1,10 @@
 // server/test-auth-isolation.mjs
-// Automated verification script for RigForge multi-user session isolation and IDOR protection.
+// Automated verification script for RigForge multi-user session isolation, Google OAuth linking, and IDOR protection.
 
 const BASE_URL = process.env.TEST_API_URL || 'http://localhost:5000';
 
 async function runTests() {
-  console.log('🧪 Starting RigForge Multi-User Session Isolation & IDOR Test Suite...\n');
+  console.log('🧪 Starting RigForge Comprehensive Multi-User Session Isolation, Google OAuth & IDOR Test Suite...\n');
   let testsPassed = 0;
   let totalTests = 0;
 
@@ -26,7 +26,7 @@ async function runTests() {
     assert(healthRes.ok && healthData.status === 'ONLINE', 'Backend API is ONLINE');
 
     // Generate unique emails for test run
-    const rand = Math.floor(Math.random() * 10000);
+    const rand = Math.floor(Math.random() * 100000);
     const userA = {
       name: 'User Alpha',
       email: `usera_${rand}@testrigforge.in`,
@@ -175,23 +175,132 @@ async function runTests() {
     assert(!orderIdsB.includes(docketA), 'User B order list DOES NOT contain User A docket (Cross-session leakage prevented)');
 
     // 11. IDOR Prevention: User A attempts to fetch User B's docket directly
-    console.log('\n--- Step 11: Direct IDOR Exploit Prevention ---');
+    console.log('\n--- Step 11: Direct Order IDOR Exploit Prevention ---');
     const idorRes = await fetch(`${BASE_URL}/api/orders/${docketB}`, {
       headers: { Authorization: `Bearer ${tokenA}` },
     });
     assert(idorRes.status === 403, 'User A attempting to access User B docket returned HTTP 403 Forbidden');
 
-    // 12. Unauthenticated access check
-    console.log('\n--- Step 12: Unauthenticated Access Prevention ---');
-    const unauthRes = await fetch(`${BASE_URL}/api/orders`);
-    assert(unauthRes.status === 401, 'Unauthenticated request to /api/orders returned HTTP 401 Unauthorized');
+    // 12. Google OAuth Authentication & Isolation
+    console.log('\n--- Step 12: Google OAuth Linking & User Isolation ---');
+    const googleUser1 = {
+      sub: `google-sub-alpha-${rand}`,
+      email: `g_alpha_${rand}@gmail.com`,
+      name: 'Google Alpha User',
+      avatar: 'https://lh3.googleusercontent.com/a/alpha',
+    };
+    const googleUser2 = {
+      sub: `google-sub-beta-${rand}`,
+      email: `g_beta_${rand}@gmail.com`,
+      name: 'Google Beta User',
+      avatar: 'https://lh3.googleusercontent.com/a/beta',
+    };
+
+    const gAuthRes1 = await fetch(`${BASE_URL}/api/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(googleUser1),
+    });
+    const gAuthData1 = await gAuthRes1.json();
+    assert(gAuthRes1.status === 200 && !!gAuthData1.token, 'Google User 1 successfully authenticated via /api/auth/google');
+    assert(gAuthData1.user.email === googleUser1.email, 'Google User 1 email matches profile');
+    const tokenG1 = gAuthData1.token;
+
+    const gAuthRes2 = await fetch(`${BASE_URL}/api/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(googleUser2),
+    });
+    const gAuthData2 = await gAuthRes2.json();
+    assert(gAuthRes2.status === 200 && !!gAuthData2.token, 'Google User 2 successfully authenticated via /api/auth/google');
+    assert(gAuthData2.token !== tokenG1, 'Google User 2 token is distinct from Google User 1 token');
+    assert(gAuthData2.user.email === googleUser2.email, 'Google User 2 email matches profile');
+
+    // Existing Google user re-login links directly to existing user account
+    const gReLoginRes = await fetch(`${BASE_URL}/api/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(googleUser1),
+    });
+    const gReLoginData = await gReLoginRes.json();
+    assert(gReLoginRes.status === 200 && gReLoginData.isNewUser === false, 'Subsequent login with Google User 1 recognizes existing user');
+
+    // 13. PC Build Configurations API & IDOR Protection
+    console.log('\n--- Step 13: PC Builds Storage & IDOR Protection ---');
+    const buildPayloadA = {
+      name: 'Alpha 4K Battlestation',
+      slots: {
+        cpu: { id: 'cpu-1', name: 'Intel Core i5-13600K', price: 29500 },
+        gpu: { id: 'gpu-1', name: 'NVIDIA RTX 4070 Super', price: 61999 },
+      },
+      totalPrice: 91499,
+      estimatedWattage: 480,
+    };
+
+    const createBuildResA = await fetch(`${BASE_URL}/api/builds`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tokenA}`,
+      },
+      body: JSON.stringify(buildPayloadA),
+    });
+    const createBuildDataA = await createBuildResA.json();
+    const buildIdA = createBuildDataA.build?.buildId || createBuildDataA.build?._id;
+    assert(createBuildResA.status === 201 && !!buildIdA, 'User A created custom PC build');
+
+    // User A queries builds
+    const getBuildsResA = await fetch(`${BASE_URL}/api/builds`, {
+      headers: { Authorization: `Bearer ${tokenA}` },
+    });
+    const getBuildsDataA = await getBuildsResA.json();
+    assert(getBuildsResA.status === 200, 'User A queried /api/builds');
+    const buildIdsA = getBuildsDataA.builds.map((b) => b.buildId || b._id);
+    assert(buildIdsA.includes(buildIdA), 'User A builds list includes created build');
+
+    // User B queries builds -> should NOT contain buildIdA
+    const getBuildsResB = await fetch(`${BASE_URL}/api/builds`, {
+      headers: { Authorization: `Bearer ${tokenB}` },
+    });
+    const getBuildsDataB = await getBuildsResB.json();
+    assert(getBuildsResB.status === 200, 'User B queried /api/builds');
+    const buildIdsB = getBuildsDataB.builds.map((b) => b.buildId || b._id);
+    assert(!buildIdsB.includes(buildIdA), 'User B builds list DOES NOT contain User A build (Zero leak)');
+
+    // User B attempts IDOR exploit to fetch User A's build directly
+    const idorBuildRes = await fetch(`${BASE_URL}/api/builds/${buildIdA}`, {
+      headers: { Authorization: `Bearer ${tokenB}` },
+    });
+    assert(idorBuildRes.status === 403, 'User B attempting to view User A build returned HTTP 403 Forbidden');
+
+    // User B attempts IDOR exploit to delete User A's build
+    const idorDeleteRes = await fetch(`${BASE_URL}/api/builds/${buildIdA}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${tokenB}` },
+    });
+    assert(idorDeleteRes.status === 403, 'User B attempting to delete User A build returned HTTP 403 Forbidden');
+
+    // User A authorized delete
+    const authDeleteRes = await fetch(`${BASE_URL}/api/builds/${buildIdA}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${tokenA}` },
+    });
+    assert(authDeleteRes.status === 200, 'User A authorized delete of own build succeeded');
+
+    // 14. Unauthenticated access check
+    console.log('\n--- Step 14: Unauthenticated Access Prevention ---');
+    const unauthOrderRes = await fetch(`${BASE_URL}/api/orders`);
+    assert(unauthOrderRes.status === 401, 'Unauthenticated request to /api/orders returned HTTP 401 Unauthorized');
+
+    const unauthBuildRes = await fetch(`${BASE_URL}/api/builds`);
+    assert(unauthBuildRes.status === 401, 'Unauthenticated request to /api/builds returned HTTP 401 Unauthorized');
 
     console.log('\n========================================');
     console.log(`📊 Test Summary: ${testsPassed}/${totalTests} Tests Passed`);
     console.log('========================================');
 
     if (testsPassed === totalTests) {
-      console.log('🎉 ALL MULTI-USER ISOLATION & IDOR TESTS PASSED!\n');
+      console.log('🎉 ALL MULTI-USER ISOLATION, GOOGLE OAUTH & IDOR TESTS PASSED!\n');
     } else {
       console.error('⚠️ Some tests failed!\n');
       process.exitCode = 1;

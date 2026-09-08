@@ -52,14 +52,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   return (
     <aside className="w-full lg:w-64 flex-shrink-0 space-y-6">
       {/* Top Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+      <div className="flex items-center justify-between pb-3 border-b border-[#262626]">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="w-4 h-4 text-cyan-400" />
+          <SlidersHorizontal className="w-4 h-4 text-[#FCA311]" />
           <h3 className="font-bold text-sm text-white">Hardware Filters</h3>
         </div>
         <button
           onClick={onReset}
-          className="text-xs text-zinc-400 hover:text-cyan-400 flex items-center gap-1 transition-colors"
+          className="text-xs text-[#A0A0A0] hover:text-[#FCA311] flex items-center gap-1 transition-colors"
           title="Reset all filters"
         >
           <RotateCcw className="w-3 h-3" />
@@ -67,12 +67,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </button>
       </div>
 
-      <div className="text-xs text-zinc-400 font-mono">
-        Showing <span className="text-white font-bold">{totalResults}</span> matched items
+      <div className="text-xs text-[#A0A0A0] font-mono">
+        Showing <span className="text-[#FCA311] font-bold">{totalResults}</span> matched items
       </div>
 
       {/* In-Stock Only Toggle Switch */}
-      <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800">
+      <div className="p-3 rounded-2xl bg-[#111111] border border-[#262626]">
         <label className="flex items-center justify-between cursor-pointer select-none">
           <span className="text-xs font-semibold text-zinc-200">Show In-Stock Only</span>
           <div className="relative inline-flex items-center">
@@ -82,14 +82,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               onChange={(e) => onFilterChange({ inStockOnly: e.target.checked })}
               className="sr-only peer"
             />
-            <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+            <div className="w-9 h-5 bg-[#1F1F1F] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#FCA311]"></div>
           </div>
         </label>
       </div>
 
       {/* Category selector */}
       <div className="space-y-2">
-        <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
+        <label className="text-xs font-mono uppercase tracking-wider text-[#A0A0A0] font-semibold block">
           Component Category
         </label>
         <div className="space-y-1">
@@ -97,13 +97,13 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <button
               key={cat.id}
               onClick={() => onFilterChange({ category: cat.id })}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all text-left ${
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all text-left ${
                 filters.category === cat.id
-                  ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold'
-                  : 'text-zinc-300 hover:text-white hover:bg-zinc-800/60 border border-transparent'
+                  ? 'bg-[#FCA311]/15 text-[#FCA311] border border-[#FCA311]/30 font-bold shadow-sm'
+                  : 'text-zinc-300 hover:text-white hover:bg-[#151515] border border-transparent'
               }`}
             >
-              <span className={filters.category === cat.id ? 'text-cyan-400' : 'text-zinc-400'}>
+              <span className={filters.category === cat.id ? 'text-[#FCA311]' : 'text-zinc-400'}>
                 {cat.icon}
               </span>
               <span className="truncate">{cat.label}</span>
@@ -113,12 +113,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       </div>
 
       {/* Max Price Range Slider (INR) */}
-      <div className="space-y-3 pt-4 border-t border-zinc-800/80">
+      <div className="space-y-3 pt-4 border-t border-[#262626]">
         <div className="flex justify-between items-center text-xs">
-          <span className="font-mono uppercase tracking-wider text-zinc-400 font-semibold">
+          <span className="font-mono uppercase tracking-wider text-[#A0A0A0] font-semibold">
             Max Budget
           </span>
-          <span className="font-mono text-cyan-400 font-bold text-sm">
+          <span className="font-mono text-[#FCA311] font-bold text-sm">
             {formatINR(filters.maxPrice)}
           </span>
         </div>
@@ -129,9 +129,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           step="2000"
           value={filters.maxPrice}
           onChange={(e) => onFilterChange({ maxPrice: Number(e.target.value) })}
-          className="w-full accent-cyan-400 cursor-pointer bg-zinc-800 h-1.5 rounded-lg"
+          className="w-full accent-[#FCA311] cursor-pointer bg-[#151515] h-1.5 rounded-lg"
         />
-        <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
+        <div className="flex justify-between text-[10px] text-[#A0A0A0] font-mono">
           <span>₹2K</span>
           <span>₹1 Lakh</span>
           <span>₹2 Lakh</span>
@@ -139,8 +139,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       </div>
 
       {/* Socket Filter (AM5, LGA1700, AM4) */}
-      <div className="space-y-2 pt-4 border-t border-zinc-800/80">
-        <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
+      <div className="space-y-2 pt-4 border-t border-[#262626]">
+        <label className="text-xs font-mono uppercase tracking-wider text-[#A0A0A0] font-semibold block">
           Processor Socket
         </label>
         <div className="grid grid-cols-2 gap-1.5">
@@ -148,10 +148,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <button
               key={sock}
               onClick={() => onFilterChange({ socket: sock })}
-              className={`py-1.5 px-2 rounded-md text-xs font-mono transition-all text-center ${
+              className={`py-1.5 px-2 rounded-lg text-xs font-mono transition-all text-center ${
                 filters.socket === sock
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
-                  : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
+                  ? 'bg-[#FCA311]/20 text-[#FCA311] border border-[#FCA311]/40 font-bold'
+                  : 'bg-[#0D0D0D] text-[#A0A0A0] hover:text-white border border-[#262626]'
               }`}
             >
               {sock === 'all' ? 'All Sockets' : sock}
@@ -161,8 +161,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       </div>
 
       {/* Memory Generation Filter */}
-      <div className="space-y-2 pt-4 border-t border-zinc-800/80">
-        <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
+      <div className="space-y-2 pt-4 border-t border-[#262626]">
+        <label className="text-xs font-mono uppercase tracking-wider text-[#A0A0A0] font-semibold block">
           Memory Standard (DDR)
         </label>
         <div className="grid grid-cols-3 gap-1.5">
@@ -170,10 +170,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <button
               key={type}
               onClick={() => onFilterChange({ ramType: type })}
-              className={`py-1.5 px-2 rounded-md text-xs font-mono transition-all text-center ${
+              className={`py-1.5 px-2 rounded-lg text-xs font-mono transition-all text-center ${
                 filters.ramType === type
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
-                  : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
+                  ? 'bg-[#FCA311]/20 text-[#FCA311] border border-[#FCA311]/40 font-bold'
+                  : 'bg-[#0D0D0D] text-[#A0A0A0] hover:text-white border border-[#262626]'
               }`}
             >
               {type === 'all' ? 'All' : type}
@@ -183,14 +183,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       </div>
 
       {/* Sort By Dropdown */}
-      <div className="space-y-2 pt-4 border-t border-zinc-800/80">
-        <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold block">
+      <div className="space-y-2 pt-4 border-t border-[#262626]">
+        <label className="text-xs font-mono uppercase tracking-wider text-[#A0A0A0] font-semibold block">
           Sort Catalog
         </label>
         <select
           value={filters.sortBy}
           onChange={(e) => onFilterChange({ sortBy: e.target.value as FilterState['sortBy'] })}
-          className="w-full py-2 px-3 bg-zinc-900 text-zinc-200 text-xs rounded-lg border border-zinc-800 focus:outline-none focus:border-cyan-500"
+          className="w-full py-2.5 px-3 bg-[#0D0D0D] text-white text-xs rounded-xl border border-[#262626] focus:outline-none focus:border-[#FCA311]"
         >
           <option value="featured">Featured / Best Value</option>
           <option value="price-asc">Price: Low to High</option>

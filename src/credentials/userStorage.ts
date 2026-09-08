@@ -10,6 +10,7 @@ export interface UserAccount {
   phone?: string;
   password?: string;
   provider: 'local' | 'google' | 'facebook';
+  providerAccountId?: string;
   avatar?: string;
   createdAt: string;
 }
@@ -21,6 +22,7 @@ export interface UserSession {
   phone?: string;
   role?: string;
   provider?: 'local' | 'google' | 'facebook';
+  providerAccountId?: string;
   token: string;
   loginAt: string;
   avatar?: string;
@@ -118,6 +120,7 @@ export function setUserSession(user: {
   phone?: string;
   role?: string;
   provider?: 'local' | 'google' | 'facebook';
+  providerAccountId?: string;
   token?: string;
   avatar?: string;
 }): UserSession {
@@ -128,6 +131,7 @@ export function setUserSession(user: {
     phone: user.phone,
     role: user.role,
     provider: user.provider || 'local',
+    providerAccountId: user.providerAccountId,
     token: user.token || ('jwt_rf_' + Math.random().toString(36).substring(2) + Date.now().toString(36)),
     loginAt: new Date().toISOString(),
     avatar: user.avatar,

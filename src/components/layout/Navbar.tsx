@@ -13,7 +13,9 @@ import {
   Check,
   User as UserIcon,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  FolderGit2,
+  RefreshCw
 } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 import { useBuilderStore } from '../../store/useBuilderStore';
@@ -44,9 +46,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   const openCart = useCartStore((state) => state.openCart);
   const totalCartItems = useCartStore((state) => state.getTotalItems());
   const selectedPartsCount = useBuilderStore((state) => state.getSelectedCount());
-  const builderWattage = useBuilderStore((state) => state.getEstimatedWattage());
 
-  const { user, isAuthenticated, openAuthModal, logout } = useAuthStore();
+  const { user, isAuthenticated, openAuthModal, switchAccount, logout } = useAuthStore();
 
   // Real-time live search matches
   const searchResults: Product[] = React.useMemo(() => {
@@ -88,11 +89,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-zinc-800/80 bg-[#09090b]/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-[#262626] bg-[#050505]/95 backdrop-blur-md">
       {/* Top India Announcement Bar */}
-      <div className="bg-gradient-to-r from-cyan-950 via-zinc-900 to-blue-950 px-4 py-1.5 text-center text-xs font-medium text-cyan-300 border-b border-cyan-500/20 flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-        <span>
+      <div className="bg-[#0D0D0D] px-4 py-1.5 text-center text-xs font-medium text-[#FCA311] border-b border-[#262626] flex items-center justify-center gap-2">
+        <Sparkles className="w-3.5 h-3.5 text-[#FCA311] animate-pulse" />
+        <span className="text-[11px] sm:text-xs">
           Pan-India Insured Courier via BlueDart &amp; Delhivery | Free Shipping on orders over ₹10,000 | GST Invoice included
         </span>
       </div>
@@ -104,19 +105,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('home')}
             className="flex items-center gap-2.5 cursor-pointer group select-none flex-shrink-0"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-glow-cyan transition-transform group-hover:scale-105">
-              <Cpu className="w-6 h-6 text-zinc-950 stroke-[2.2]" />
+            <div className="w-10 h-10 rounded-xl bg-[#151515] border border-[#262626] flex items-center justify-center shadow-glow-orange transition-transform group-hover:scale-105">
+              <Cpu className="w-6 h-6 text-[#FCA311] stroke-[2.2]" />
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-xl tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-                  RIG<span className="text-cyan-400">FORGE</span>
+                <span className="font-extrabold text-xl tracking-tight text-white group-hover:text-[#FCA311] transition-colors font-mono">
+                  RIG<span className="text-[#FCA311]">FORGE</span>
                 </span>
-                <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                  INDIA
+                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30">
+                  IN
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-zinc-400 -mt-1 hidden sm:block">
+              <span className="text-[10px] font-mono text-[#A0A0A0] -mt-1 hidden sm:block">
                 CUSTOM PC CONFIGURATOR
               </span>
             </div>
@@ -135,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setShowDropdown(true);
                 }}
                 placeholder="Search RTX 4070, Ryzen 7800X3D, B650, DDR5..."
-                className="w-full pl-10 pr-4 py-2 text-sm bg-zinc-900/90 text-zinc-200 placeholder-zinc-500 rounded-lg border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
+                className="w-full pl-10 pr-4 py-2 text-sm bg-[#0D0D0D] text-white placeholder-zinc-500 rounded-xl border border-[#262626] focus:outline-none focus:border-[#FCA311] focus:ring-1 focus:ring-[#FCA311] transition-all"
               />
               {searchQuery && (
                 <button
@@ -152,15 +153,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Real-time search dropdown suggestions */}
             {showDropdown && searchQuery.trim().length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-950 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
-                <div className="p-2 border-b border-zinc-800 bg-zinc-900/60 flex items-center justify-between text-xs text-zinc-400">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#111111] border border-[#262626] rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
+                <div className="p-2.5 border-b border-[#262626] bg-[#0D0D0D] flex items-center justify-between text-xs text-[#A0A0A0]">
                   <span>Live Inventory Results ({searchResults.length})</span>
-                  <span className="font-mono text-[10px] text-cyan-400">Press enter to view all</span>
+                  <span className="font-mono text-[10px] text-[#FCA311]">Press enter to view all</span>
                 </div>
 
-                <div className="max-h-80 overflow-y-auto divide-y divide-zinc-850">
+                <div className="max-h-80 overflow-y-auto divide-y divide-[#1F1F1F]">
                   {searchResults.length === 0 ? (
-                    <div className="p-4 text-center text-xs text-zinc-400">
+                    <div className="p-4 text-center text-xs text-[#A0A0A0]">
                       No matching components found for "{searchQuery}".
                     </div>
                   ) : (
@@ -168,22 +169,22 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <div
                         key={product.id}
                         onClick={() => handleSelectSearchResult(product)}
-                        className="p-3 hover:bg-zinc-900/80 cursor-pointer flex items-center justify-between gap-3 transition-colors"
+                        className="p-3 hover:bg-[#151515] cursor-pointer flex items-center justify-between gap-3 transition-colors"
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <img
                             src={product.image}
                             alt={product.name}
-                            className="w-10 h-10 object-cover rounded-md border border-zinc-800 bg-zinc-900 flex-shrink-0"
+                            className="w-10 h-10 object-cover rounded-lg border border-[#262626] bg-[#050505] flex-shrink-0"
                           />
                           <div className="min-w-0">
                             <div className="text-xs font-bold text-white truncate max-w-xs">
                               {product.name}
                             </div>
-                            <div className="text-[11px] font-mono text-zinc-400 flex items-center gap-1.5">
+                            <div className="text-[11px] font-mono text-[#A0A0A0] flex items-center gap-1.5">
                               <span>{product.brand}</span>
                               <span>·</span>
-                              <span className="text-cyan-400 uppercase">{product.category}</span>
+                              <span className="text-[#FCA311] uppercase">{product.category}</span>
                             </div>
                           </div>
                         </div>
@@ -213,7 +214,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setShowDropdown(false);
                       onNavigate('catalog');
                     }}
-                    className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 text-center text-xs font-semibold text-cyan-400 border-t border-zinc-800 transition-colors"
+                    className="w-full py-2.5 bg-[#0D0D0D] hover:bg-[#151515] text-center text-xs font-semibold text-[#FCA311] border-t border-[#262626] transition-colors"
                   >
                     View All Matching Components in Catalog →
                   </button>
@@ -223,13 +224,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1.5">
             <button
               onClick={() => handleNavClick('home')}
-              className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors ${
                 currentPage === 'home'
-                  ? 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/20'
-                  : 'text-zinc-300 hover:text-white hover:bg-zinc-800/60'
+                  ? 'text-[#FCA311] bg-[#FCA311]/10 border border-[#FCA311]/30 shadow-glow-orange'
+                  : 'text-zinc-300 hover:text-white hover:bg-[#151515]'
               }`}
             >
               Home
@@ -237,10 +238,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleNavClick('catalog')}
-              className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-1.5 ${
                 currentPage === 'catalog'
-                  ? 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/20'
-                  : 'text-zinc-300 hover:text-white hover:bg-zinc-800/60'
+                  ? 'text-[#FCA311] bg-[#FCA311]/10 border border-[#FCA311]/30 shadow-glow-orange'
+                  : 'text-zinc-300 hover:text-white hover:bg-[#151515]'
               }`}
             >
               <Layers className="w-4 h-4" />
@@ -249,36 +250,43 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleNavClick('builder')}
-              className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
+              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-1.5 ${
                 currentPage === 'builder'
-                  ? 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/20'
-                  : 'text-zinc-300 hover:text-white hover:bg-zinc-800/60'
+                  ? 'text-[#FCA311] bg-[#FCA311]/10 border border-[#FCA311]/30 shadow-glow-orange'
+                  : 'text-zinc-300 hover:text-white hover:bg-[#151515]'
               }`}
             >
-              <Wrench className="w-4 h-4 text-cyan-400" />
+              <Wrench className="w-4 h-4" />
               <span>PC Builder</span>
               {selectedPartsCount > 0 && (
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                  {selectedPartsCount}/8
-                  {builderWattage > 0 && <span className="text-[10px] text-zinc-400">· {builderWattage}W</span>}
+                <span className="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-[#FCA311] text-zinc-950 font-bold font-mono">
+                  {selectedPartsCount}
                 </span>
               )}
             </button>
           </nav>
 
-          {/* Right Action Icons & User Account */}
-          <div className="flex items-center gap-3">
+          {/* Right Action Icons: User Account & Cart */}
+          <div className="flex items-center gap-2.5">
             {/* User Account / Sign In Trigger */}
             <div className="relative" ref={userDropdownRef}>
               {isAuthenticated && user ? (
                 <button
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
-                  className="flex items-center gap-2 py-1.5 px-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-200 transition-colors"
+                  className="flex items-center gap-2 py-1.5 px-2.5 rounded-xl bg-[#111111] hover:bg-[#151515] border border-[#262626] hover:border-[#FCA311]/40 text-xs text-white transition-all shadow-sm"
                 >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-zinc-950 font-bold flex items-center justify-center text-xs">
-                    {user.name.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="hidden sm:inline-block font-medium truncate max-w-[100px]">
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-6 h-6 rounded-full object-cover border border-[#262626]"
+                    />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-[#FCA311] text-zinc-950 font-bold flex items-center justify-center text-xs">
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span className="hidden sm:inline-block font-semibold truncate max-w-[100px]">
                     {user.name.split(' ')[0]}
                   </span>
                   <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
@@ -286,56 +294,85 @@ export const Navbar: React.FC<NavbarProps> = ({
               ) : (
                 <button
                   onClick={() => openAuthModal('signin')}
-                  className="flex items-center gap-1.5 py-1.5 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
+                  className="flex items-center gap-1.5 py-1.5 px-3 rounded-xl bg-[#111111] hover:bg-[#151515] border border-[#262626] hover:border-[#FCA311]/50 text-xs font-bold text-[#FCA311] transition-all"
                 >
                   <UserIcon className="w-3.5 h-3.5" />
                   <span>Sign In</span>
                 </button>
               )}
 
-              {/* User Dropdown Menu */}
+              {/* User Dropdown Menu (Requirement 14: User Avatar, Name, Email, Profile, Builds, Settings, Switch Account, Logout) */}
               {showUserDropdown && isAuthenticated && user && (
-                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-2xl p-2 z-50 animate-fadeIn text-xs">
-                  <div className="p-2.5 border-b border-zinc-850">
-                    <div className="font-bold text-white truncate">{user.name}</div>
-                    <div className="text-[11px] text-zinc-400 font-mono truncate">{user.email}</div>
-                    <div className="mt-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-[10px] font-mono">
-                      Via {(user.provider || 'local').toUpperCase()}
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#111111] border border-[#262626] shadow-2xl p-2 z-50 animate-fadeIn text-xs">
+                  {/* User Profile Header */}
+                  <div className="p-3 border-b border-[#262626] flex items-center gap-3">
+                    {user.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full object-cover border border-[#262626] flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-[#FCA311] text-zinc-950 font-bold flex items-center justify-center text-sm flex-shrink-0">
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <div className="font-bold text-white truncate">{user.name}</div>
+                      <div className="text-[11px] text-[#A0A0A0] font-mono truncate">{user.email}</div>
+                      <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30 text-[10px] font-mono font-semibold">
+                        Via {(user.provider || 'local').toUpperCase()}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="py-1">
+                  {/* Options Menu */}
+                  <div className="py-1 space-y-0.5">
                     <button
                       onClick={() => {
                         setShowUserDropdown(false);
                         handleNavClick('builder');
                       }}
-                      className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-zinc-900 text-zinc-300 hover:text-white text-left transition-colors"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[#151515] text-zinc-300 hover:text-white text-left transition-colors"
                     >
-                      <Wrench className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>My Configured Build</span>
+                      <FolderGit2 className="w-4 h-4 text-[#FCA311]" />
+                      <span>My Builds</span>
                     </button>
+
                     <button
                       onClick={() => {
                         setShowUserDropdown(false);
                         openCart();
                       }}
-                      className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-zinc-900 text-zinc-300 hover:text-white text-left transition-colors"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[#151515] text-zinc-300 hover:text-white text-left transition-colors"
                     >
-                      <ShoppingCart className="w-3.5 h-3.5 text-cyan-400" />
+                      <ShoppingCart className="w-4 h-4 text-[#FCA311]" />
                       <span>My Cart ({totalCartItems})</span>
+                    </button>
+
+                    {/* Switch Account (Requirement 7) */}
+                    <button
+                      onClick={() => {
+                        setShowUserDropdown(false);
+                        switchAccount();
+                      }}
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[#151515] text-zinc-300 hover:text-[#FCA311] text-left transition-colors"
+                    >
+                      <RefreshCw className="w-4 h-4 text-[#FCA311]" />
+                      <span>Switch Account</span>
                     </button>
                   </div>
 
-                  <div className="pt-1 border-t border-zinc-850">
+                  {/* Sign Out */}
+                  <div className="pt-1 border-t border-[#262626]">
                     <button
                       onClick={() => {
                         setShowUserDropdown(false);
                         logout();
                       }}
-                      className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-red-950/40 text-zinc-400 hover:text-red-400 text-left transition-colors"
+                      className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-red-950/40 text-zinc-400 hover:text-red-400 text-left transition-colors"
                     >
-                      <LogOut className="w-3.5 h-3.5" />
+                      <LogOut className="w-4 h-4" />
                       <span>Sign Out</span>
                     </button>
                   </div>
@@ -347,11 +384,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={openCart}
               aria-label="Open Shopping Cart"
-              className="relative p-2.5 rounded-lg text-zinc-300 hover:text-white hover:bg-zinc-800/80 transition-colors border border-transparent hover:border-zinc-700"
+              className="relative p-2.5 rounded-xl text-zinc-300 hover:text-white bg-[#111111] hover:bg-[#151515] border border-[#262626] hover:border-[#FCA311]/40 transition-colors"
             >
-              <ShoppingCart className="w-5 h-5" />
+              <ShoppingCart className="w-4.5 h-4.5" />
               {totalCartItems > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-cyan-500 text-[11px] font-bold text-zinc-950 ring-2 ring-[#09090b] animate-bounce">
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#FCA311] text-[10px] font-extrabold text-zinc-950 shadow-glow-orange animate-bounce">
                   {totalCartItems}
                 </span>
               )}
@@ -361,9 +398,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
-              className="lg:hidden p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800"
+              className="lg:hidden p-2 rounded-xl text-zinc-400 hover:text-white bg-[#111111] border border-[#262626]"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -382,33 +419,54 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }
               }}
               placeholder="Search Indian PC hardware..."
-              className="w-full pl-10 pr-4 py-2 text-sm bg-zinc-900 text-zinc-200 placeholder-zinc-500 rounded-lg border border-zinc-800 focus:outline-none focus:border-cyan-500"
+              className="w-full pl-10 pr-4 py-2 text-xs bg-[#0D0D0D] text-white placeholder-zinc-500 rounded-xl border border-[#262626] focus:outline-none focus:border-[#FCA311]"
             />
           </div>
         </div>
 
         {/* Mobile Navigation Dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-3 border-t border-zinc-800 flex flex-col gap-1.5 animate-fadeIn">
-            {/* Mobile Auth Button */}
+          <div className="lg:hidden py-3 border-t border-[#262626] flex flex-col gap-1.5 animate-fadeIn">
+            {/* Mobile Auth Button / User Card */}
             <div className="px-2 pb-2">
               {isAuthenticated && user ? (
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-900 border border-zinc-800">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-cyan-500 text-zinc-950 font-bold flex items-center justify-center text-xs">
-                      {user.name.charAt(0).toUpperCase()}
+                <div className="p-3 rounded-2xl bg-[#111111] border border-[#262626] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      {user.avatar ? (
+                        <img
+                          src={user.avatar}
+                          alt={user.name}
+                          className="w-8 h-8 rounded-full object-cover border border-[#262626]"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-[#FCA311] text-zinc-950 font-bold flex items-center justify-center text-xs">
+                          {user.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <div className="text-xs font-bold text-white">{user.name}</div>
+                        <div className="text-[10px] text-[#A0A0A0] font-mono">{user.email}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-xs font-bold text-white">{user.name}</div>
-                      <div className="text-[10px] text-zinc-400 font-mono">{user.email}</div>
-                    </div>
+                    <button
+                      onClick={logout}
+                      className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400"
+                      title="Sign Out"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </button>
                   </div>
+
                   <button
-                    onClick={logout}
-                    className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400"
-                    title="Sign Out"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      switchAccount();
+                    }}
+                    className="w-full py-1.5 rounded-lg bg-[#151515] border border-[#262626] text-[#FCA311] text-xs font-semibold flex items-center justify-center gap-1.5"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>Switch Account</span>
                   </button>
                 </div>
               ) : (
@@ -417,7 +475,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setMobileMenuOpen(false);
                     openAuthModal('signin');
                   }}
-                  className="w-full py-2.5 rounded-xl bg-cyan-500 text-zinc-950 font-bold text-xs flex items-center justify-center gap-2"
+                  className="w-full py-2.5 rounded-xl bg-[#FCA311] text-zinc-950 font-bold text-xs flex items-center justify-center gap-2 shadow-glow-orange"
                 >
                   <UserIcon className="w-4 h-4" />
                   <span>Sign In / Create Account</span>
@@ -427,8 +485,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleNavClick('home')}
-              className={`flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-medium ${
-                currentPage === 'home' ? 'bg-cyan-500/10 text-cyan-400' : 'text-zinc-300 hover:bg-zinc-800'
+              className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium ${
+                currentPage === 'home' ? 'bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30' : 'text-zinc-300 hover:bg-[#151515]'
               }`}
             >
               <span>Home</span>
@@ -436,8 +494,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
             <button
               onClick={() => handleNavClick('catalog')}
-              className={`flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-medium ${
-                currentPage === 'catalog' ? 'bg-cyan-500/10 text-cyan-400' : 'text-zinc-300 hover:bg-zinc-800'
+              className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium ${
+                currentPage === 'catalog' ? 'bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30' : 'text-zinc-300 hover:bg-[#151515]'
               }`}
             >
               <span>Parts Catalog</span>
@@ -445,14 +503,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
             <button
               onClick={() => handleNavClick('builder')}
-              className={`flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-medium ${
-                currentPage === 'builder' ? 'bg-cyan-500/10 text-cyan-400' : 'text-zinc-300 hover:bg-zinc-800'
+              className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium ${
+                currentPage === 'builder' ? 'bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30' : 'text-zinc-300 hover:bg-[#151515]'
               }`}
             >
               <div className="flex items-center gap-2">
                 <span>PC Builder</span>
                 {selectedPartsCount > 0 && (
-                  <span className="text-xs px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono">
+                  <span className="text-xs px-2 py-0.5 rounded bg-[#FCA311]/20 text-[#FCA311] font-mono">
                     {selectedPartsCount}/8 slots
                   </span>
                 )}

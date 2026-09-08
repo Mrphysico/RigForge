@@ -7,6 +7,8 @@ export interface IUser extends Document {
   phone?: string;
   role: string;
   provider: 'local' | 'google' | 'facebook';
+  providerAccountId?: string;
+  avatar?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   createdAt: Date;
@@ -20,6 +22,8 @@ const UserSchema = new Schema<IUser>(
     phone: { type: String, trim: true },
     role: { type: String, default: 'customer' },
     provider: { type: String, enum: ['local', 'google', 'facebook'], default: 'local' },
+    providerAccountId: { type: String, index: true },
+    avatar: { type: String },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
   },
@@ -27,6 +31,9 @@ const UserSchema = new Schema<IUser>(
     timestamps: true,
   }
 );
+
+// Compound index for fast and unique OAuth provider account resolution
+UserSchema.index({ provider: 1, providerAccountId: 1 }, { sparse: true });
 
 export const UserModel = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
@@ -39,9 +46,12 @@ export interface MemoryUser {
   phone?: string;
   role: string;
   provider: 'local' | 'google' | 'facebook';
+  providerAccountId?: string;
+  avatar?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: number;
   createdAt: string;
 }
 
 export const inMemoryUsers: MemoryUser[] = [];
+
