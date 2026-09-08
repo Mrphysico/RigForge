@@ -96,94 +96,49 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
-          {/* Brand Logo with Red 'R' Icon */}
+          {/* Brand Logo with Slanted Geometric 'R' Icon */}
           <div 
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2.5 cursor-pointer group select-none flex-shrink-0"
+            className="flex items-center gap-3 cursor-pointer group select-none flex-shrink-0"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#ff1e2d] to-[#b30012] flex items-center justify-center shadow-glow-red transition-transform group-hover:scale-105 font-black text-white text-lg font-mono">
-              R
+            <div className="relative -skew-x-12 w-9 h-9 rounded-lg bg-gradient-to-br from-[#FF1F29] via-[#E01923] to-[#99000B] flex items-center justify-center shadow-[0_0_20px_rgba(255,31,41,0.5)] transition-transform group-hover:scale-105 border border-white/20">
+              <span className="skew-x-12 font-teko font-black text-white text-2xl tracking-tighter">
+                R
+              </span>
             </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-xl tracking-wider text-white group-hover:text-[#ff1e2d] transition-colors font-mono">
-                RIG<span className="text-[#ff1e2d]">FORGE</span>
+            <div className="flex flex-col leading-none">
+              <span className="font-teko text-3xl font-bold tracking-wider italic uppercase text-white group-hover:text-[#FF1F29] transition-colors">
+                RIG<span className="text-[#FF1F29]">FORGE</span>
               </span>
             </div>
           </div>
 
-          {/* Desktop Center Nav Links */}
-          <nav className="hidden xl:flex items-center gap-1">
-            <button
-              onClick={() => handleNavClick('home')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                currentPage === 'home'
-                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
-                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
-              }`}
-            >
-              Home
-            </button>
-
-            <button
-              onClick={() => handleNavClick('builds')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                currentPage === 'builds'
-                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
-                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
-              }`}
-            >
-              Builds
-            </button>
-
-            <button
-              onClick={() => handleNavClick('community')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                currentPage === 'community'
-                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
-                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
-              }`}
-            >
-              Community
-            </button>
-
-            <button
-              onClick={() => handleNavClick('marketplace')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                currentPage === 'marketplace'
-                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
-                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
-              }`}
-            >
-              Marketplace
-            </button>
-
-            <button
-              onClick={() => handleNavClick('guides')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                currentPage === 'guides'
-                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
-                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
-              }`}
-            >
-              Guides
-            </button>
-
-            <button
-              onClick={() => handleNavClick('support')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                currentPage === 'support'
-                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
-                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
-              }`}
-            >
-              Support
-            </button>
+          {/* Desktop Center Nav Links with active red indicator pill */}
+          <nav className="hidden xl:flex items-center gap-6">
+            {(['home', 'builds', 'community', 'marketplace', 'guides', 'support'] as AppPage[]).map((page) => {
+              const label = page.charAt(0).toUpperCase() + page.slice(1);
+              const isActive = currentPage === page;
+              return (
+                <button
+                  key={page}
+                  onClick={() => handleNavClick(page)}
+                  className={`relative py-1 text-sm font-medium tracking-wide transition-colors ${
+                    isActive ? 'text-white font-semibold' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span>{label}</span>
+                  {isActive && (
+                    <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-6 h-1 bg-[#FF1F29] rounded-full shadow-[0_0_10px_#FF1F29]" />
+                  )}
+                </button>
+              );
+            })}
           </nav>
 
           {/* Desktop Search Bar with Real-Time Dropdown */}
           <div className="hidden lg:flex flex-1 max-w-xs mx-2 relative" ref={dropdownRef}>
             <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
@@ -193,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setShowDropdown(true);
                 }}
                 placeholder="Search builds, users, guides..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#0d172e] text-white placeholder-slate-400 rounded-xl border border-[#1e2d4f] focus:outline-none focus:border-[#ff1e2d] transition-all"
+                className="w-full pl-9 pr-4 py-1.5 text-xs bg-[#0E121C]/90 text-white placeholder-slate-400 rounded-full border border-white/10 focus:outline-none focus:border-[#FF1F29] focus:ring-1 focus:ring-[#FF1F29]/40 transition-all"
               />
             </div>
 
@@ -294,16 +249,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 sm:gap-2.5">
                   <button
                     onClick={() => openAuthModal('signin')}
-                    className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white border border-[#1e2d4f] hover:border-slate-400 transition-colors"
+                    className="rounded-full px-4 py-1.5 text-xs font-semibold text-slate-300 hover:text-white border border-white/10 hover:border-white/25 bg-transparent hover:bg-white/5 transition-all"
                   >
                     Sign In
                   </button>
                   <button
                     onClick={() => openAuthModal('signup')}
-                    className="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-[#ff1e2d] hover:bg-[#e50914] shadow-glow-red transition-all transform hover:scale-105"
+                    className="rounded-full px-4 py-1.5 text-xs font-bold text-white bg-[#FF1F29] hover:bg-[#E01923] shadow-[0_0_20px_rgba(255,31,41,0.5)] hover:shadow-[0_0_25px_rgba(255,31,41,0.7)] transition-all transform hover:scale-105"
                   >
                     Create Account
                   </button>

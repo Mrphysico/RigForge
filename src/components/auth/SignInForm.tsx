@@ -140,11 +140,11 @@ export const SignInForm: React.FC<SignInFormProps> = ({
           )}
         </div>
 
-        {/* Primary Action Button (Electric Blue matching image) */}
+        {/* Action Button: Full-width vibrant blue button: "Sign In →" */}
         <button
           type="submit"
           disabled={loading || googleLoading}
-          className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-[#0066ff] hover:bg-[#0052cc] flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all active:scale-[0.99] disabled:opacity-50 cursor-pointer mt-2"
+          className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-[#0284C7] hover:bg-[#0369A1] flex items-center justify-center gap-2 shadow-lg shadow-sky-500/25 transition-all active:scale-[0.99] disabled:opacity-50 cursor-pointer mt-2"
         >
           {loading ? (
             <span className="flex items-center gap-2">
