@@ -1,16 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { 
   Search, 
-  SlidersHorizontal, 
-  X, 
-  Layers,
-  MessageSquare
+  ShoppingCart, 
+  Sparkles
 } from 'lucide-react';
-import { MOCK_PRODUCTS, CATEGORY_LABELS } from '../data/mockHardware';
+import { MOCK_PRODUCTS } from '../data/mockHardware';
 import { ProductCard } from '../components/products/ProductCard';
-import { FilterSidebar, FilterState } from '../components/products/FilterSidebar';
 import { ComponentCategory } from '../types/hardware';
-import { formatINR } from '../utils/formatCurrency';
+import { useCartStore } from '../store/useCartStore';
 
 interface CatalogPageProps {
   initialCategory?: ComponentCategory | 'all';
@@ -19,317 +16,210 @@ interface CatalogPageProps {
   onNotification: (msg: string) => void;
 }
 
+const MARKETPLACE_CATEGORIES = [
+  { id: 'all', label: 'All' },
+  { id: 'cpu', label: 'CPUs' },
+  { id: 'gpu', label: 'GPUs' },
+  { id: 'motherboard', label: 'Motherboards' },
+  { id: 'ram', label: 'RAM' },
+  { id: 'storage', label: 'Storage' },
+  { id: 'psu', label: 'PSUs' },
+  { id: 'case', label: 'Cases' },
+  { id: 'cooler', label: 'Cooling' },
+  { id: 'peripherals', label: 'Peripherals' },
+] as const;
+
 export const CatalogPage: React.FC<CatalogPageProps> = ({
   initialCategory = 'all',
   searchQuery,
   onSearchChange,
   onNotification,
 }) => {
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<ComponentCategory | 'all'>(initialCategory);
+  const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>('featured');
+  const [inStockOnly, setInStockOnly] = useState(false);
 
-  const [filters, setFilters] = useState<FilterState>({
-    category: initialCategory,
-    search: searchQuery,
-    maxPrice: 200000,
-    socket: 'all',
-    ramType: 'all',
-    inStockOnly: false,
-    sortBy: 'featured',
-  });
-
-  // Keep internal search synced with prop
-  React.useEffect(() => {
-    setFilters((prev) => ({ ...prev, search: searchQuery }));
-  }, [searchQuery]);
-
-  // Keep initial category synced if passed externally
-  React.useEffect(() => {
-    if (initialCategory) {
-      setFilters((prev) => ({ ...prev, category: initialCategory }));
-    }
-  }, [initialCategory]);
-
-  const handleFilterChange = (newFilters: Partial<FilterState>) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
-  };
-
-  const handleResetFilters = () => {
-    setFilters({
-      category: 'all',
-      search: '',
-      maxPrice: 200000,
-      socket: 'all',
-      ramType: 'all',
-      inStockOnly: false,
-      sortBy: 'featured',
-    });
-    onSearchChange('');
-  };
+  const openCart = useCartStore((state) => state.openCart);
+  const totalCartItems = useCartStore((state) => state.getTotalItems());
 
   // Filter and Sort Logic
   const filteredProducts = useMemo(() => {
-    return MOCK_PRODUCTS.filter((product) => {
+    let result = MOCK_PRODUCTS.filter((product) => {
       // Category filter
-      if (filters.category !== 'all' && product.category !== filters.category) {
+      if (selectedCategory !== 'all' && product.category !== selectedCategory) {
         return false;
       }
 
       // Search Query filter
-      if (filters.search.trim()) {
-        const query = filters.search.toLowerCase();
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
         const matchesName = product.name.toLowerCase().includes(query);
         const matchesBrand = product.brand.toLowerCase().includes(query);
         const matchesCategory = product.category.toLowerCase().includes(query);
         const matchesSocket = product.specs.socket?.toLowerCase().includes(query);
-        const matchesChipset = product.specs.chipset?.toLowerCase().includes(query);
-        const matchesDescription = product.description.toLowerCase().includes(query);
-        if (!matchesName && !matchesBrand && !matchesCategory && !matchesSocket && !matchesChipset && !matchesDescription) {
+        const matchesDesc = product.description.toLowerCase().includes(query);
+
+        if (!matchesName && !matchesBrand && !matchesCategory && !matchesSocket && !matchesDesc) {
           return false;
         }
       }
 
-      // Max Price filter
-      if (product.price > filters.maxPrice) {
-        return false;
-      }
-
-      // Socket filter
-      if (filters.socket !== 'all') {
-        if (product.specs.socket && product.specs.socket !== filters.socket) {
-          return false;
-        }
-      }
-
-      // Memory Type filter
-      if (filters.ramType !== 'all') {
-        if (product.specs.ramType && product.specs.ramType !== filters.ramType) {
-          return false;
-        }
-        if (product.specs.supportedRamType && product.specs.supportedRamType !== filters.ramType) {
-          return false;
-        }
-      }
-
-      // In stock filter
-      if (filters.inStockOnly && !product.inStock) {
+      // In Stock filter
+      if (inStockOnly && !product.inStock) {
         return false;
       }
 
       return true;
-    }).sort((a, b) => {
-      if (filters.sortBy === 'price-asc') return a.price - b.price;
-      if (filters.sortBy === 'price-desc') return b.price - a.price;
-      if (filters.sortBy === 'rating') return b.rating - a.rating;
-      return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
     });
-  }, [filters]);
+
+    // Sorting
+    switch (sortBy) {
+      case 'price-asc':
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'featured':
+      default:
+        result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+        break;
+    }
+
+    return result;
+  }, [selectedCategory, searchQuery, inStockOnly, sortBy]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="min-h-screen pb-20 bg-[#050a14] text-slate-100">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#26365a]">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#FCA311] font-bold mb-1">
-            <Layers className="w-4 h-4" />
-            <span>Verified Indian Inventory</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white">
-            PC Component Catalog
-          </h1>
-          <p className="text-xs text-[#A0A0A0] mt-1 max-w-xl leading-relaxed">
-            All prices in INR including 18% GST. Backed by authorized national distributor warranty across India.
-          </p>
-        </div>
+      <div className="border-b border-[#1e2d4f] bg-gradient-to-b from-[#08111f] to-[#050a14] py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#142244] border border-[#1e2d4f] text-[#ff1e2d] text-xs font-mono font-semibold mb-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>GENUINE INDIAN HARDWARE STORE</span>
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase font-mono">
+                MARKET<span className="text-[#ff1e2d]">PLACE</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+                Buy, sell or discover the best PC components. Real-time Indian retail stock with verified GST invoices.
+              </p>
+            </div>
 
-        {/* Mobile Filter Drawer Trigger */}
-        <button
-          onClick={() => setMobileFilterOpen(true)}
-          className="lg:hidden flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#16223f] border border-[#26365a] text-xs font-bold text-[#FCA311] self-start sm:self-auto shadow-sm"
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-          <span>Filters ({filteredProducts.length})</span>
-        </button>
+            {/* Cart Trigger Button */}
+            <button
+              onClick={openCart}
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#0d172e] hover:bg-[#142244] border border-[#1e2d4f] text-white font-bold text-xs shadow-lg transition-all flex-shrink-0"
+            >
+              <ShoppingCart className="w-4 h-4 text-[#ff1e2d]" />
+              <span>Cart ({totalCartItems})</span>
+            </button>
+          </div>
+
+          {/* Category Filter Pills (Panel 5 layout) */}
+          <div className="mt-8 flex items-center gap-2 overflow-x-auto pb-2 border-t border-[#1e2d4f] pt-6 scrollbar-none">
+            {MARKETPLACE_CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id as any)}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                  selectedCategory === cat.id
+                    ? 'bg-[#ff1e2d] text-white shadow-glow-red font-bold'
+                    : 'bg-[#0d172e] text-slate-300 hover:text-white hover:bg-[#142244] border border-[#1e2d4f]'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Search bar & Sort Controls */}
+          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
+            <div className="relative w-full sm:w-96">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+                placeholder="Search RTX 4080, Ryzen 7800X3D, B650, DDR5..."
+                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-[#0d172e] text-white placeholder-slate-400 rounded-xl border border-[#1e2d4f] focus:outline-none focus:border-[#ff1e2d]"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => onSearchChange('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+              <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={inStockOnly}
+                  onChange={(e) => setInStockOnly(e.target.checked)}
+                  className="rounded border-[#1e2d4f] bg-[#0d172e] text-[#ff1e2d] focus:ring-0"
+                />
+                <span>In Stock Only</span>
+              </label>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono text-slate-400 hidden sm:inline">Sort:</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="px-3 py-2 rounded-xl bg-[#0d172e] border border-[#1e2d4f] text-xs font-semibold text-white focus:outline-none focus:border-[#ff1e2d]"
+                >
+                  <option value="featured">Popular / Featured</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="rating">Top Rated</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Active Filter Badges */}
-      <div className="flex flex-wrap items-center gap-2">
-        {filters.category !== 'all' && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30 font-semibold">
-            Category: {CATEGORY_LABELS[filters.category] || filters.category}
-            <button
-              onClick={() => handleFilterChange({ category: 'all' })}
-              className="hover:text-white"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          </span>
-        )}
+      {/* Product Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div className="flex items-center justify-between mb-4 text-xs font-mono text-slate-400">
+          <span>Showing {filteredProducts.length} verified hardware components</span>
+          {searchQuery && <span>Filter: "{searchQuery}"</span>}
+        </div>
 
-        {filters.search && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30 font-semibold">
-            Query: "{filters.search}"
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-20 bg-[#0d172e] rounded-3xl border border-[#1e2d4f] space-y-3">
+            <p className="text-slate-400 text-sm">No hardware found matching your criteria.</p>
             <button
               onClick={() => {
-                handleFilterChange({ search: '' });
+                setSelectedCategory('all');
                 onSearchChange('');
+                setInStockOnly(false);
               }}
-              className="hover:text-white"
+              className="px-4 py-2 rounded-xl bg-[#ff1e2d] hover:bg-[#e50914] text-white text-xs font-bold shadow-glow-red"
             >
-              <X className="w-3 h-3" />
+              Reset Marketplace Filters
             </button>
-          </span>
-        )}
-
-        {filters.inStockOnly && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-semibold">
-            In-Stock Only
-            <button
-              onClick={() => handleFilterChange({ inStockOnly: false })}
-              className="hover:text-white"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          </span>
-        )}
-
-        {filters.socket !== 'all' && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30 font-semibold">
-            Socket: {filters.socket}
-            <button
-              onClick={() => handleFilterChange({ socket: 'all' })}
-              className="hover:text-white"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          </span>
-        )}
-
-        {filters.ramType !== 'all' && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30 font-semibold">
-            Memory: {filters.ramType}
-            <button
-              onClick={() => handleFilterChange({ ramType: 'all' })}
-              className="hover:text-white"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          </span>
-        )}
-
-        {filters.maxPrice < 200000 && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30 font-semibold">
-            Under {formatINR(filters.maxPrice)}
-            <button
-              onClick={() => handleFilterChange({ maxPrice: 200000 })}
-              className="hover:text-white"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          </span>
-        )}
-
-        {(filters.category !== 'all' || filters.search || filters.socket !== 'all' || filters.ramType !== 'all' || filters.maxPrice < 200000 || filters.inStockOnly) && (
-          <button
-            onClick={handleResetFilters}
-            className="text-xs text-[#A0A0A0] hover:text-white underline underline-offset-4 ml-2"
-          >
-            Clear All
-          </button>
-        )}
-      </div>
-
-      {/* Main Grid & Filter Layout */}
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Desktop Filter Sidebar */}
-        <div className="hidden lg:block">
-          <div className="sticky top-24 p-5 rounded-2xl bg-[#16223f] border border-[#26365a] backdrop-blur-md">
-            <FilterSidebar
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onReset={handleResetFilters}
-              totalResults={filteredProducts.length}
-            />
           </div>
-        </div>
-
-        {/* Mobile Filter Modal */}
-        {mobileFilterOpen && (
-          <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md p-4 lg:hidden animate-fadeIn">
-            <div className="p-6 rounded-3xl bg-[#16223f] border border-[#26365a] space-y-4 max-w-lg mx-auto max-h-[92vh] overflow-y-auto">
-              <div className="flex justify-between items-center pb-3 border-b border-[#26365a]">
-                <h3 className="font-bold text-base text-white">Catalog Filters</h3>
-                <button
-                  onClick={() => setMobileFilterOpen(false)}
-                  className="p-1 rounded-lg text-zinc-400 hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <FilterSidebar
-                filters={filters}
-                onFilterChange={handleFilterChange}
-                onReset={handleResetFilters}
-                totalResults={filteredProducts.length}
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onNotification={onNotification}
               />
-
-              <button
-                onClick={() => setMobileFilterOpen(false)}
-                className="w-full py-3 rounded-xl bg-[#FCA311] hover:bg-[#E59200] text-zinc-950 font-bold text-sm shadow-glow-orange"
-              >
-                Apply Filters &amp; View Results
-              </button>
-            </div>
+            ))}
           </div>
         )}
-
-        {/* Product Cards Grid */}
-        <div className="flex-1">
-          {filteredProducts.length === 0 ? (
-            /* Explicit Indian Inventory Not Found State */
-            <div className="py-16 text-center rounded-2xl bg-[#16223f]/40 border border-dashed border-[#26365a] p-8 space-y-4">
-              <div className="w-16 h-16 rounded-2xl bg-[#16223f] border border-[#26365a] flex items-center justify-center text-zinc-400 mx-auto">
-                <Search className="w-8 h-8" />
-              </div>
-
-              <div className="max-w-md mx-auto space-y-2">
-                <h3 className="text-lg font-bold text-white">
-                  No Matching Silicon Found
-                </h3>
-                <p className="text-sm text-[#A0A0A0] leading-relaxed font-sans">
-                  Item not found in our Indian inventory. You can request stock via our contact channel.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-                <button
-                  onClick={handleResetFilters}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#1e2d4f] hover:bg-[#233359] text-white border border-[#26365a] transition-colors"
-                >
-                  Reset Filters &amp; Show All
-                </button>
-
-                <button
-                  onClick={() => onNotification('Stock request registered! Our Indian procurement team has been notified.')}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#FCA311] hover:bg-[#E59200] text-zinc-950 flex items-center gap-2 shadow-glow-orange"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Request Part Procurement</span>
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onNotification={onNotification}
-                />
-              ))}
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

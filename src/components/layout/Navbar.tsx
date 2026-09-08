@@ -1,20 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  Cpu, 
   ShoppingCart, 
   Wrench, 
-  Layers, 
   Search, 
   Menu, 
   X, 
-  ChevronRight,
-  Sparkles,
-  Ban,
-  Check,
-  User as UserIcon,
-  LogOut,
-  ChevronDown,
-  FolderGit2,
+  Sparkles, 
+  LogOut, 
+  ChevronDown, 
+  FolderGit2, 
   RefreshCw
 } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
@@ -24,9 +18,11 @@ import { MOCK_PRODUCTS } from '../../data/mockHardware';
 import { formatINR } from '../../utils/formatCurrency';
 import { Product } from '../../types/hardware';
 
+export type AppPage = 'home' | 'builds' | 'builder' | 'community' | 'marketplace' | 'guides' | 'support';
+
 interface NavbarProps {
-  currentPage: 'home' | 'catalog' | 'builder';
-  onNavigate: (page: 'home' | 'catalog' | 'builder', categoryFilter?: string) => void;
+  currentPage: AppPage;
+  onNavigate: (page: AppPage, categoryFilter?: string) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
 }
@@ -76,7 +72,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleNavClick = (page: 'home' | 'catalog' | 'builder') => {
+  const handleNavClick = (page: AppPage) => {
     onNavigate(page);
     setMobileMenuOpen(false);
     setShowDropdown(false);
@@ -85,14 +81,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   const handleSelectSearchResult = (product: Product) => {
     onSearchChange(product.name);
     setShowDropdown(false);
-    onNavigate('catalog');
+    onNavigate('marketplace');
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#26365a] bg-[#0b1329]/95 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-[#1e2d4f] bg-[#050a14]/95 backdrop-blur-md">
       {/* Top India Announcement Bar */}
-      <div className="bg-[#131d38] px-4 py-1.5 text-center text-xs font-medium text-[#FCA311] border-b border-[#26365a] flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-[#FCA311] animate-pulse" />
+      <div className="bg-[#08111f] px-4 py-1 text-center text-xs font-medium text-slate-300 border-b border-[#1e2d4f] flex items-center justify-center gap-2">
+        <Sparkles className="w-3.5 h-3.5 text-[#ff1e2d] animate-pulse" />
         <span className="text-[11px] sm:text-xs">
           Pan-India Insured Courier via BlueDart &amp; Delhivery | Free Shipping on orders over ₹10,000 | GST Invoice included
         </span>
@@ -100,33 +96,94 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
-          {/* Brand Logo */}
+          {/* Brand Logo with Red 'R' Icon */}
           <div 
             onClick={() => handleNavClick('home')}
             className="flex items-center gap-2.5 cursor-pointer group select-none flex-shrink-0"
           >
-            <div className="w-10 h-10 rounded-xl bg-[#1e2d4f] border border-[#26365a] flex items-center justify-center shadow-glow-orange transition-transform group-hover:scale-105">
-              <Cpu className="w-6 h-6 text-[#FCA311] stroke-[2.2]" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#ff1e2d] to-[#b30012] flex items-center justify-center shadow-glow-red transition-transform group-hover:scale-105 font-black text-white text-lg font-mono">
+              R
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-xl tracking-tight text-white group-hover:text-[#FCA311] transition-colors font-mono">
-                  RIG<span className="text-[#FCA311]">FORGE</span>
-                </span>
-                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30">
-                  IN
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-[#A0A0A0] -mt-1 hidden sm:block">
-                CUSTOM PC CONFIGURATOR
+              <span className="font-extrabold text-xl tracking-wider text-white group-hover:text-[#ff1e2d] transition-colors font-mono">
+                RIG<span className="text-[#ff1e2d]">FORGE</span>
               </span>
             </div>
           </div>
 
+          {/* Desktop Center Nav Links */}
+          <nav className="hidden xl:flex items-center gap-1">
+            <button
+              onClick={() => handleNavClick('home')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                currentPage === 'home'
+                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
+                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
+              }`}
+            >
+              Home
+            </button>
+
+            <button
+              onClick={() => handleNavClick('builds')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                currentPage === 'builds'
+                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
+                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
+              }`}
+            >
+              Builds
+            </button>
+
+            <button
+              onClick={() => handleNavClick('community')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                currentPage === 'community'
+                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
+                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
+              }`}
+            >
+              Community
+            </button>
+
+            <button
+              onClick={() => handleNavClick('marketplace')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                currentPage === 'marketplace'
+                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
+                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
+              }`}
+            >
+              Marketplace
+            </button>
+
+            <button
+              onClick={() => handleNavClick('guides')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                currentPage === 'guides'
+                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
+                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
+              }`}
+            >
+              Guides
+            </button>
+
+            <button
+              onClick={() => handleNavClick('support')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                currentPage === 'support'
+                  ? 'text-white bg-[#142244] border border-[#1e2d4f]'
+                  : 'text-slate-400 hover:text-white hover:bg-[#0d172e]'
+              }`}
+            >
+              Support
+            </button>
+          </nav>
+
           {/* Desktop Search Bar with Real-Time Dropdown */}
-          <div className="hidden md:flex flex-1 max-w-md mx-4 relative" ref={dropdownRef}>
+          <div className="hidden lg:flex flex-1 max-w-xs mx-2 relative" ref={dropdownRef}>
             <div className="relative w-full">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
@@ -135,242 +192,174 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onSearchChange(e.target.value);
                   setShowDropdown(true);
                 }}
-                placeholder="Search RTX 4070, Ryzen 7800X3D, B650, DDR5..."
-                className="w-full pl-10 pr-4 py-2 text-sm bg-[#131d38] text-white placeholder-zinc-400 rounded-xl border border-[#26365a] focus:outline-none focus:border-[#FCA311] focus:ring-1 focus:ring-[#FCA311] transition-all"
+                placeholder="Search builds, users, guides..."
+                className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#0d172e] text-white placeholder-slate-400 rounded-xl border border-[#1e2d4f] focus:outline-none focus:border-[#ff1e2d] transition-all"
               />
-              {searchQuery && (
-                <button
-                  onClick={() => {
-                    onSearchChange('');
-                    setShowDropdown(false);
-                  }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-400 hover:text-zinc-200"
-                >
-                  Clear
-                </button>
-              )}
             </div>
 
             {/* Real-time search dropdown suggestions */}
             {showDropdown && searchQuery.trim().length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-[#16223f] border border-[#26365a] rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
-                <div className="p-2.5 border-b border-[#26365a] bg-[#131d38] flex items-center justify-between text-xs text-[#A0A0A0]">
-                  <span>Live Inventory Results ({searchResults.length})</span>
-                  <span className="font-mono text-[10px] text-[#FCA311]">Press enter to view all</span>
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#0d172e] border border-[#1e2d4f] rounded-2xl shadow-2xl overflow-hidden z-50">
+                <div className="p-2 border-b border-[#1e2d4f] bg-[#08111f] flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                  <span>Results ({searchResults.length})</span>
+                  <span className="text-[#ff1e2d]">Press enter</span>
                 </div>
 
-                <div className="max-h-80 overflow-y-auto divide-y divide-[#26365a]">
+                <div className="max-h-72 overflow-y-auto divide-y divide-[#1e2d4f]">
                   {searchResults.length === 0 ? (
-                    <div className="p-4 text-center text-xs text-[#A0A0A0]">
-                      No matching components found for "{searchQuery}".
+                    <div className="p-4 text-center text-xs text-slate-400">
+                      No components found.
                     </div>
                   ) : (
                     searchResults.map((product) => (
                       <div
                         key={product.id}
                         onClick={() => handleSelectSearchResult(product)}
-                        className="p-3 hover:bg-[#1e2d4f] cursor-pointer flex items-center justify-between gap-3 transition-colors"
+                        className="p-2.5 hover:bg-[#142244] cursor-pointer flex items-center justify-between gap-2"
                       >
-                        <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex items-center gap-2.5 min-w-0">
                           <img
                             src={product.image}
                             alt={product.name}
-                            className="w-10 h-10 object-cover rounded-lg border border-[#26365a] bg-[#0b1329] flex-shrink-0"
+                            className="w-8 h-8 object-cover rounded-lg border border-[#1e2d4f] bg-[#050a14] flex-shrink-0"
                           />
                           <div className="min-w-0">
-                            <div className="text-xs font-bold text-white truncate max-w-xs">
+                            <div className="text-xs font-bold text-white truncate max-w-[140px]">
                               {product.name}
                             </div>
-                            <div className="text-[11px] font-mono text-[#A0A0A0] flex items-center gap-1.5">
-                              <span>{product.brand}</span>
-                              <span>·</span>
-                              <span className="text-[#FCA311] uppercase">{product.category}</span>
+                            <div className="text-[10px] font-mono text-slate-400">
+                              {formatINR(product.price)}
                             </div>
                           </div>
-                        </div>
-
-                        <div className="text-right flex-shrink-0">
-                          <div className="text-xs font-mono font-bold text-white">
-                            {formatINR(product.price)}
-                          </div>
-                          {product.inStock ? (
-                            <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-0.5 justify-end">
-                              <Check className="w-2.5 h-2.5" /> In Stock
-                            </span>
-                          ) : (
-                            <span className="text-[10px] font-mono text-red-400 flex items-center gap-0.5 justify-end">
-                              <Ban className="w-2.5 h-2.5" /> Out of Stock
-                            </span>
-                          )}
                         </div>
                       </div>
                     ))
                   )}
                 </div>
-
-                {searchResults.length > 0 && (
-                  <button
-                    onClick={() => {
-                      setShowDropdown(false);
-                      onNavigate('catalog');
-                    }}
-                    className="w-full py-2.5 bg-[#131d38] hover:bg-[#1e2d4f] text-center text-xs font-semibold text-[#FCA311] border-t border-[#26365a] transition-colors"
-                  >
-                    View All Matching Components in Catalog →
-                  </button>
-                )}
               </div>
             )}
           </div>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1.5">
+          {/* Right Action Buttons */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            {/* Cart Drawer Trigger */}
             <button
-              onClick={() => handleNavClick('home')}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors ${
-                currentPage === 'home'
-                  ? 'text-[#FCA311] bg-[#FCA311]/10 border border-[#FCA311]/30 shadow-glow-orange'
-                  : 'text-zinc-300 hover:text-white hover:bg-[#1e2d4f]'
-              }`}
+              onClick={openCart}
+              className="relative p-2 rounded-xl bg-[#0d172e] hover:bg-[#142244] border border-[#1e2d4f] text-slate-300 hover:text-white transition-colors"
+              title="Cart Drawer"
             >
-              Home
+              <ShoppingCart className="w-4 h-4" />
+              {totalCartItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#ff1e2d] text-white text-[10px] font-bold flex items-center justify-center font-mono shadow-glow-red">
+                  {totalCartItems}
+                </span>
+              )}
             </button>
 
-            <button
-              onClick={() => handleNavClick('catalog')}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-1.5 ${
-                currentPage === 'catalog'
-                  ? 'text-[#FCA311] bg-[#FCA311]/10 border border-[#FCA311]/30 shadow-glow-orange'
-                  : 'text-zinc-300 hover:text-white hover:bg-[#1e2d4f]'
-              }`}
-            >
-              <Layers className="w-4 h-4" />
-              <span>Parts Catalog</span>
-            </button>
-
+            {/* Builder Trigger Button */}
             <button
               onClick={() => handleNavClick('builder')}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-1.5 ${
-                currentPage === 'builder'
-                  ? 'text-[#FCA311] bg-[#FCA311]/10 border border-[#FCA311]/30 shadow-glow-orange'
-                  : 'text-zinc-300 hover:text-white hover:bg-[#1e2d4f]'
-              }`}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0d172e] hover:bg-[#142244] border border-[#1e2d4f] text-xs font-bold text-slate-200 hover:text-white transition-colors"
             >
-              <Wrench className="w-4 h-4" />
-              <span>PC Builder</span>
+              <Wrench className="w-3.5 h-3.5 text-[#0066ff]" />
+              <span>Builder</span>
               {selectedPartsCount > 0 && (
-                <span className="ml-1 text-xs px-1.5 py-0.5 rounded-full bg-[#FCA311] text-zinc-950 font-bold font-mono">
+                <span className="text-[10px] font-mono px-1 rounded bg-[#ff1e2d] text-white">
                   {selectedPartsCount}
                 </span>
               )}
             </button>
-          </nav>
 
-          {/* Right Action Icons: User Account & Cart */}
-          <div className="flex items-center gap-2.5">
-            {/* User Account / Sign In Trigger */}
+            {/* User Account / Auth Actions */}
             <div className="relative" ref={userDropdownRef}>
               {isAuthenticated && user ? (
                 <button
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
-                  className="flex items-center gap-2 py-1.5 px-2.5 rounded-xl bg-[#16223f] hover:bg-[#1e2d4f] border border-[#26365a] hover:border-[#FCA311]/40 text-xs text-white transition-all shadow-sm"
+                  className="flex items-center gap-2 py-1.5 px-2.5 rounded-xl bg-[#0d172e] hover:bg-[#142244] border border-[#1e2d4f] text-xs text-white transition-all shadow-sm"
                 >
                   {user.avatar ? (
                     <img
                       src={user.avatar}
                       alt={user.name}
-                      className="w-6 h-6 rounded-full object-cover border border-[#26365a]"
+                      className="w-6 h-6 rounded-full object-cover border border-[#1e2d4f]"
                     />
                   ) : (
-                    <div className="w-6 h-6 rounded-full bg-[#FCA311] text-zinc-950 font-bold flex items-center justify-center text-xs">
+                    <div className="w-6 h-6 rounded-full bg-[#ff1e2d] text-white font-bold flex items-center justify-center text-xs">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <span className="hidden sm:inline-block font-semibold truncate max-w-[100px]">
+                  <span className="hidden md:inline-block font-semibold truncate max-w-[80px]">
                     {user.name.split(' ')[0]}
                   </span>
-                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
               ) : (
-                <button
-                  onClick={() => openAuthModal('signin')}
-                  className="flex items-center gap-1.5 py-1.5 px-3 rounded-xl bg-[#16223f] hover:bg-[#1e2d4f] border border-[#26365a] hover:border-[#FCA311]/50 text-xs font-bold text-[#FCA311] transition-all"
-                >
-                  <UserIcon className="w-3.5 h-3.5" />
-                  <span>Sign In</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => openAuthModal('signin')}
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white border border-[#1e2d4f] hover:border-slate-400 transition-colors"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => openAuthModal('signup')}
+                    className="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-[#ff1e2d] hover:bg-[#e50914] shadow-glow-red transition-all transform hover:scale-105"
+                  >
+                    Create Account
+                  </button>
+                </div>
               )}
 
               {/* User Dropdown Menu */}
               {showUserDropdown && isAuthenticated && user && (
-                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#16223f] border border-[#26365a] shadow-2xl p-2 z-50 animate-fadeIn text-xs">
-                  {/* User Profile Header */}
-                  <div className="p-3 border-b border-[#26365a] flex items-center gap-3">
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#0d172e] border border-[#1e2d4f] shadow-2xl p-2 z-50 text-xs animate-fadeIn">
+                  <div className="p-3 border-b border-[#1e2d4f] flex items-center gap-3">
                     {user.avatar ? (
                       <img
                         src={user.avatar}
                         alt={user.name}
-                        className="w-10 h-10 rounded-full object-cover border border-[#26365a] flex-shrink-0"
+                        className="w-10 h-10 rounded-full object-cover border border-[#1e2d4f]"
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-[#FCA311] text-zinc-950 font-bold flex items-center justify-center text-sm flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-[#ff1e2d] text-white font-bold flex items-center justify-center text-sm">
                         {user.name.charAt(0).toUpperCase()}
                       </div>
                     )}
                     <div className="min-w-0">
                       <div className="font-bold text-white truncate">{user.name}</div>
-                      <div className="text-[11px] text-[#A0A0A0] font-mono truncate">{user.email}</div>
-                      <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30 text-[10px] font-mono font-semibold">
-                        Via {(user.provider || 'local').toUpperCase()}
-                      </div>
+                      <div className="text-[11px] text-slate-400 font-mono truncate">{user.email}</div>
                     </div>
                   </div>
 
-                  {/* Options Menu */}
                   <div className="py-1 space-y-0.5">
                     <button
                       onClick={() => {
                         setShowUserDropdown(false);
                         handleNavClick('builder');
                       }}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[#1e2d4f] text-zinc-300 hover:text-white text-left transition-colors"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[#142244] text-slate-300 hover:text-white text-left transition-colors"
                     >
-                      <FolderGit2 className="w-4 h-4 text-[#FCA311]" />
-                      <span>My Builds</span>
+                      <FolderGit2 className="w-4 h-4 text-[#ff1e2d]" />
+                      <span>Configurator</span>
                     </button>
 
-                    <button
-                      onClick={() => {
-                        setShowUserDropdown(false);
-                        openCart();
-                      }}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[#1e2d4f] text-zinc-300 hover:text-white text-left transition-colors"
-                    >
-                      <ShoppingCart className="w-4 h-4 text-[#FCA311]" />
-                      <span>My Cart ({totalCartItems})</span>
-                    </button>
-
-                    {/* Switch Account */}
                     <button
                       onClick={() => {
                         setShowUserDropdown(false);
                         switchAccount();
                       }}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[#1e2d4f] text-zinc-300 hover:text-[#FCA311] text-left transition-colors"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[#142244] text-slate-300 hover:text-[#ff1e2d] text-left transition-colors"
                     >
-                      <RefreshCw className="w-4 h-4 text-[#FCA311]" />
+                      <RefreshCw className="w-4 h-4 text-[#0066ff]" />
                       <span>Switch Account</span>
                     </button>
-                  </div>
 
-                  {/* Sign Out */}
-                  <div className="pt-1 border-t border-[#26365a]">
                     <button
                       onClick={() => {
                         setShowUserDropdown(false);
                         logout();
                       }}
-                      className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-red-950/40 text-zinc-400 hover:text-red-400 text-left transition-colors"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-rose-950/30 text-rose-400 text-left transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>Sign Out</span>
@@ -380,146 +369,46 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Cart Trigger */}
-            <button
-              onClick={openCart}
-              aria-label="Open Shopping Cart"
-              className="relative p-2.5 rounded-xl text-zinc-300 hover:text-white bg-[#16223f] hover:bg-[#1e2d4f] border border-[#26365a] hover:border-[#FCA311]/40 transition-colors"
-            >
-              <ShoppingCart className="w-4.5 h-4.5" />
-              {totalCartItems > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#FCA311] text-[10px] font-extrabold text-zinc-950 shadow-glow-orange animate-bounce">
-                  {totalCartItems}
-                </span>
-              )}
-            </button>
-
-            {/* Mobile Hamburger Toggle */}
+            {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle menu"
-              className="lg:hidden p-2 rounded-xl text-zinc-400 hover:text-white bg-[#16223f] border border-[#26365a]"
+              className="xl:hidden p-2 rounded-xl bg-[#0d172e] border border-[#1e2d4f] text-slate-300 hover:text-white"
+              aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Search Bar */}
-        <div className="md:hidden pb-3">
-          <div className="relative w-full">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => {
-                onSearchChange(e.target.value);
-                if (currentPage !== 'catalog' && e.target.value.trim().length > 0) {
-                  onNavigate('catalog');
-                }
-              }}
-              placeholder="Search Indian PC hardware..."
-              className="w-full pl-10 pr-4 py-2 text-xs bg-[#131d38] text-white placeholder-zinc-400 rounded-xl border border-[#26365a] focus:outline-none focus:border-[#FCA311]"
-            />
+      {/* Mobile Menu Drawer */}
+      {mobileMenuOpen && (
+        <div className="xl:hidden bg-[#08111f] border-b border-[#1e2d4f] px-4 pt-3 pb-6 space-y-3">
+          <div className="space-y-1">
+            {[
+              { id: 'home', label: 'Home' },
+              { id: 'builds', label: 'Builds' },
+              { id: 'builder', label: 'PC Builder' },
+              { id: 'community', label: 'Community' },
+              { id: 'marketplace', label: 'Marketplace' },
+              { id: 'guides', label: 'Guides & Tutorials' },
+              { id: 'support', label: 'Support Center' },
+            ].map((link) => (
+              <button
+                key={link.id}
+                onClick={() => handleNavClick(link.id as AppPage)}
+                className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-colors ${
+                  currentPage === link.id
+                    ? 'bg-[#ff1e2d] text-white shadow-glow-red'
+                    : 'text-slate-300 hover:bg-[#142244] hover:text-white'
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
           </div>
         </div>
-
-        {/* Mobile Navigation Dropdown */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden py-3 border-t border-[#26365a] flex flex-col gap-1.5 animate-fadeIn">
-            {/* Mobile Auth Button / User Card */}
-            <div className="px-2 pb-2">
-              {isAuthenticated && user ? (
-                <div className="p-3 rounded-2xl bg-[#16223f] border border-[#26365a] space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      {user.avatar ? (
-                        <img
-                          src={user.avatar}
-                          alt={user.name}
-                          className="w-8 h-8 rounded-full object-cover border border-[#26365a]"
-                        />
-                      ) : (
-                        <div className="w-8 h-8 rounded-full bg-[#FCA311] text-zinc-950 font-bold flex items-center justify-center text-xs">
-                          {user.name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <div>
-                        <div className="text-xs font-bold text-white">{user.name}</div>
-                        <div className="text-[10px] text-[#A0A0A0] font-mono">{user.email}</div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={logout}
-                      className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400"
-                      title="Sign Out"
-                    >
-                      <LogOut className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      switchAccount();
-                    }}
-                    className="w-full py-1.5 rounded-lg bg-[#1e2d4f] border border-[#26365a] text-[#FCA311] text-xs font-semibold flex items-center justify-center gap-1.5"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" />
-                    <span>Switch Account</span>
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openAuthModal('signin');
-                  }}
-                  className="w-full py-2.5 rounded-xl bg-[#FCA311] text-zinc-950 font-bold text-xs flex items-center justify-center gap-2 shadow-glow-orange"
-                >
-                  <UserIcon className="w-4 h-4" />
-                  <span>Sign In / Create Account</span>
-                </button>
-              )}
-            </div>
-
-            <button
-              onClick={() => handleNavClick('home')}
-              className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium ${
-                currentPage === 'home' ? 'bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30' : 'text-zinc-300 hover:bg-[#1e2d4f]'
-              }`}
-            >
-              <span>Home</span>
-              <ChevronRight className="w-4 h-4 opacity-50" />
-            </button>
-            <button
-              onClick={() => handleNavClick('catalog')}
-              className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium ${
-                currentPage === 'catalog' ? 'bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30' : 'text-zinc-300 hover:bg-[#1e2d4f]'
-              }`}
-            >
-              <span>Parts Catalog</span>
-              <ChevronRight className="w-4 h-4 opacity-50" />
-            </button>
-            <button
-              onClick={() => handleNavClick('builder')}
-              className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium ${
-                currentPage === 'builder' ? 'bg-[#FCA311]/10 text-[#FCA311] border border-[#FCA311]/30' : 'text-zinc-300 hover:bg-[#1e2d4f]'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span>PC Builder</span>
-                {selectedPartsCount > 0 && (
-                  <span className="text-xs px-2 py-0.5 rounded bg-[#FCA311]/20 text-[#FCA311] font-mono">
-                    {selectedPartsCount}/8 slots
-                  </span>
-                )}
-              </div>
-              <ChevronRight className="w-4 h-4 opacity-50" />
-            </button>
-          </div>
-        )}
-      </div>
+      )}
     </header>
   );
 };

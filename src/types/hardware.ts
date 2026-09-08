@@ -6,7 +6,8 @@ export type ComponentCategory =
   | 'storage'
   | 'gpu'
   | 'case'
-  | 'psu';
+  | 'psu'
+  | 'peripherals';
 
 export interface HardwareSpecs {
   socket?: string; // e.g. 'AM5', 'LGA1700'
@@ -31,6 +32,9 @@ export interface HardwareSpecs {
   radiatorSize?: string; // e.g. '360mm AIO', 'Dual-Tower Air'
   color?: string;
   rgb?: boolean;
+  dpi?: number;
+  switches?: string;
+  connectivity?: string;
 }
 
 export interface Product {
@@ -68,4 +72,49 @@ export interface CompatibilityIssue {
   title: string;
   message: string;
   slots: ComponentCategory[];
+}
+
+export interface ShowcaseBuild {
+  id: string;
+  title: string;
+  author: string;
+  authorAvatar: string;
+  specsSummary: string;
+  cpu: string;
+  gpu: string;
+  ram: string;
+  storage: string;
+  totalPrice: number;
+  likes: number;
+  comments: number;
+  image: string;
+  category: 'Popular' | 'Latest' | 'Budget' | 'High-End' | 'Gaming' | 'Streaming' | 'Workstation';
+  description: string;
+}
+
+export interface CommunityPost {
+  id: string;
+  authorName: string;
+  authorHandle: string;
+  authorAvatar: string;
+  authorBadge?: string;
+  timeAgo: string;
+  title: string;
+  content: string;
+  category: 'Discussions' | 'Showcases' | 'Help' | 'Events';
+  likesCount: number;
+  commentsCount: number;
+  images: string[];
+  tags: string[];
+}
+
+export interface GuideArticle {
+  id: string;
+  title: string;
+  subtitle: string;
+  category: 'PC Building' | 'Components' | 'Gaming' | 'Software' | 'Troubleshooting';
+  readTime: string;
+  image: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  content: string[];
 }

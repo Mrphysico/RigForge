@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Navbar } from './components/layout/Navbar';
+import { Navbar, AppPage } from './components/layout/Navbar';
 import { CartDrawer } from './components/layout/CartDrawer';
 import { Footer } from './components/layout/Footer';
 import { Toast } from './components/layout/Toast';
@@ -7,16 +7,20 @@ import { AuthModal } from './components/auth/AuthModal';
 import { SessionTimeoutModal } from './components/auth/SessionTimeoutModal';
 import { EmailConfirmationBanner } from './components/auth/EmailConfirmationBanner';
 import { HomePage } from './pages/HomePage';
-import { CatalogPage } from './pages/CatalogPage';
+import { BuildsPage } from './pages/BuildsPage';
 import { BuilderPage } from './pages/BuilderPage';
+import { CommunityPage } from './pages/CommunityPage';
+import { CatalogPage } from './pages/CatalogPage';
+import { GuidesPage } from './pages/GuidesPage';
+import { SupportPage } from './pages/SupportPage';
 import { ComponentCategory } from './types/hardware';
 import { useAutoLogout } from './hooks/useAutoLogout';
 import { useAuthStore } from './store/useAuthStore';
 import { handleGoogleRedirectCallback } from './services/auth/googleOAuth';
-import { Cpu, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 export function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'catalog' | 'builder'>('home');
+  const [currentPage, setCurrentPage] = useState<AppPage>('home');
   const [selectedCatalogCategory, setSelectedCatalogCategory] = useState<ComponentCategory | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -44,8 +48,18 @@ export function App() {
   // Sync hash routing on mount and hash change
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash === 'catalog' || hash === 'builder' || hash === 'home') {
+      const hash = window.location.hash.replace('#', '') as AppPage | 'catalog';
+      if (hash === 'catalog') {
+        setCurrentPage('marketplace');
+      } else if (
+        hash === 'home' ||
+        hash === 'builds' ||
+        hash === 'builder' ||
+        hash === 'community' ||
+        hash === 'marketplace' ||
+        hash === 'guides' ||
+        hash === 'support'
+      ) {
         setCurrentPage(hash);
       }
     };
@@ -55,14 +69,15 @@ export function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  const navigateTo = (page: 'home' | 'catalog' | 'builder', category?: string) => {
-    setCurrentPage(page);
-    window.location.hash = page;
+  const navigateTo = (page: AppPage, category?: string) => {
+    const targetPage = (page === ('catalog' as any) ? 'marketplace' : page) as AppPage;
+    setCurrentPage(targetPage);
+    window.location.hash = targetPage;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (category) {
       setSelectedCatalogCategory(category as ComponentCategory);
-    } else if (page === 'catalog') {
+    } else if (targetPage === 'marketplace') {
       setSelectedCatalogCategory('all');
     }
   };
@@ -84,23 +99,23 @@ export function App() {
   // While verifying session with the server, display a sleek loading state
   if (isCheckingAuth) {
     return (
-      <div className="min-h-screen bg-[#0b1329] flex flex-col items-center justify-center text-slate-100 space-y-4 font-sans selection:bg-[#FCA311]/30">
-        <div className="w-16 h-16 rounded-3xl bg-[#131d38] border border-[#26365a] flex items-center justify-center shadow-glow-orange animate-pulse">
-          <Cpu className="w-8 h-8 text-[#FCA311]" />
+      <div className="min-h-screen bg-[#050a14] flex flex-col items-center justify-center text-slate-100 space-y-4 font-sans selection:bg-[#ff1e2d]/30">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ff1e2d] to-[#b30012] flex items-center justify-center shadow-glow-red font-black text-2xl font-mono animate-pulse text-white">
+          R
         </div>
         <div className="text-xl font-black font-mono tracking-wider">
-          RIG<span className="text-[#FCA311]">FORGE</span>
+          RIG<span className="text-[#ff1e2d]">FORGE</span>
         </div>
         <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-          <Loader2 className="w-4 h-4 animate-spin text-[#FCA311]" />
-          <span>Checking your session...</span>
+          <Loader2 className="w-4 h-4 animate-spin text-[#ff1e2d]" />
+          <span>Verifying secure session...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0b1329] text-slate-100 bg-grid-pattern selection:bg-[#FCA311]/30 selection:text-[#FCA311]">
+    <div className="min-h-screen flex flex-col bg-[#050a14] text-slate-100 bg-grid-pattern selection:bg-[#ff1e2d]/30 selection:text-white">
       {/* Top Navigation */}
       <Navbar
         currentPage={currentPage}
@@ -118,7 +133,26 @@ export function App() {
           />
         )}
 
-        {currentPage === 'catalog' && (
+        {currentPage === 'builds' && (
+          <BuildsPage
+            onNavigate={navigateTo}
+            onNotification={showNotification}
+          />
+        )}
+
+        {currentPage === 'builder' && (
+          <BuilderPage
+            onNotification={showNotification}
+          />
+        )}
+
+        {currentPage === 'community' && (
+          <CommunityPage
+            onNotification={showNotification}
+          />
+        )}
+
+        {currentPage === 'marketplace' && (
           <CatalogPage
             initialCategory={selectedCatalogCategory}
             searchQuery={searchQuery}
@@ -127,8 +161,15 @@ export function App() {
           />
         )}
 
-        {currentPage === 'builder' && (
-          <BuilderPage
+        {currentPage === 'guides' && (
+          <GuidesPage
+            onNotification={showNotification}
+          />
+        )}
+
+        {currentPage === 'support' && (
+          <SupportPage
+            onNavigate={navigateTo}
             onNotification={showNotification}
           />
         )}

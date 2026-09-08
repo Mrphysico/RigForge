@@ -26,6 +26,7 @@ const initialSlots: Record<ComponentCategory, Product | null> = {
   gpu: null,
   case: null,
   psu: null,
+  peripherals: null,
 };
 
 export const useBuilderStore = create<BuilderState>((set, get) => ({
@@ -67,6 +68,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       const gpu = MOCK_PRODUCTS.find((p) => p.id === 'gpu-rtx-4070-super') || null;
       const chasis = MOCK_PRODUCTS.find((p) => p.id === 'case-lianli-216') || null;
       const psu = MOCK_PRODUCTS.find((p) => p.id === 'psu-corsair-rm850e') || null;
+      const peripherals = MOCK_PRODUCTS.find((p) => p.id === 'peri-lg-27gr75q') || null;
 
       set({
         slots: {
@@ -78,6 +80,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
           gpu,
           case: chasis,
           psu,
+          peripherals,
         },
       });
     } else {
@@ -90,6 +93,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       const gpu = MOCK_PRODUCTS.find((p) => p.id === 'gpu-rx-6600') || null;
       const chasis = MOCK_PRODUCTS.find((p) => p.id === 'case-ant-ice-100') || null;
       const psu = MOCK_PRODUCTS.find((p) => p.id === 'psu-cm-mwe-550') || null;
+      const peripherals = MOCK_PRODUCTS.find((p) => p.id === 'peri-corsair-k70-pro') || null;
 
       set({
         slots: {
@@ -101,6 +105,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
           gpu,
           case: chasis,
           psu,
+          peripherals,
         },
       });
     }
