@@ -26,7 +26,7 @@ export function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const { isCheckingAuth, checkAuth } = useAuthStore();
+  const { isCheckingAuth, checkAuth, openAuthModal } = useAuthStore();
 
   // 30-Minute Inactivity Auto-Logout Tracker
   const { isTimedOut, handleSignInAgain, dismissTimeoutModal } = useAutoLogout();
@@ -49,9 +49,17 @@ export function App() {
   // Sync hash routing on mount and hash change
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '') as AppPage | 'catalog';
+      const hash = window.location.hash.replace('#', '') as AppPage | 'catalog' | 'login' | 'signup' | 'dashboard';
       if (hash === 'catalog') {
         setCurrentPage('marketplace');
+      } else if (hash === 'login') {
+        openAuthModal('signin');
+        setCurrentPage('signin');
+      } else if (hash === 'signup') {
+        openAuthModal('signup');
+        setCurrentPage('signin');
+      } else if (hash === 'dashboard') {
+        setCurrentPage('builds');
       } else if (
         hash === 'home' ||
         hash === 'builds' ||
@@ -62,7 +70,7 @@ export function App() {
         hash === 'support' ||
         hash === 'signin'
       ) {
-        setCurrentPage(hash);
+        setCurrentPage(hash as AppPage);
       }
     };
 
@@ -134,13 +142,15 @@ export function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0a0a0a] text-slate-100 bg-grid-pattern selection:bg-[#e2231a]/30 selection:text-white">
-      {/* Top Navigation */}
-      <Navbar
-        currentPage={currentPage}
-        onNavigate={navigateTo}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-      />
+      {/* Top Navigation: displayed on all sub-pages; HomePage contains its own integrated hero navbar */}
+      {currentPage !== 'home' && (
+        <Navbar
+          currentPage={currentPage}
+          onNavigate={navigateTo}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
+      )}
 
       {/* Main Content Area */}
       <main className="flex-1">
@@ -148,6 +158,8 @@ export function App() {
           <HomePage
             onNavigate={navigateTo}
             onNotification={showNotification}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
           />
         )}
 

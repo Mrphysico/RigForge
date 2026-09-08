@@ -1,394 +1,328 @@
 import React from 'react';
-import { 
-  ArrowRight, 
-  Users, 
-  Box, 
-  ShoppingCart, 
-  BookOpen, 
-  ChevronRight
-} from 'lucide-react';
-import { MOCK_PRODUCTS } from '../data/mockHardware';
-import { ProductCard } from '../components/products/ProductCard';
+import { useAuthStore } from '../store/useAuthStore';
+import { AppPage } from '../components/layout/Navbar';
+import '../styles/landing.css';
 
 interface HomePageProps {
-  onNavigate: (page: 'home' | 'builds' | 'builder' | 'community' | 'marketplace' | 'guides' | 'support' | 'signin', category?: string) => void;
+  onNavigate: (page: AppPage, category?: string) => void;
   onNotification?: (msg: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
 }
 
-export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }) => {
-  const featuredProducts = MOCK_PRODUCTS.filter((p) => p.featured).slice(0, 6);
+export const HomePage: React.FC<HomePageProps> = ({
+  onNavigate,
+  onNotification: _onNotification,
+  searchQuery = '',
+  onSearchChange,
+}) => {
+  const { user, isAuthenticated, isCheckingAuth, openAuthModal } = useAuthStore();
+
+  const handleGetStarted = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (isCheckingAuth) return;
+    if (isAuthenticated && user) {
+      onNavigate('builds');
+    } else {
+      openAuthModal('signin');
+      onNavigate('signin');
+    }
+  };
+
+  const handleSignIn = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (isAuthenticated && user) {
+      onNavigate('builds');
+    } else {
+      openAuthModal('signin');
+      onNavigate('signin');
+    }
+  };
+
+  const handleCreateAccount = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (isAuthenticated && user) {
+      onNavigate('builds');
+    } else {
+      openAuthModal('signup');
+      onNavigate('signin');
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-slate-100 pb-20 space-y-12 select-none">
-      
-      {/* ========================================================= */}
-      {/* 4.2 HERO SECTION — DIAGONAL 4-COLOR CANVAS & BATTLESTATION */}
-      {/* ========================================================= */}
-      <section className="relative overflow-hidden bg-[#0a0a0a] min-h-[760px] lg:min-h-[880px] flex flex-col justify-between pt-10 pb-4">
-        
-        {/* Full-bleed background split into diagonal red / gray-white / blue / yellow bands */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden -z-0">
-          
-          {/* Red Band (Left) - angled at ~17deg */}
-          <div 
-            className="absolute inset-0 bg-[#e2231a]" 
-            style={{ clipPath: 'polygon(0% 0%, 25% 0%, 12% 100%, 0% 100%)' }}
-          >
-            <div 
-              className="w-full h-full bg-cover bg-left-top opacity-55 mix-blend-luminosity"
-              style={{ backgroundImage: `url('/images/hero-soldier-left.jpg')` }}
+    <div className="landing-page-root">
+      {/* BACKGROUND COMPOSITION */}
+      <div className="viewport-bg">
+        <div className="bg-slice-left"></div>
+        <div className="mid-gothic-backdrop"></div>
+        <div className="bg-slice-right"></div>
+
+        {/* Parachute Airdrop SVG overlay in gold slice */}
+        <svg className="airdrop-crate" viewBox="0 0 140 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 70 C10 10, 130 10, 130 70 C110 65, 95 65, 70 68 C45 65, 30 65, 10 70 Z" fill="#1e2229" stroke="#12161f" strokeWidth={2} />
+          <path d="M35 67 C48 40, 92 40, 105 67" stroke="#12161f" strokeWidth={2} fill="none" />
+          <line x1="12" y1="70" x2="62" y2="120" stroke="#1b2029" strokeWidth={1.5} />
+          <line x1="45" y1="68" x2="65" y2="120" stroke="#1b2029" strokeWidth={1.5} />
+          <line x1="95" y1="68" x2="75" y2="120" stroke="#1b2029" strokeWidth={1.5} />
+          <line x1="128" y1="70" x2="78" y2="120" stroke="#1b2029" strokeWidth={1.5} />
+          <rect x="58" y="120" width="24" height="24" rx="2" fill="#8c1d1d" stroke="#12161f" strokeWidth={1.5} />
+          <rect x="56" y="118" width="28" height="8" rx="1" fill="#1b4d8c" />
+        </svg>
+
+        <div className="bg-slice-far-right"></div>
+      </div>
+
+      {/* NAVIGATION */}
+      <header className="navbar">
+        <a href="#home" className="brand" onClick={(e) => { e.preventDefault(); onNavigate('home'); }}>
+          <svg className="brand-logo-svg" viewBox="0 0 40 40">
+            <path d="M6 6 H22 C28 6 32 10 32 16 C32 21 28 25 22 25 H14 V34 H6 V6 Z M14 13 V18 H21 C23 18 24 17 24 15.5 C24 14 23 13 21 13 H14 Z" fill="#ffffff" />
+            <path d="M22 23 L32 34 H23 L15 25 Z" fill="#ff1e27" />
+          </svg>
+          <span className="brand-text">RIG<span>FORGE</span></span>
+        </a>
+
+        <ul className="nav-links">
+          <li><a href="#home" className="active" onClick={(e) => { e.preventDefault(); onNavigate('home'); }}>Home</a></li>
+          <li><a href="#builds" onClick={(e) => { e.preventDefault(); onNavigate('builds'); }}>Builds</a></li>
+          <li><a href="#community" onClick={(e) => { e.preventDefault(); onNavigate('community'); }}>Community</a></li>
+          <li><a href="#marketplace" onClick={(e) => { e.preventDefault(); onNavigate('marketplace'); }}>Marketplace</a></li>
+          <li><a href="#guides" onClick={(e) => { e.preventDefault(); onNavigate('guides'); }}>Guides</a></li>
+          <li><a href="#support" onClick={(e) => { e.preventDefault(); onNavigate('support'); }}>Support</a></li>
+        </ul>
+
+        <div className="nav-actions">
+          <div className="search-bar">
+            <i className="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              placeholder="Search builds, users, guides..."
+              value={searchQuery}
+              onChange={(e) => onSearchChange?.(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onNavigate('marketplace');
+                }
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/60" />
           </div>
+          <button className="btn-signin" onClick={handleSignIn}>
+            {isAuthenticated && user ? user.name.split(' ')[0] : 'Sign In'}
+          </button>
+          <button className="btn-create" onClick={handleCreateAccount}>
+            {isAuthenticated && user ? 'My Account' : 'Create Account'}
+          </button>
+        </div>
+      </header>
 
-          {/* Gray / White Ruins Band */}
-          <div 
-            className="absolute inset-0 bg-[#2b2d35]" 
-            style={{ clipPath: 'polygon(25% 0%, 34% 0%, 21% 100%, 12% 100%)' }}
-          >
-            <div 
-              className="w-full h-full bg-cover bg-center opacity-45 mix-blend-luminosity grayscale"
-              style={{ backgroundImage: `url('/images/hero-city-ruins.jpg')` }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/80" />
-          </div>
+      {/* HERO SECTION */}
+      <div className="hero-container">
 
-          {/* Blue Band */}
-          <div 
-            className="absolute inset-0 bg-[#1c3f8f]" 
-            style={{ clipPath: 'polygon(34% 0%, 68% 0%, 55% 100%, 21% 100%)' }}
-          >
-            <div className="w-full h-full bg-gradient-to-b from-[#1c3f8f] via-[#0f2557] to-[#0a0a0a] opacity-85" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/60" />
-          </div>
-
-          {/* Yellow / Amber Parachute Band */}
-          <div 
-            className="absolute inset-0 bg-[#f2b705]" 
-            style={{ clipPath: 'polygon(68% 0%, 92% 0%, 79% 100%, 55% 100%)' }}
-          >
-            <div 
-              className="w-full h-full bg-cover bg-right-top opacity-55 mix-blend-multiply"
-              style={{ backgroundImage: `url('/images/hero-parachute-drop.jpg')` }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-l from-black/70 via-transparent to-black/60" />
-          </div>
-
-          {/* Far Right Dark Skyline Band */}
-          <div 
-            className="absolute inset-0 bg-[#0a0a0a]" 
-            style={{ clipPath: 'polygon(92% 0%, 100% 0%, 100% 100%, 79% 100%)' }}
-          >
-            <div className="w-full h-full bg-gradient-to-l from-black via-[#0d162c] to-transparent" />
-          </div>
+        {/* Flanking Edge Words */}
+        <div className="side-pill-text left">
+          <span>PLAY</span>
+          <span>BUILD</span>
+          <span>CONNECT</span>
         </div>
 
-        {/* ========================================================= */}
-        {/* DECORATIVE FRAMING TEXT (LEFT & RIGHT EDGES) */}
-        {/* ========================================================= */}
-        {/* Left Band Vertical Stacked Copy: PLAY, BUILD, CONNECT (with red underline) */}
-        <div className="absolute left-6 sm:left-10 top-1/2 -translate-y-1/2 flex-col items-start gap-1 z-20 pointer-events-none hidden lg:flex">
-          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
-            PLAY
-          </span>
-          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
-            BUILD
-          </span>
-          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
-            CONNECT
-          </span>
-          <div className="w-8 h-[2.5px] bg-[#e2231a] mt-1.5" />
+        <div className="side-pill-text right">
+          <span>BUILD</span>
+          <span>STREAM</span>
+          <span>GAME</span>
+          <span>REPEAT</span>
         </div>
 
-        {/* Right Band Vertical Stacked Copy: BUILD, STREAM, GAME, REPEAT (with blue underline) */}
-        <div className="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 flex-col items-end gap-1 z-20 pointer-events-none hidden lg:flex">
-          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
-            BUILD
-          </span>
-          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
-            STREAM
-          </span>
-          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
-            GAME
-          </span>
-          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
-            REPEAT
-          </span>
-          <div className="w-8 h-[2.5px] bg-[#1c3f8f] mt-1.5" />
+        <div className="side-yellow-text">
+          MORE<br />THAN<br />GAMING
         </div>
 
-        {/* Right Band Floating Eyebrow: MORE THAN GAMING (with yellow underline) */}
-        <div className="absolute top-20 right-16 sm:right-32 lg:right-48 flex-col items-start z-20 pointer-events-none hidden xl:flex">
-          <span className="font-barlow font-bold text-xs tracking-[0.25em] text-white uppercase leading-tight">
-            MORE
-          </span>
-          <span className="font-barlow font-bold text-xs tracking-[0.25em] text-white uppercase leading-tight">
-            THAN
-          </span>
-          <span className="font-barlow font-bold text-xs tracking-[0.25em] text-white uppercase leading-tight">
-            GAMING
-          </span>
-          <div className="w-7 h-[2px] bg-[#f2b705] mt-1" />
+        {/* Center Headers */}
+        <div className="tagline-sub">GEAR &nbsp;|&nbsp; BUILD &nbsp;|&nbsp; PLAY &nbsp;|&nbsp; TOGETHER</div>
+
+        <div className="hero-title-group">
+          <span className="logo-bracket">[</span>
+          <h1>RIGFORGE</h1>
+          <span className="logo-bracket">]</span>
         </div>
 
-        {/* ========================================================= */}
-        {/* CENTER HERO CONTENT: EYEBROW, TITLE, SUBHEAD, BODY, CTAS */}
-        {/* ========================================================= */}
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10 pt-4 space-y-4">
-          
-          {/* 1. Small Eyebrow Line */}
-          <div className="text-[11px] sm:text-[13px] font-mono font-bold tracking-[0.25em] sm:tracking-[0.3em] text-white/90 uppercase">
-            GEAR &nbsp;|&nbsp; BUILD &nbsp;|&nbsp; PLAY &nbsp;|&nbsp; TOGETHER
-          </div>
+        <div className="hero-subtitle">POWER YOUR PASSION</div>
 
-          {/* 2. Giant Logo Lockup: RIGFORGE (RIG white, FORGE red) */}
-          <h1 className="font-barlow font-black text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase italic tracking-tighter leading-none text-white drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)]">
-            RIG<span className="text-[#e2231a]">FORGE</span>
-          </h1>
+        <p className="hero-desc">
+          A community-driven platform for gamers, creators, and PC builders.<br />
+          Share builds, get support, explore gear, and take your setup to the next level.
+        </p>
 
-          {/* 3. Subheading Line: POWER YOUR PASSION */}
-          <div className="font-barlow font-bold uppercase tracking-wider text-xl sm:text-2xl md:text-4xl text-white">
-            POWER YOUR PASSION
-          </div>
-
-          {/* 4. Body Paragraph */}
-          <p className="text-xs sm:text-sm text-slate-300 max-w-[500px] mx-auto leading-relaxed font-sans px-2">
-            A community-driven platform for gamers, creators, and PC builders. Share builds, get support, explore gear, and take your setup to the next level.
-          </p>
-
-          {/* 5. Two CTA Buttons: Stacks on mobile, side-by-side on sm+ */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 w-full max-w-xs sm:max-w-none mx-auto">
-            {/* Primary Red CTA: Get Started → */}
-            <button
-              onClick={() => onNavigate('signin')}
-              className="w-full sm:w-auto min-h-[44px] rounded-full px-8 py-3 bg-[#e2231a] hover:bg-[#b71c17] text-white font-bold text-sm tracking-wide shadow-[0_0_25px_rgba(226,35,26,0.6)] hover:shadow-[0_0_35px_rgba(226,35,26,0.8)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span>Get Started</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-
-            {/* Dark Outlined CTA: Explore Builds */}
-            <button
-              onClick={() => onNavigate('builds')}
-              className="w-full sm:w-auto min-h-[44px] rounded-full px-8 py-3 bg-black/60 hover:bg-white hover:text-black text-white font-semibold text-sm border border-white/30 hover:border-white transition-all flex items-center justify-center gap-2 backdrop-blur-md cursor-pointer"
-            >
-              <span>Explore Builds</span>
-            </button>
-          </div>
-        </div>
-
-        {/* ========================================================= */}
-        {/* 6. GAMING DESK SETUP HERO STAGE (OVERLAPPING COLOR BANDS) */}
-        {/* ========================================================= */}
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 pt-6 sm:pt-10 flex justify-center">
-          <div className="relative w-full overflow-hidden flex justify-center">
-            <img
-              src="/images/hero-desk-setup.jpg"
-              alt="RigForge Custom Battlestation Desk Setup"
-              className="w-full h-auto max-h-[220px] sm:max-h-[300px] lg:max-h-[360px] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.95)]"
-            />
-            <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none" />
-          </div>
-        </div>
-
-      </section>
-
-      {/* ========================================================= */}
-      {/* 4.3 FEATURE STRIP (BLACK BACKGROUND, 4 COLUMNS) */}
-      {/* ========================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          
-          {/* 1. Red circle icon: Join Community */}
-          <div
-            onClick={() => onNavigate('community')}
-            className="group p-5 rounded-2xl bg-[#0f1117] hover:bg-[#151922] border border-white/[0.08] hover:border-[#e2231a]/60 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
-          >
-            <div className="w-12 h-12 rounded-full bg-[#e2231a] text-white flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(226,35,26,0.4)] group-hover:scale-110 transition-transform">
-              <Users className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-white group-hover:text-[#e2231a] transition-colors">
-                Join Community
-              </h3>
-              <p className="text-xs text-slate-400">Connect with gamers &amp; builders</p>
-            </div>
-          </div>
-
-          {/* 2. White/outline circle icon: Share Your Build */}
-          <div
-            onClick={() => onNavigate('builds')}
-            className="group p-5 rounded-2xl bg-[#0f1117] hover:bg-[#151922] border border-white/[0.08] hover:border-white/30 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
-          >
-            <div className="w-12 h-12 rounded-full bg-white text-slate-950 flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-110 transition-transform">
-              <Box className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-white group-hover:text-slate-200 transition-colors">
-                Share Your Build
-              </h3>
-              <p className="text-xs text-slate-400">Showcase your setup</p>
-            </div>
-          </div>
-
-          {/* 3. Blue circle icon: Explore Gear */}
-          <div
-            onClick={() => onNavigate('marketplace')}
-            className="group p-5 rounded-2xl bg-[#0f1117] hover:bg-[#151922] border border-white/[0.08] hover:border-[#1c3f8f]/60 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
-          >
-            <div className="w-12 h-12 rounded-full bg-[#1c3f8f] text-white flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(28,63,143,0.4)] group-hover:scale-110 transition-transform">
-              <ShoppingCart className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-white group-hover:text-[#3b82f6] transition-colors">
-                Explore Gear
-              </h3>
-              <p className="text-xs text-slate-400">Find the best components</p>
-            </div>
-          </div>
-
-          {/* 4. Yellow circle icon: Learn & Grow */}
-          <div
-            onClick={() => onNavigate('guides')}
-            className="group p-5 rounded-2xl bg-[#0f1117] hover:bg-[#151922] border border-white/[0.08] hover:border-[#f2b705]/60 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
-          >
-            <div className="w-12 h-12 rounded-full bg-[#f2b705] text-slate-950 flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(242,183,5,0.4)] group-hover:scale-110 transition-transform">
-              <BookOpen className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-white group-hover:text-[#f2b705] transition-colors">
-                Learn &amp; Grow
-              </h3>
-              <p className="text-xs text-slate-400">Guides, tips and support</p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================= */}
-      {/* 4.4 THREE FEATURED CARDS (BOTTOM ROW, EQUAL-WIDTH) */}
-      {/* ========================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          {/* Card 1: Red Card — FEATURED BUILDS / INSANE SETUPS */}
-          <div
-            onClick={() => onNavigate('builds')}
-            className="red-card insane-setups-card group relative rounded-2xl overflow-hidden border border-[#e2231a]/40 hover:border-[#e2231a] cursor-pointer shadow-xl transition-all duration-300 min-h-[220px] flex flex-col justify-between p-6 sm:p-7 hover:scale-[1.025]"
-            style={{
-              backgroundImage: `url('/images/card-pc-build-red.jpg')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'right center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
-            <div className="relative z-[2] space-y-1">
-              <span className="relative z-[2] text-[11px] font-mono tracking-widest font-bold text-[#e2231a] uppercase block">
-                FEATURED BUILDS
-              </span>
-              <h3 className="relative z-[2] font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
-                INSANE<br />SETUPS
-              </h3>
-            </div>
-
-            <div className="relative z-[2] flex items-center justify-between pt-4">
-              <div className="relative z-[2] w-9 h-9 rounded-full bg-[#e2231a] text-white flex items-center justify-center shadow-[0_0_15px_rgba(226,35,26,0.6)] group-hover:translate-x-1 transition-transform">
-                <ArrowRight className="w-4 h-4" />
-              </div>
-            </div>
-          </div>
-
-          {/* Card 2: Gray/Blue Card — COMMUNITY / REAL PEOPLE */}
-          <div
-            onClick={() => onNavigate('community')}
-            className="group relative rounded-2xl overflow-hidden border border-white/20 hover:border-white/40 cursor-pointer shadow-xl transition-all duration-300 min-h-[220px] bg-cover bg-center flex flex-col justify-between p-6 sm:p-7 hover:scale-[1.025]"
-            style={{ backgroundImage: `url('/images/card-community-soldier.jpg')` }}
-          >
-            {/* Dark gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40 group-hover:bg-black/60 transition-colors duration-400" />
-
-            <div className="relative z-10 space-y-1">
-              <span className="text-[11px] font-mono tracking-widest font-bold text-slate-300 uppercase">
-                COMMUNITY
-              </span>
-              <h3 className="font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
-                REAL PEOPLE
-              </h3>
-              <p className="text-xs text-slate-300 font-sans pt-1">
-                Real Builds. Real Stories.
-              </p>
-            </div>
-
-            <div className="relative z-10 flex items-center justify-between pt-4">
-              <div className="w-9 h-9 rounded-full bg-slate-900/90 border border-white/20 text-white flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform">
-                <ArrowRight className="w-4 h-4" />
-              </div>
-            </div>
-          </div>
-
-          {/* Card 3: Yellow Card — GUIDES / LEVEL UP YOUR KNOWLEDGE */}
-          <div
-            onClick={() => onNavigate('guides')}
-            className="group relative rounded-2xl overflow-hidden border border-[#f2b705]/40 hover:border-[#f2b705] cursor-pointer shadow-xl transition-all duration-300 min-h-[220px] bg-cover bg-center flex flex-col justify-between p-6 sm:p-7 hover:scale-[1.025]"
-            style={{ backgroundImage: `url('/images/card-guides-soldier-gun.jpg')` }}
-          >
-            {/* Warm yellow gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-[#f2b705]/20 group-hover:bg-black/60 transition-colors duration-400" />
-
-            <div className="relative z-10 space-y-1">
-              <span className="text-[11px] font-mono tracking-widest font-bold text-[#f2b705] uppercase">
-                GUIDES
-              </span>
-              <h3 className="font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
-                LEVEL UP<br />YOUR KNOWLEDGE
-              </h3>
-              <p className="text-xs text-slate-300 font-sans pt-1">
-                Build Smarter. Game Better.
-              </p>
-            </div>
-
-            <div className="relative z-10 flex items-center justify-between pt-4">
-              <div className="w-9 h-9 rounded-full bg-slate-900/90 border border-[#f2b705]/40 text-white flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform">
-                <ArrowRight className="w-4 h-4" />
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================= */}
-      {/* MARKETPLACE HARDWARE SHOWCASE */}
-      {/* ========================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6 pb-4 border-b border-white/10">
-          <div>
-            <span className="text-xs font-mono font-bold text-[#e2231a] uppercase tracking-wider">HOT DEALS</span>
-            <h2 className="font-barlow text-2xl sm:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight">
-              FEATURED HARDWARE
-            </h2>
-          </div>
-
-          <button
-            onClick={() => onNavigate('marketplace')}
-            className="self-start sm:self-auto inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#e2231a] hover:text-white transition-colors cursor-pointer py-1.5 min-h-[40px]"
-          >
-            <span>View All Components</span>
-            <ChevronRight className="w-4 h-4" />
+        <div className="hero-buttons">
+          <button className="hero-btn-red" onClick={handleGetStarted}>
+            Get Started <i className="fa-solid fa-arrow-right"></i>
+          </button>
+          <button className="hero-btn-dark" onClick={() => onNavigate('builds')}>
+            Explore Builds
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onNotification={onNotification}
-            />
-          ))}
+        {/* Battlestation Display Graphic */}
+        <div className="battlestation-stage">
+          {/* Left props: Stacked Books & Headset */}
+          <div className="left-desk-prop">
+            <div className="stacked-books">
+              <div className="book-spine">BETTER GEAR</div>
+              <div className="book-spine">BETTER GAMES</div>
+              <div className="book-spine">A BRIGHTER YOU</div>
+            </div>
+            <div className="headset-prop"></div>
+          </div>
+
+          {/* Center Curved Ultrawide Display */}
+          <div className="monitor-unit">
+            <div className="monitor-bezel">
+              <div className="monitor-screen">
+                <div className="screen-quote">
+                  GOOD<br />GAMES<br />BETTER<br />PEOPLE
+                </div>
+              </div>
+            </div>
+            <div className="monitor-stand"></div>
+            <div className="monitor-base"></div>
+          </div>
+
+          {/* Mat & Peripherals */}
+          <div className="desk-keyboard"></div>
+          <div className="desk-mouse"></div>
+
+          {/* Gaming PC Tower with Neon Dual Rings */}
+          <div className="pc-tower">
+            <div className="rgb-fan"></div>
+            <div className="rgb-fan"></div>
+            <div className="pc-brand-logo">RIGFORGE</div>
+          </div>
+
+          {/* Red Accent Gaming Chair */}
+          <div className="chair-silhouette"></div>
+
+          {/* Desk Mat Shadow Base */}
+          <div className="desk-mat-base"></div>
         </div>
-      </section>
+      </div>
+
+      {/* QUICK ACTION PILLS (4 ICONS) */}
+      <div className="action-pill-bar">
+        <div className="pill-card" onClick={() => onNavigate('community')}>
+          <div className="pill-icon red">
+            <i className="fa-solid fa-users"></i>
+          </div>
+          <div className="pill-details">
+            <h4>Join Community</h4>
+            <p>Connect with gamers &amp; builders</p>
+          </div>
+        </div>
+
+        <div className="pill-card" onClick={() => onNavigate('builds')}>
+          <div className="pill-icon dark">
+            <i className="fa-solid fa-cube"></i>
+          </div>
+          <div className="pill-details">
+            <h4>Share Your Build</h4>
+            <p>Showcase your setup</p>
+          </div>
+        </div>
+
+        <div className="pill-card" onClick={() => onNavigate('marketplace')}>
+          <div className="pill-icon blue">
+            <i className="fa-solid fa-cart-shopping"></i>
+          </div>
+          <div className="pill-details">
+            <h4>Explore Gear</h4>
+            <p>Find the best components</p>
+          </div>
+        </div>
+
+        <div className="pill-card" onClick={() => onNavigate('guides')}>
+          <div className="pill-icon yellow">
+            <i className="fa-solid fa-book-open"></i>
+          </div>
+          <div className="pill-details">
+            <h4>Learn &amp; Grow</h4>
+            <p>Guides, tips and support</p>
+          </div>
+        </div>
+      </div>
+
+      {/* BOTTOM 3 CARDS */}
+      <div className="bottom-cards-row">
+
+        {/* 1. EXACT "FEATURED BUILDS - INSANE SETUPS" CARD */}
+        <a
+          href="#builds"
+          className="card-insane-setups"
+          onClick={(e) => {
+            e.preventDefault();
+            onNavigate('builds');
+          }}
+        >
+          <div className="card-bg-layer">
+            <img
+              className="pc-rig-photo"
+              src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=800&auto=format&fit=crop"
+              alt="Custom Red RGB Liquid Cooled PC Setup"
+            />
+            <div className="red-gradient-fade"></div>
+          </div>
+
+          <div className="inner-text">
+            <div className="kicker-red">FEATURED BUILDS</div>
+            <h2 className="bold-title-italic">INSANE<br />SETUPS</h2>
+          </div>
+
+          <div className="red-circle-btn">
+            <svg viewBox="0 0 24 24">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </div>
+        </a>
+
+        {/* 2. COMMUNITY - REAL PEOPLE CARD */}
+        <a
+          href="#community"
+          className="card-real-people"
+          onClick={(e) => {
+            e.preventDefault();
+            onNavigate('community');
+          }}
+        >
+          <div>
+            <div className="card-kicker">COMMUNITY</div>
+            <div className="card-title-heavy">REAL<br />PEOPLE</div>
+          </div>
+          <div className="card-foot-meta">
+            <span>Real Builds. Real Stories.</span>
+            <div className="btn-arrow-subtle"><i className="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </a>
+
+        {/* 3. GUIDES - LEVEL UP YOUR KNOWLEDGE CARD */}
+        <a
+          href="#guides"
+          className="card-level-up"
+          onClick={(e) => {
+            e.preventDefault();
+            onNavigate('guides');
+          }}
+        >
+          <div>
+            <div className="card-kicker">GUIDES</div>
+            <div className="card-title-heavy">LEVEL UP<br />YOUR KNOWLEDGE</div>
+          </div>
+          <div className="card-foot-meta">
+            <span>Build Smarter. Game Better.</span>
+            <div className="btn-arrow-gold"><i className="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </a>
+
+      </div>
     </div>
   );
 };
+
+export default HomePage;
