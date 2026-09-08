@@ -81,12 +81,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
           >
             <div className="w-full h-full bg-gradient-to-l from-black via-[#0d162c] to-transparent" />
           </div>
-
-          {/* Authentic High-Res Reference Artwork Overlay Blend */}
-          <div 
-            className="absolute inset-0 opacity-40 mix-blend-lighten bg-cover bg-center pointer-events-none"
-            style={{ backgroundImage: `url('/images/media_home.jpg')` }}
-          />
         </div>
 
         {/* ========================================================= */}
@@ -186,14 +180,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
         {/* ========================================================= */}
         {/* 6. GAMING DESK SETUP HERO STAGE (OVERLAPPING COLOR BANDS) */}
         {/* ========================================================= */}
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 pt-6 sm:pt-8 flex justify-center">
-          <div className="relative w-full rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.95)]">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 pt-8 sm:pt-10 flex justify-center">
+          <div className="relative w-full overflow-hidden flex justify-center">
             <img
               src="/images/hero-desk-setup.jpg"
               alt="RigForge Custom Battlestation Desk Setup"
-              className="w-full h-auto object-cover rounded-2xl border border-white/10"
+              className="w-full h-auto max-h-[360px] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.95)]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-40 pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none" />
           </div>
         </div>
 
