@@ -24,6 +24,7 @@ import {
   STANDARD_SHIPPING_FEE_INR, 
   GST_RATE 
 } from '../../utils/formatCurrency';
+import { API_BASE_URL } from '../../config/api';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -105,9 +106,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       paymentStatus: 'pending_verification',
     };
 
-    // Attempt to send order to backend on port 5000
+    // Attempt to send order to backend API
     try {
-      await fetch('http://localhost:5000/api/orders', {
+      await fetch(`${API_BASE_URL}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +118,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       });
       console.log('Order successfully synced with backend API:', orderId);
     } catch {
-      console.warn('Backend server not reachable at localhost:5000, saving order locally.');
+      console.warn('Backend server not reachable, saving order locally.');
     }
 
     // Save order in local storage as well for resilience

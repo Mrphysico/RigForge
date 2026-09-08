@@ -1,0 +1,26 @@
+# Render Blueprint Specification
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: rigforge
+    runtime: node
+    plan: free
+    buildCommand: npm run render-build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 30m
+      - key: MERCHANT_NAME
+        value: Arth Rakesh Jadav
+      - key: MERCHANT_UPI
+        value: 9819319689@nyes
+      - key: MERCHANT_BANK
+        value: Bank of India

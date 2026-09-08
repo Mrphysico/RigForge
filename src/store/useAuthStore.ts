@@ -9,6 +9,7 @@ import {
   registerSocialUser 
 } from '../credentials/userStorage';
 import { sendSuccessEmail } from '../services/mailer/emailService';
+import { API_BASE_URL } from '../config/api';
 
 interface AuthState {
   user: UserSession | null;
@@ -52,9 +53,9 @@ export const useAuthStore = create<AuthState>((set) => {
 
       const session = setUserSession(result.user);
 
-      // Synchronize with backend API on port 5000
+      // Synchronize with backend API
       try {
-        const backendRes = await fetch('http://localhost:5000/api/auth/login', {
+        const backendRes = await fetch(`${API_BASE_URL}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
@@ -92,9 +93,9 @@ export const useAuthStore = create<AuthState>((set) => {
       // Establish session
       const session = setUserSession(result.user);
 
-      // Synchronize with backend API on port 5000 (MongoDB & Nodemailer)
+      // Synchronize with backend API (MongoDB & Nodemailer)
       try {
-        const backendRes = await fetch('http://localhost:5000/api/auth/register', {
+        const backendRes = await fetch(`${API_BASE_URL}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

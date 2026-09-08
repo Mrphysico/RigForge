@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "RigForge India E-Commerce Backend Server (Express + TypeScript + MongoDB/In-Memory + Nodemailer)",
   "main": "dist/server.js",
+  "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "tsx src/server.ts"
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
