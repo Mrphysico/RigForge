@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { OrderModel, inMemoryOrders, MemoryOrder } from '../models/Order.js';
 import { getDbStatus } from '../config/db.js';
 import { AuthenticatedRequest } from '../middleware/authMiddleware.js';
@@ -36,11 +36,23 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response): Pro
       return;
     }
 
+    // Determine customer identity - never fallback to hardcoded mock names
+    const authenticatedUser = req.user;
+    const finalCustomerName = (customerName && typeof customerName === 'string' && customerName.trim()) 
+      || authenticatedUser?.name;
+    const finalCustomerEmail = (customerEmail && typeof customerEmail === 'string' && customerEmail.trim().toLowerCase()) 
+      || authenticatedUser?.email;
+
+    if (!finalCustomerName || !finalCustomerEmail) {
+      res.status(400).json({
+        success: false,
+        message: 'Customer name and valid email address are required to place an order.',
+      });
+      return;
+    }
+
+    const userId = authenticatedUser?.id || `guest-${Date.now()}`;
     const generatedOrderId = orderId || ('RF-IN-' + Math.floor(100000 + Math.random() * 900000));
-    const customer = {
-      name: customerName || req.user?.name || 'Arth Jadav',
-      email: customerEmail || req.user?.email || 'jadavarth07@gmail.com',
-    };
 
     const merchantDetails = {
       beneficiary: 'Arth Rakesh Jadav',
@@ -50,8 +62,9 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response): Pro
 
     const newOrderData: MemoryOrder = {
       orderId: generatedOrderId,
-      customerName: customer.name,
-      customerEmail: customer.email,
+      userId,
+      customerName: finalCustomerName,
+      customerEmail: finalCustomerEmail,
       items,
       subtotal: Number(subtotal) || 0,
       tax: Number(tax) || 0,
@@ -80,11 +93,12 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response): Pro
     // Always keep in memory store as well
     inMemoryOrders.unshift(newOrderData);
 
-    console.log(`📦 [New Order Logged] Docket: ${generatedOrderId} | Customer: ${customer.name} | Total: ₹${newOrderData.totalAmount} | UTR: ${cleanUtr}`);
+    console.log(`📦 [Order Created] Docket: ${generatedOrderId} | User: ${userId} (${finalCustomerEmail}) | Total: ₹${newOrderData.totalAmount}`);
 
     res.status(201).json({
       success: true,
       message: 'Order placed and payment details submitted for verification.',
+      orderId: generatedOrderId,
       order: newOrderData,
       tracking: {
         docketNumber: generatedOrderId,
@@ -105,13 +119,25 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response): Pro
 
 export const getOrders = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const userEmail = req.user?.email || (req.query.email as string);
+    // Strictly require authenticated user identity from verified JWT
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: 'Authentication required to access order history.',
+      });
+      return;
+    }
+
+    const userId = req.user.id;
+    const userEmail = req.user.email.toLowerCase();
     const { isInMemoryFallback } = getDbStatus();
 
     if (!isInMemoryFallback) {
       try {
-        const query = userEmail ? { customerEmail: userEmail } : {};
-        const dbOrders = await OrderModel.find(query).sort({ createdAt: -1 });
+        const dbOrders = await OrderModel.find({
+          $or: [{ userId: userId }, { customerEmail: userEmail }],
+        }).sort({ createdAt: -1 });
+
         res.json({
           success: true,
           count: dbOrders.length,
@@ -123,9 +149,10 @@ export const getOrders = async (req: AuthenticatedRequest, res: Response): Promi
       }
     }
 
-    const filtered = userEmail
-      ? inMemoryOrders.filter((o) => o.customerEmail.toLowerCase() === userEmail.toLowerCase())
-      : inMemoryOrders;
+    // Isolated in-memory orders filtered strictly for this authenticated user
+    const filtered = inMemoryOrders.filter(
+      (o) => o.userId === userId || o.customerEmail.toLowerCase() === userEmail
+    );
 
     res.json({
       success: true,
@@ -141,33 +168,56 @@ export const getOrders = async (req: AuthenticatedRequest, res: Response): Promi
   }
 };
 
-export const getOrderById = async (req: Request, res: Response): Promise<void> => {
+export const getOrderById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: 'Authentication required.',
+      });
+      return;
+    }
+
     const { id } = req.params;
+    const userId = req.user.id;
+    const userEmail = req.user.email.toLowerCase();
     const { isInMemoryFallback } = getDbStatus();
+
+    let foundOrder: any = null;
 
     if (!isInMemoryFallback) {
       try {
-        const dbOrder = await OrderModel.findOne({ orderId: id });
-        if (dbOrder) {
-          res.json({ success: true, order: dbOrder });
-          return;
-        }
+        foundOrder = await OrderModel.findOne({ orderId: id });
       } catch {
         // Fallback to memory
       }
     }
 
-    const memoryMatch = inMemoryOrders.find((o) => o.orderId === id);
-    if (memoryMatch) {
-      res.json({ success: true, order: memoryMatch });
+    if (!foundOrder) {
+      foundOrder = inMemoryOrders.find((o) => o.orderId === id);
+    }
+
+    if (!foundOrder) {
+      res.status(404).json({
+        success: false,
+        message: `Order #${id} not found`,
+      });
       return;
     }
 
-    res.status(404).json({
-      success: false,
-      message: `Order #${id} not found`,
-    });
+    // Prevent IDOR - Strictly check that the requested order belongs to THIS user
+    const orderUserId = foundOrder.userId;
+    const orderEmail = (foundOrder.customerEmail || '').toLowerCase();
+
+    if (orderUserId !== userId && orderEmail !== userEmail) {
+      res.status(403).json({
+        success: false,
+        message: 'Access denied. You do not have permission to view this order.',
+      });
+      return;
+    }
+
+    res.json({ success: true, order: foundOrder });
   } catch (error: any) {
     res.status(500).json({
       success: false,

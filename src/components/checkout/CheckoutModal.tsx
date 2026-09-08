@@ -44,6 +44,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [copiedUpi, setCopiedUpi] = useState(false);
   const [utrNumber, setUtrNumber] = useState('');
   const [utrError, setUtrError] = useState<string | null>(null);
+  const [guestName, setGuestName] = useState('');
+  const [guestEmail, setGuestEmail] = useState('');
+  const [guestError, setGuestError] = useState<string | null>(null);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [placedOrderId, setPlacedOrderId] = useState<string | null>(null);
@@ -68,6 +71,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setTimeout(() => setCopiedUpi(false), 2000);
   };
 
+  const handleProceedToStep2 = () => {
+    if (!user) {
+      if (!guestName.trim()) {
+        setGuestError('Please enter your full name for the dispatch invoice.');
+        return;
+      }
+      if (!guestEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim())) {
+        setGuestError('Please enter a valid email address for delivery tracking.');
+        return;
+      }
+    }
+    setGuestError(null);
+    setStep(2);
+  };
+
   const validateAndProceedToConfirm = () => {
     const cleanUtr = utrNumber.trim();
     if (!/^\d{12}$/.test(cleanUtr)) {
@@ -82,10 +100,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setIsSubmitting(true);
     const orderId = 'RF-IN-' + Math.floor(100000 + Math.random() * 900000);
 
+    const customerName = user ? user.name : (guestName.trim() || 'Valued Customer');
+    const customerEmail = user ? user.email : (guestEmail.trim().toLowerCase() || 'customer@rigforge.in');
+
     const orderPayload = {
       orderId,
-      customerName: user?.name || 'Arth Jadav',
-      customerEmail: user?.email || 'jadavarth07@gmail.com',
+      customerName,
+      customerEmail,
       items: items.map((it) => ({
         id: it.product.id,
         name: it.product.name,
@@ -146,6 +167,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setUtrNumber('');
     setReceiptFile(null);
     setPlacedOrderId(null);
+    setGuestName('');
+    setGuestEmail('');
+    setGuestError(null);
   };
 
   return (
@@ -250,10 +274,80 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
               </div>
 
+              {/* Customer Contact & Delivery Info */}
+              {user ? (
+                <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800 text-xs flex items-center justify-between">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-7 h-7 rounded-full bg-cyan-500 text-zinc-950 font-bold flex items-center justify-center flex-shrink-0 text-xs">
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-bold text-white truncate">{user.name}</div>
+                      <div className="text-[11px] text-zinc-400 font-mono truncate">{user.email}</div>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex-shrink-0">
+                    Verified Account
+                  </span>
+                </div>
+              ) : (
+                <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800 text-xs space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white flex items-center gap-1.5 uppercase font-mono text-[10px] tracking-wider">
+                      <User className="w-3.5 h-3.5 text-cyan-400" />
+                      Invoice &amp; Courier Contact
+                    </span>
+                    <span className="text-[10px] text-cyan-400 font-mono">Guest Order</span>
+                  </div>
+
+                  {guestError && (
+                    <div className="p-2 rounded-lg bg-red-950/40 border border-red-500/40 text-red-300 text-xs flex items-center gap-2">
+                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 text-red-400" />
+                      <span>{guestError}</span>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-1">
+                        Full Name <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={guestName}
+                        onChange={(e) => {
+                          setGuestName(e.target.value);
+                          if (guestError) setGuestError(null);
+                        }}
+                        placeholder="Recipient full name"
+                        className="w-full px-3 py-1.5 text-xs bg-zinc-950 text-white placeholder-zinc-500 rounded-lg border border-zinc-800 focus:outline-none focus:border-cyan-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-1">
+                        Email Address <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={guestEmail}
+                        onChange={(e) => {
+                          setGuestEmail(e.target.value);
+                          if (guestError) setGuestError(null);
+                        }}
+                        placeholder="name@example.com"
+                        className="w-full px-3 py-1.5 text-xs bg-zinc-950 text-white placeholder-zinc-500 rounded-lg border border-zinc-800 focus:outline-none focus:border-cyan-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Navigation button */}
               <button
                 disabled={items.length === 0}
-                onClick={() => setStep(2)}
+                onClick={handleProceedToStep2}
                 className="w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 flex items-center justify-center gap-2 shadow-glow-cyan transition-all active:scale-[0.99] disabled:opacity-50"
               >
                 <span>Proceed to Scan &amp; Pay UPI</span>

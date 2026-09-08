@@ -19,7 +19,8 @@ export interface UserSession {
   name: string;
   email: string;
   phone?: string;
-  provider: 'local' | 'google' | 'facebook';
+  role?: string;
+  provider?: 'local' | 'google' | 'facebook';
   token: string;
   loginAt: string;
   avatar?: string;
@@ -27,6 +28,7 @@ export interface UserSession {
 
 const USERS_STORAGE_KEY = 'rigforge_users';
 const SESSION_STORAGE_KEY = 'rigforge_active_session';
+const LAST_ACTIVITY_KEY = 'rigforge_last_active_timestamp';
 
 /**
  * Fetch all registered users from local persistence
@@ -52,7 +54,7 @@ export function saveUserCredentials(user: Omit<UserAccount, 'id' | 'createdAt'>)
     // Check if email is already taken
     const normalizedEmail = user.email.toLowerCase().trim();
     if (existingUsers.some((u) => u.email.toLowerCase() === normalizedEmail)) {
-      return { success: false, error: 'An account with this email address already exists.' };
+      return { success: false, error: 'An account with this email address already exists. Please log in.' };
     }
 
     const newUser: UserAccount = {
@@ -85,7 +87,7 @@ export function verifyCredentials(email: string, password: string): { success: b
     );
 
     if (!matchedUser) {
-      return { success: false, error: 'No account registered with this email.' };
+      return { success: false, error: 'Invalid email or password.' };
     }
 
     if (matchedUser.provider !== 'local') {
@@ -96,7 +98,7 @@ export function verifyCredentials(email: string, password: string): { success: b
     }
 
     if (matchedUser.password !== password) {
-      return { success: false, error: 'Invalid password. Please try again.' };
+      return { success: false, error: 'Invalid email or password.' };
     }
 
     return { success: true, user: matchedUser };
@@ -109,20 +111,31 @@ export function verifyCredentials(email: string, password: string): { success: b
 /**
  * Creates and stores an active authenticated session
  */
-export function setUserSession(user: UserAccount): UserSession {
+export function setUserSession(user: {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  role?: string;
+  provider?: 'local' | 'google' | 'facebook';
+  token?: string;
+  avatar?: string;
+}): UserSession {
   const session: UserSession = {
     id: user.id,
     name: user.name,
     email: user.email,
     phone: user.phone,
-    provider: user.provider,
-    token: 'jwt_rf_' + Math.random().toString(36).substring(2) + Date.now().toString(36),
+    role: user.role,
+    provider: user.provider || 'local',
+    token: user.token || ('jwt_rf_' + Math.random().toString(36).substring(2) + Date.now().toString(36)),
     loginAt: new Date().toISOString(),
     avatar: user.avatar,
   };
 
   try {
     localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+    localStorage.setItem(LAST_ACTIVITY_KEY, Date.now().toString());
   } catch (error) {
     console.error('Failed to write active session:', error);
   }
@@ -150,39 +163,39 @@ export function getUserSession(): UserSession | null {
 export function clearSession(): void {
   try {
     localStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem(LAST_ACTIVITY_KEY);
   } catch (error) {
     console.error('Failed to clear session:', error);
   }
 }
 
 /**
- * Simulates a Social OAuth registration or login (Google / Facebook)
+ * Handles social login without hardcoding any shared account credentials
  */
-export function registerSocialUser(provider: 'google' | 'facebook'): { session: UserSession; isNewUser: boolean } {
+export function registerSocialUser(
+  provider: 'google' | 'facebook',
+  overrideEmail?: string,
+  overrideName?: string
+): { session: UserSession; isNewUser: boolean } {
   const existingUsers = getRegisteredUsers();
 
-  const mockSocialData = provider === 'google' 
-    ? {
-        name: 'Arth Jadav',
-        email: 'jadavarth07@gmail.com',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-      }
-    : {
-        name: 'Arth Jadav',
-        email: 'jadavarth07@gmail.com',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-      };
+  const randSuffix = Math.random().toString(36).substring(2, 6);
+  const socialName = overrideName || (provider === 'google' ? `Google User (${randSuffix})` : `Facebook User (${randSuffix})`);
+  const socialEmail = (overrideEmail && overrideEmail.trim().toLowerCase()) 
+    || `${provider}.user.${randSuffix}@gmail.com`;
 
-  let user = existingUsers.find((u) => u.email === mockSocialData.email);
+  let user = existingUsers.find((u) => u.email === socialEmail);
   let isNewUser = false;
 
   if (!user) {
     user = {
-      id: 'usr_' + provider + '_' + Math.random().toString(36).substring(2, 7),
-      name: mockSocialData.name,
-      email: mockSocialData.email,
+      id: 'usr_' + provider + '_' + Math.random().toString(36).substring(2, 9),
+      name: socialName,
+      email: socialEmail,
       provider,
-      avatar: mockSocialData.avatar,
+      avatar: provider === 'google' 
+        ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'
+        : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
       createdAt: new Date().toISOString(),
     };
     existingUsers.push(user);

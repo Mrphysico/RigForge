@@ -7,17 +7,21 @@ export interface IUser extends Document {
   phone?: string;
   role: string;
   provider: 'local' | 'google' | 'facebook';
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   createdAt: Date;
 }
 
 const UserSchema = new Schema<IUser>(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String },
-    phone: { type: String },
+    phone: { type: String, trim: true },
     role: { type: String, default: 'customer' },
     provider: { type: String, enum: ['local', 'google', 'facebook'], default: 'local' },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
   },
   {
     timestamps: true,
@@ -26,7 +30,7 @@ const UserSchema = new Schema<IUser>(
 
 export const UserModel = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
-// Resilient in-memory user storage fallback
+// Resilient in-memory user storage fallback (starts completely empty, zero hardcoded accounts)
 export interface MemoryUser {
   id: string;
   name: string;
@@ -35,18 +39,9 @@ export interface MemoryUser {
   phone?: string;
   role: string;
   provider: 'local' | 'google' | 'facebook';
+  resetPasswordToken?: string;
+  resetPasswordExpires?: number;
   createdAt: string;
 }
 
-export const inMemoryUsers: MemoryUser[] = [
-  {
-    id: 'usr-default-arth',
-    name: 'Arth Jadav',
-    email: 'jadavarth07@gmail.com',
-    password: '$2a$10$YourHashedPasswordPlaceholderHere',
-    phone: '+91 9819319689',
-    role: 'customer',
-    provider: 'local',
-    createdAt: new Date().toISOString(),
-  },
-];
+export const inMemoryUsers: MemoryUser[] = [];

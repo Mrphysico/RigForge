@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { Mail, Lock, AlertCircle, ArrowRight, Loader2 } from 'lucide-react';
+import { Mail, Lock, AlertCircle, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 
 interface SignInFormProps {
   onSwitchToSignUp: () => void;
+  onForgotPassword?: () => void;
   onNotification?: (msg: string) => void;
 }
 
 export const SignInForm: React.FC<SignInFormProps> = ({
   onSwitchToSignUp,
+  onForgotPassword,
   onNotification,
 }) => {
   const { login, socialLogin } = useAuthStore();
-  const [email, setEmail] = useState('jadavarth07@gmail.com');
-  const [password, setPassword] = useState('RigForge@2026');
+  // Zero hardcoded credentials - each user must supply their own email and password
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<'google' | 'facebook' | null>(null);
@@ -22,19 +26,25 @@ export const SignInForm: React.FC<SignInFormProps> = ({
     e.preventDefault();
     setError(null);
 
-    if (!email.trim() || !password) {
-      setError('Please enter both email and password.');
+    const cleanEmail = email.trim();
+    if (!cleanEmail) {
+      setError('Please enter your email.');
+      return;
+    }
+
+    if (!password) {
+      setError('Please enter your password.');
       return;
     }
 
     setLoading(true);
-    const result = await login(email, password);
+    const result = await login(cleanEmail, password);
     setLoading(false);
 
     if (result.success) {
       if (onNotification) onNotification('Logged in successfully! Welcome back.');
     } else {
-      setError(result.error || 'Invalid credentials.');
+      setError(result.error || 'Invalid email or password.');
     }
   };
 
@@ -47,15 +57,15 @@ export const SignInForm: React.FC<SignInFormProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Social Login Buttons */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {/* Google Button */}
         <button
           type="button"
           onClick={() => handleSocial('google')}
           disabled={socialLoading !== null || loading}
-          className="w-full py-2.5 px-4 rounded-xl border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-zinc-100 font-medium text-xs flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-sm"
+          className="w-full py-2.5 px-4 rounded-xl border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-zinc-100 font-medium text-xs flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-sm disabled:opacity-50"
         >
           {socialLoading === 'google' ? (
             <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
@@ -87,7 +97,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
           type="button"
           onClick={() => handleSocial('facebook')}
           disabled={socialLoading !== null || loading}
-          className="w-full py-2.5 px-4 rounded-xl border border-[#1877F2]/40 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] hover:text-white font-medium text-xs flex items-center justify-center gap-3 transition-all active:scale-[0.98]"
+          className="w-full py-2.5 px-4 rounded-xl border border-[#1877F2]/40 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] hover:text-white font-medium text-xs flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-50"
         >
           {socialLoading === 'facebook' ? (
             <Loader2 className="w-4 h-4 animate-spin text-[#1877F2]" />
@@ -103,14 +113,14 @@ export const SignInForm: React.FC<SignInFormProps> = ({
       {/* Or Divider */}
       <div className="relative flex items-center justify-center">
         <div className="border-t border-zinc-800 w-full" />
-        <span className="bg-zinc-950 px-3 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
-          or continue with email
+        <span className="bg-zinc-950 px-3 text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+          or sign in with credentials
         </span>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/40 text-red-300 text-xs flex items-center gap-2">
+        <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/40 text-red-300 text-xs flex items-center gap-2 animate-fadeIn">
           <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400" />
           <span>{error}</span>
         </div>
@@ -120,17 +130,21 @@ export const SignInForm: React.FC<SignInFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1.5 font-medium">
-            Email Address
+            Email Address <span className="text-red-400">*</span>
           </label>
           <div className="relative">
             <Mail className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="email"
               required
+              autoComplete="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. jadavarth07@gmail.com"
-              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder="name@example.com"
+              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
             />
           </div>
         </div>
@@ -138,22 +152,40 @@ export const SignInForm: React.FC<SignInFormProps> = ({
         <div>
           <div className="flex justify-between items-center mb-1.5">
             <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 font-medium">
-              Password
+              Password <span className="text-red-400">*</span>
             </label>
-            <span className="text-[10px] text-cyan-400 hover:underline cursor-pointer">
-              Forgot?
-            </span>
+            {onForgotPassword && (
+              <button
+                type="button"
+                onClick={onForgotPassword}
+                className="text-[11px] text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer transition-colors"
+              >
+                Forgot Password?
+              </button>
+            )}
           </div>
           <div className="relative">
             <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               required
+              autoComplete="current-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder="Enter your password"
+              className="w-full pl-10 pr-10 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1 transition-colors"
+              title={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 
@@ -173,15 +205,15 @@ export const SignInForm: React.FC<SignInFormProps> = ({
         </button>
       </form>
 
-      {/* Switcher */}
+      {/* Switcher to Sign Up */}
       <div className="text-center text-xs text-zinc-400 pt-2 border-t border-zinc-850">
-        Don't have an account yet?{' '}
+        Don't have an account?{' '}
         <button
           type="button"
           onClick={onSwitchToSignUp}
-          className="text-cyan-400 hover:text-cyan-300 font-semibold underline underline-offset-4 ml-1"
+          className="text-cyan-400 hover:text-cyan-300 font-bold underline underline-offset-4 ml-1 cursor-pointer"
         >
-          Create One
+          Sign Up
         </button>
       </div>
     </div>

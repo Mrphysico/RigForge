@@ -300,7 +300,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div className="font-bold text-white truncate">{user.name}</div>
                     <div className="text-[11px] text-zinc-400 font-mono truncate">{user.email}</div>
                     <div className="mt-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-[10px] font-mono">
-                      Via {user.provider.toUpperCase()}
+                      Via {(user.provider || 'local').toUpperCase()}
                     </div>
                   </div>
 

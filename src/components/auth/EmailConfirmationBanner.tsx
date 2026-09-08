@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, CheckCircle2, X, ExternalLink, Sparkles, KeyRound } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 
 export const EmailConfirmationBanner: React.FC = () => {
   const { latestDispatchedEmail, clearEmailAlert, user } = useAuthStore();
   const [showEmailPreview, setShowEmailPreview] = useState(false);
+  const [emailDetails, setEmailDetails] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    const handleEmailSent = (e: any) => {
+      if (e.detail) {
+        setEmailDetails({ name: e.detail.name, email: e.detail.recipient });
+      }
+    };
+    window.addEventListener('rigforge_email_sent', handleEmailSent);
+    return () => window.removeEventListener('rigforge_email_sent', handleEmailSent);
+  }, []);
 
   if (!latestDispatchedEmail) return null;
 
-  const recipientName = user?.name || 'Arth Jadav';
-  const recipientEmail = user?.email || 'jadavarth07@gmail.com';
+  const recipientName = emailDetails?.name || user?.name || 'Valued Member';
+  const recipientEmail = emailDetails?.email || user?.email || 'your-email@example.com';
 
   const hasEmailJsKeys = Boolean(
     import.meta.env.VITE_EMAILJS_SERVICE_ID &&

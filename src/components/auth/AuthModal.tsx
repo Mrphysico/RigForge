@@ -3,6 +3,7 @@ import { X, ShieldCheck, Cpu } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
+import { ForgotPasswordModal } from './ForgotPasswordModal';
 
 interface AuthModalProps {
   onNotification?: (msg: string) => void;
@@ -22,7 +23,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onNotification }) => {
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-3xl shadow-2xl overflow-hidden z-10 p-6 sm:p-8">
+      <div className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-3xl shadow-2xl overflow-hidden z-10 p-6 sm:p-8 max-h-[92vh] overflow-y-auto">
         {/* Neon Glow accent */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
 
@@ -40,50 +41,64 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onNotification }) => {
             <Cpu className="w-7 h-7 text-zinc-950 stroke-[2.2]" />
           </div>
           <h2 className="text-xl font-extrabold text-white">
-            {authModalView === 'signin' ? 'Welcome Back to RigForge' : 'Join the RigForge Community'}
+            {authModalView === 'signin' && 'Welcome Back to RigForge'}
+            {authModalView === 'signup' && 'Join the RigForge Community'}
+            {authModalView === 'forgot' && 'Account Recovery'}
           </h2>
           <p className="text-xs text-zinc-400 mt-1 max-w-xs">
-            {authModalView === 'signin'
-              ? 'Sign in to access saved builds, order telemetry, and GST invoicing.'
-              : 'Create an account to configure custom rigs with automated email verification.'}
+            {authModalView === 'signin' && 'Sign in to access your personal builds, cart, and verified order tracking.'}
+            {authModalView === 'signup' && 'Create your personal account to configure battle rigs and track orders.'}
+            {authModalView === 'forgot' && 'Reset your password securely to regain access to your personal account.'}
           </p>
         </div>
 
-        {/* View Switcher Tabs */}
-        <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-900 border border-zinc-800 mb-6 text-xs font-semibold">
-          <button
-            type="button"
-            onClick={() => setAuthModalView('signin')}
-            className={`py-2 rounded-lg transition-all ${
-              authModalView === 'signin'
-                ? 'bg-zinc-800 text-cyan-400 shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => setAuthModalView('signup')}
-            className={`py-2 rounded-lg transition-all ${
-              authModalView === 'signup'
-                ? 'bg-zinc-800 text-cyan-400 shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            Create Account
-          </button>
-        </div>
+        {/* View Switcher Tabs (Only shown on signin / signup) */}
+        {authModalView !== 'forgot' && (
+          <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-900 border border-zinc-800 mb-6 text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => setAuthModalView('signin')}
+              className={`py-2 rounded-lg transition-all ${
+                authModalView === 'signin'
+                  ? 'bg-zinc-800 text-cyan-400 shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => setAuthModalView('signup')}
+              className={`py-2 rounded-lg transition-all ${
+                authModalView === 'signup'
+                  ? 'bg-zinc-800 text-cyan-400 shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              Create Account
+            </button>
+          </div>
+        )}
 
         {/* Dynamic Forms */}
-        {authModalView === 'signin' ? (
+        {authModalView === 'signin' && (
           <SignInForm
             onSwitchToSignUp={() => setAuthModalView('signup')}
+            onForgotPassword={() => setAuthModalView('forgot')}
             onNotification={onNotification}
           />
-        ) : (
+        )}
+
+        {authModalView === 'signup' && (
           <SignUpForm
             onSwitchToSignIn={() => setAuthModalView('signin')}
+            onNotification={onNotification}
+          />
+        )}
+
+        {authModalView === 'forgot' && (
+          <ForgotPasswordModal
+            onBackToSignIn={() => setAuthModalView('signin')}
             onNotification={onNotification}
           />
         )}

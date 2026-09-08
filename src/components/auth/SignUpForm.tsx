@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Phone, Lock, AlertCircle, ArrowRight, Loader2, Sparkles } from 'lucide-react';
+import { User, Mail, Phone, Lock, AlertCircle, ArrowRight, Loader2, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 
 interface SignUpFormProps {
@@ -12,46 +12,69 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
   onNotification,
 }) => {
   const { signup, socialLogin } = useAuthStore();
-  const [name, setName] = useState('Arth Jadav');
-  const [email, setEmail] = useState('jadavarth07@gmail.com');
-  const [phone, setPhone] = useState('+91 98765 43210');
-  const [password, setPassword] = useState('RigForge@2026');
+  // Zero hardcoded credentials - starts completely blank for each unique user
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<'google' | 'facebook' | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccessMessage(null);
 
-    if (!name.trim()) {
+    const cleanName = name.trim();
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanName) {
       setError('Please enter your full name.');
       return;
     }
-    if (!email.trim() || !email.includes('@')) {
-      setError('Please provide a valid email address.');
+
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      setError('Please provide a valid email address (e.g. name@example.com).');
       return;
     }
-    if (password.length < 6) {
+
+    if (!password || password.length < 6) {
       setError('Password must be at least 6 characters.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match. Please verify your confirmation password.');
       return;
     }
 
     setLoading(true);
     const res = await signup({
-      name: name.trim(),
-      email: email.trim(),
+      name: cleanName,
+      email: cleanEmail,
       phone: phone.trim() || undefined,
       password,
+      confirmPassword,
     });
     setLoading(false);
 
     if (res.success) {
+      const msg = res.message || 'Account created successfully. Please log in.';
+      setSuccessMessage(msg);
       if (onNotification) {
-        onNotification(`🎉 Account created! Welcome confirmation email sent to ${email}`);
+        onNotification(msg);
       }
+      // After successful registration, redirect them to Login
+      setTimeout(() => {
+        onSwitchToSignIn();
+      }, 1500);
     } else {
-      setError(res.error || 'Registration failed.');
+      setError(res.error || 'Unable to create account. Please try again.');
     }
   };
 
@@ -66,15 +89,15 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Social Registration Buttons */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {/* Google Button */}
         <button
           type="button"
           onClick={() => handleSocial('google')}
           disabled={socialLoading !== null || loading}
-          className="w-full py-2.5 px-4 rounded-xl border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-zinc-100 font-medium text-xs flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-sm"
+          className="w-full py-2.5 px-4 rounded-xl border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-zinc-100 font-medium text-xs flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-sm disabled:opacity-50"
         >
           {socialLoading === 'google' ? (
             <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
@@ -106,7 +129,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
           type="button"
           onClick={() => handleSocial('facebook')}
           disabled={socialLoading !== null || loading}
-          className="w-full py-2.5 px-4 rounded-xl border border-[#1877F2]/40 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] hover:text-white font-medium text-xs flex items-center justify-center gap-3 transition-all active:scale-[0.98]"
+          className="w-full py-2.5 px-4 rounded-xl border border-[#1877F2]/40 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] hover:text-white font-medium text-xs flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-50"
         >
           {socialLoading === 'facebook' ? (
             <Loader2 className="w-4 h-4 animate-spin text-[#1877F2]" />
@@ -122,14 +145,25 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
       {/* Or Divider */}
       <div className="relative flex items-center justify-center">
         <div className="border-t border-zinc-800 w-full" />
-        <span className="bg-zinc-950 px-3 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
-          or create account with email
+        <span className="bg-zinc-950 px-3 text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+          or register with email
         </span>
       </div>
 
+      {/* Success Notification */}
+      {successMessage && (
+        <div className="p-3.5 rounded-xl bg-emerald-950/50 border border-emerald-500/50 text-emerald-300 text-xs flex items-center gap-2.5 animate-fadeIn">
+          <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-400" />
+          <div>
+            <div className="font-bold text-white">{successMessage}</div>
+            <div className="text-[11px] text-emerald-300/80 mt-0.5">Redirecting you to Login...</div>
+          </div>
+        </div>
+      )}
+
       {/* Error Alert */}
       {error && (
-        <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/40 text-red-300 text-xs flex items-center gap-2">
+        <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/40 text-red-300 text-xs flex items-center gap-2 animate-fadeIn">
           <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400" />
           <span>{error}</span>
         </div>
@@ -139,100 +173,144 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-3.5">
         <div>
           <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1 font-medium">
-            Full Name
+            Full Name <span className="text-red-400">*</span>
           </label>
           <div className="relative">
             <User className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               required
+              autoComplete="name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Arth Jadav"
-              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+              onChange={(e) => {
+                setName(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder="e.g. Rahul Sharma"
+              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
             />
           </div>
         </div>
 
         <div>
           <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1 font-medium">
-            Email Address
+            Email Address <span className="text-red-400">*</span>
           </label>
           <div className="relative">
             <Mail className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="email"
               required
+              autoComplete="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. jadavarth07@gmail.com"
-              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder="name@example.com"
+              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
             />
           </div>
         </div>
 
         <div>
           <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1 font-medium">
-            Phone Number (India +91)
+            Phone Number <span className="text-zinc-500 text-[10px]">(Optional)</span>
           </label>
           <div className="relative">
             <Phone className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="tel"
+              autoComplete="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+91 98765 43210 (For courier updates)"
-              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+              placeholder="+91 98765 43210"
+              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
             />
           </div>
         </div>
 
         <div>
           <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1 font-medium">
-            Create Password
+            Password <span className="text-red-400">*</span> <span className="text-zinc-500 text-[10px]">(min. 6 characters)</span>
           </label>
           <div className="relative">
             <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               required
+              autoComplete="new-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Minimum 6 characters"
-              className="w-full pl-10 pr-4 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder="••••••••"
+              className="w-full pl-10 pr-10 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1 transition-colors"
+              title={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 
-        {/* Email guarantee note */}
-        <div className="p-2.5 rounded-lg bg-cyan-950/20 border border-cyan-500/20 flex items-center gap-2 text-[11px] text-cyan-300">
-          <Sparkles className="w-3.5 h-3.5 flex-shrink-0 text-cyan-400" />
-          <span>An automated confirmation email will be dispatched upon registration.</span>
+        <div>
+          <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1 font-medium">
+            Confirm Password <span className="text-red-400">*</span>
+          </label>
+          <div className="relative">
+            <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              required
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder="Re-enter password"
+              className="w-full pl-10 pr-10 py-2.5 text-xs bg-zinc-900 text-zinc-100 placeholder-zinc-500 rounded-xl border border-zinc-800 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1 transition-colors"
+              title={showConfirmPassword ? 'Hide password' : 'Show password'}
+            >
+              {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
         </div>
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !!successMessage}
           className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 flex items-center justify-center gap-2 shadow-glow-cyan transition-all active:scale-[0.99] disabled:opacity-50"
         >
           {loading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
             <>
-              <span>Create Account &amp; Verify Email</span>
+              <span>Create Free Account</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </>
           )}
         </button>
       </form>
 
-      {/* Switcher */}
+      {/* Switcher to Sign In */}
       <div className="text-center text-xs text-zinc-400 pt-2 border-t border-zinc-850">
-        Already have a RigForge account?{' '}
+        Already have an account?{' '}
         <button
           type="button"
           onClick={onSwitchToSignIn}
-          className="text-cyan-400 hover:text-cyan-300 font-semibold underline underline-offset-4 ml-1"
+          className="text-cyan-400 hover:text-cyan-300 font-bold underline underline-offset-4 ml-1 cursor-pointer"
         >
           Sign In
         </button>

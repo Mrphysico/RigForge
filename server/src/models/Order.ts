@@ -10,6 +10,7 @@ export interface IOrderItem {
 
 export interface IOrder extends Document {
   orderId: string;
+  userId: string;
   customerName: string;
   customerEmail: string;
   items: IOrderItem[];
@@ -40,8 +41,9 @@ const OrderItemSchema = new Schema<IOrderItem>(
 const OrderSchema = new Schema<IOrder>(
   {
     orderId: { type: String, required: true, unique: true },
+    userId: { type: String, required: true, index: true },
     customerName: { type: String, required: true },
-    customerEmail: { type: String, required: true },
+    customerEmail: { type: String, required: true, index: true },
     items: [OrderItemSchema],
     subtotal: { type: Number, required: true },
     tax: { type: Number, required: true },
@@ -68,6 +70,7 @@ export const OrderModel = mongoose.models.Order || mongoose.model<IOrder>('Order
 // Resilient in-memory orders store
 export interface MemoryOrder {
   orderId: string;
+  userId: string;
   customerName: string;
   customerEmail: string;
   items: IOrderItem[];

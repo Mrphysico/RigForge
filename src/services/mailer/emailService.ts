@@ -36,8 +36,8 @@ export async function sendSuccessEmail({
   email: string;
   name: string;
 }): Promise<EmailDispatchResult> {
-  const finalName = name.trim() || 'Arth Jadav';
-  const finalEmail = email.trim() || 'jadavarth07@gmail.com';
+  const finalName = name.trim() || 'Valued User';
+  const finalEmail = email.trim();
   const messageId = 'msg_rf_' + Math.random().toString(36).substring(2, 11);
   const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
