@@ -32,7 +32,7 @@ export const EmailConfirmationBanner: React.FC = () => {
     <>
       {/* Toast Alert */}
       <div className="fixed top-20 right-6 z-50 max-w-md animate-bounce">
-        <div className="p-4 rounded-2xl bg-[#0D0D0D] border border-[#FCA311]/60 shadow-glow-orange text-white backdrop-blur-xl">
+        <div className="p-4 rounded-2xl bg-[#131d38] border border-[#FCA311]/60 shadow-glow-orange text-white backdrop-blur-xl">
           <div className="flex items-start gap-3">
             <div className="w-9 h-9 rounded-xl bg-[#FCA311]/15 text-[#FCA311] flex items-center justify-center flex-shrink-0 border border-[#FCA311]/30">
               <Mail className="w-5 h-5 animate-pulse" />
@@ -60,7 +60,7 @@ export const EmailConfirmationBanner: React.FC = () => {
 
             <button
               onClick={clearEmailAlert}
-              className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-[#151515] transition-colors"
+              className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-[#1e2d4f] transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -70,22 +70,22 @@ export const EmailConfirmationBanner: React.FC = () => {
 
       {/* Simulated Email Client Preview Modal */}
       {showEmailPreview && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="relative w-full max-w-lg bg-[#0D0D0D] border border-[#262626] rounded-3xl shadow-2xl overflow-hidden p-6 space-y-4">
-            <div className="flex justify-between items-center pb-3 border-b border-[#262626]">
+        <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+          <div className="relative w-full max-w-lg bg-[#131d38] border border-[#26365a] rounded-3xl shadow-2xl overflow-hidden p-6 space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b border-[#26365a]">
               <div className="flex items-center gap-2 text-xs font-mono text-[#FCA311] font-bold">
                 <Mail className="w-4 h-4" />
                 <span>RigForge Mailer Engine</span>
               </div>
               <button
                 onClick={() => setShowEmailPreview(false)}
-                className="p-1.5 text-zinc-400 hover:text-white rounded-xl hover:bg-[#151515] transition-colors"
+                className="p-1.5 text-zinc-400 hover:text-white rounded-xl hover:bg-[#1e2d4f] transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="bg-[#111111] rounded-2xl p-4 border border-[#262626] text-xs space-y-2">
+            <div className="bg-[#16223f] rounded-2xl p-4 border border-[#26365a] text-xs space-y-2">
               <div className="flex justify-between text-zinc-400">
                 <span>To:</span>
                 <span className="font-mono text-zinc-100 font-semibold">{recipientName} &lt;{recipientEmail}&gt;</span>
@@ -108,12 +108,12 @@ export const EmailConfirmationBanner: React.FC = () => {
             </div>
 
             {/* Email Body Content */}
-            <div className="p-4 rounded-2xl bg-[#111111]/70 border border-[#262626] text-xs space-y-3 leading-relaxed text-zinc-300">
+            <div className="p-4 rounded-2xl bg-[#16223f]/70 border border-[#26365a] text-xs space-y-3 leading-relaxed text-zinc-300">
               <h4 className="text-base font-bold text-white">Hello {recipientName},</h4>
               <p className="leading-relaxed">
                 Your RigForge hardware account has been successfully created. Welcome to the ultimate custom PC building platform in India! You can now configure, price, and save your custom battle rigs with 100% verified component compatibility.
               </p>
-              <div className="p-3 rounded-xl bg-[#151515] border border-[#262626] font-mono text-[11px] text-zinc-400 space-y-1">
+              <div className="p-3 rounded-xl bg-[#1e2d4f] border border-[#26365a] font-mono text-[11px] text-zinc-300 space-y-1">
                 <div>• Verified Indian Courier: BlueDart / Delhivery Express Transit</div>
                 <div>• GST Invoicing with Input Tax Credit Enabled</div>
                 <div>• 100% Genuine Manufacturer Silicon Warranty</div>

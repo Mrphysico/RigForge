@@ -162,7 +162,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 pb-32 md:pb-20">
       {/* Top Header & Preset Quick Switcher */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#262626]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#26365a]">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#FCA311] font-bold mb-1">
             <Wrench className="w-3.5 h-3.5" />
@@ -183,7 +183,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
               loadPresetBuild('enthusiast');
               onNotification('Loaded 1440p / 4K Esports King (Ryzen 7 7800X3D + RTX 4070 Super)');
             }}
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#111111] hover:bg-[#151515] text-[#FCA311] border border-[#FCA311]/40 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-[#FCA311] border border-[#FCA311]/40 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#FCA311]" />
             <span>1440p Esports King</span>
@@ -194,7 +194,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
               loadPresetBuild('sweetspot');
               onNotification('Loaded 1080p Value Champion (Ryzen 5 5600 + RX 6600)');
             }}
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#111111] hover:bg-[#151515] text-zinc-200 border border-[#262626] hover:border-zinc-500 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-200 border border-[#26365a] hover:border-zinc-500 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
           >
             <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
             <span>1080p Value Champion</span>
@@ -206,7 +206,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                 clearBuild();
                 onNotification('Cleared current build configuration.');
               }}
-              className="p-2.5 rounded-xl text-xs text-zinc-400 hover:text-red-400 hover:bg-[#151515] transition-colors border border-transparent hover:border-[#262626]"
+              className="p-2.5 rounded-xl text-xs text-zinc-400 hover:text-red-400 hover:bg-[#1e2d4f] transition-colors border border-transparent hover:border-[#26365a]"
               title="Reset all builder slots"
             >
               <RotateCcw className="w-4 h-4" />
@@ -218,7 +218,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
       {/* Real-time System Telemetry, Wattage & Compatibility Dashboard */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Estimated Wattage & Power Meter */}
-        <div className="lg:col-span-4 p-5 rounded-3xl bg-[#0D0D0D] border border-[#262626] flex flex-col justify-between shadow-xl">
+        <div className="lg:col-span-4 p-5 rounded-3xl bg-[#131d38] border border-[#26365a] flex flex-col justify-between shadow-xl">
           <div>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
@@ -227,7 +227,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                   Estimated System Wattage
                 </span>
               </div>
-              <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#151515] text-zinc-400 border border-[#262626]">
+              <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-zinc-400 border border-[#26365a]">
                 Peak Load
               </span>
             </div>
@@ -240,7 +240,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
             </div>
 
             {/* Wattage bar */}
-            <div className="w-full h-2.5 bg-[#151515] rounded-full overflow-hidden mb-3 border border-[#262626]">
+            <div className="w-full h-2.5 bg-[#1e2d4f] rounded-full overflow-hidden mb-3 border border-[#26365a]">
               <div
                 className={`h-full transition-all duration-500 rounded-full ${
                   estimatedWattage > 700
@@ -251,22 +251,22 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
               />
             </div>
 
-            <div className="text-xs text-zinc-400 space-y-1 bg-[#111111] p-3 rounded-2xl border border-[#262626]">
+            <div className="text-xs text-zinc-400 space-y-1 bg-[#16223f] p-3 rounded-2xl border border-[#26365a]">
               <div className="flex justify-between">
                 <span>Recommended PSU Rating:</span>
                 <span className="font-mono font-bold text-[#FCA311]">
                   {recommendedPsu > 0 ? `${recommendedPsu}W or higher` : 'Select components'}
                 </span>
               </div>
-              <div className="flex justify-between text-[11px] text-zinc-500">
+              <div className="flex justify-between text-[11px] text-zinc-400">
                 <span>Indian Mains Headroom:</span>
-                <span className="font-mono text-zinc-400">+35% Transient Spike Buffer</span>
+                <span className="font-mono text-zinc-300">+35% Transient Spike Buffer</span>
               </div>
             </div>
           </div>
 
           {slots.psu && (
-            <div className="mt-3 text-xs pt-3 border-t border-[#262626] flex items-center justify-between text-zinc-300">
+            <div className="mt-3 text-xs pt-3 border-t border-[#26365a] flex items-center justify-between text-zinc-300">
               <span>Selected PSU:</span>
               <span className="font-mono font-bold text-white">
                 {slots.psu.specs.wattage}W ({slots.psu.specs.efficiency})
@@ -276,7 +276,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
         </div>
 
         {/* Compatibility Matrix Panel */}
-        <div className="lg:col-span-4 p-5 rounded-3xl bg-[#0D0D0D] border border-[#262626] flex flex-col justify-between shadow-xl">
+        <div className="lg:col-span-4 p-5 rounded-3xl bg-[#131d38] border border-[#26365a] flex flex-col justify-between shadow-xl">
           <div>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -332,14 +332,14 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
             )}
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#262626] flex items-center justify-between text-xs text-zinc-400">
+          <div className="mt-4 pt-3 border-t border-[#26365a] flex items-center justify-between text-xs text-zinc-400">
             <span>Configured Slots:</span>
             <span className="font-mono font-bold text-white">{selectedCount} / 8 slots filled</span>
           </div>
         </div>
 
         {/* Pricing Summary & Action CTAs */}
-        <div className="lg:col-span-4 p-5 rounded-3xl bg-[#0D0D0D] border border-[#262626] flex flex-col justify-between shadow-xl">
+        <div className="lg:col-span-4 p-5 rounded-3xl bg-[#131d38] border border-[#26365a] flex flex-col justify-between shadow-xl">
           <div>
             <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-1">
               Estimated Build Total (INR)
@@ -372,7 +372,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
               className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 ${
                 selectedCount > 0 && !hasErrors
                   ? 'bg-[#FCA311] hover:bg-[#e5920a] text-black shadow-glow-orange cursor-pointer'
-                  : 'bg-[#151515] text-zinc-500 cursor-not-allowed border border-[#262626]'
+                  : 'bg-[#1e2d4f] text-zinc-500 cursor-not-allowed border border-[#26365a]'
               }`}
             >
               <ShoppingCart className="w-4 h-4" />
@@ -383,7 +383,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
               <button
                 onClick={() => setShowSaveDialog(true)}
                 disabled={selectedCount === 0}
-                className="py-2.5 px-3 rounded-xl text-xs font-semibold bg-[#111111] hover:bg-[#151515] text-zinc-300 hover:text-[#FCA311] border border-[#262626] hover:border-[#FCA311]/40 flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="py-2.5 px-3 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-300 hover:text-[#FCA311] border border-[#26365a] hover:border-[#FCA311]/40 flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Save className="w-3.5 h-3.5 text-[#FCA311]" />
                 <span>Save Build</span>
@@ -391,7 +391,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
 
               <button
                 onClick={handleShareBuild}
-                className="py-2.5 px-3 rounded-xl text-xs font-semibold bg-[#111111] hover:bg-[#151515] text-zinc-300 hover:text-white border border-[#262626] flex items-center justify-center gap-1.5 transition-colors"
+                className="py-2.5 px-3 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-300 hover:text-white border border-[#26365a] flex items-center justify-center gap-1.5 transition-colors"
               >
                 {copiedLink ? (
                   <>
@@ -412,8 +412,8 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
 
       {/* Save Build Modal Dialog */}
       {showSaveDialog && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#111111] border border-[#262626] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-fadeIn">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#16223f] border border-[#26365a] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-fadeIn">
             <div className="flex items-center gap-2">
               <Save className="w-5 h-5 text-[#FCA311]" />
               <h3 className="text-lg font-bold text-white">Save Custom Rig to Account</h3>
@@ -430,14 +430,14 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                 value={buildName}
                 onChange={(e) => setBuildName(e.target.value)}
                 placeholder={user ? `${user.name}'s Custom Rig` : 'e.g., Ultra 4K Battlestation'}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#151515] border border-[#262626] text-white text-sm focus:outline-none focus:border-[#FCA311]"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#1e2d4f] border border-[#26365a] text-white text-sm focus:outline-none focus:border-[#FCA311]"
               />
             </div>
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setShowSaveDialog(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white hover:bg-[#151515] transition-colors"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white hover:bg-[#1e2d4f] transition-colors"
               >
                 Cancel
               </button>
@@ -485,13 +485,13 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                   isOutOfStock
                     ? 'bg-red-950/20 border-red-900/40'
                     : product
-                    ? 'bg-[#0D0D0D] border-[#262626] hover:border-[#FCA311]/50'
-                    : 'bg-[#0D0D0D]/40 border-dashed border-[#262626] hover:border-zinc-600'
+                    ? 'bg-[#131d38] border-[#26365a] hover:border-[#FCA311]/50'
+                    : 'bg-[#131d38]/40 border-dashed border-[#26365a] hover:border-zinc-500'
                 }`}
               >
                 {/* Left slot info and product preview */}
                 <div className="flex items-center gap-4 min-w-0">
-                  <div className="w-12 h-12 rounded-2xl bg-[#151515] border border-[#262626] flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-2xl bg-[#1e2d4f] border border-[#26365a] flex items-center justify-center flex-shrink-0">
                     {getSlotIcon(slot.category)}
                   </div>
 
@@ -500,7 +500,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                       <img
                         src={product.image}
                         alt={product.name}
-                        className={`w-12 h-12 rounded-xl object-cover border border-[#262626] bg-black hidden sm:block flex-shrink-0 ${
+                        className={`w-12 h-12 rounded-xl object-cover border border-[#26365a] bg-[#0b1329] hidden sm:block flex-shrink-0 ${
                           isOutOfStock ? 'grayscale' : ''
                         }`}
                       />
@@ -509,7 +509,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                           <span className="text-[10px] font-mono uppercase tracking-wider text-[#FCA311] font-bold">
                             {slot.label}
                           </span>
-                          <span className="text-xs text-zinc-500 font-mono">· {product.brand}</span>
+                          <span className="text-xs text-zinc-400 font-mono">· {product.brand}</span>
                           {isOutOfStock && (
                             <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.2 rounded bg-red-950 text-red-400 border border-red-500/40">
                               <Ban className="w-2.5 h-2.5" /> Out of Stock
@@ -521,27 +521,27 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                         </h3>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {product.specs.socket && (
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#151515] text-[#FCA311] border border-[#262626]">
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-[#FCA311] border border-[#26365a]">
                               {product.specs.socket}
                             </span>
                           )}
                           {product.specs.tdp && (
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#151515] text-amber-300 border border-[#262626]">
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-amber-300 border border-[#26365a]">
                               {product.specs.tdp}W TDP
                             </span>
                           )}
                           {product.specs.wattage && (
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#151515] text-amber-300 border border-[#262626]">
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-amber-300 border border-[#26365a]">
                               {product.specs.wattage}W
                             </span>
                           )}
                           {product.specs.ramType && (
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#151515] text-emerald-300 border border-[#262626]">
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-emerald-300 border border-[#26365a]">
                               {product.specs.ramType}
                             </span>
                           )}
                           {product.specs.vram && (
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#151515] text-purple-300 border border-[#262626]">
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-purple-300 border border-[#26365a]">
                               {product.specs.vram}
                             </span>
                           )}
@@ -555,16 +555,16 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                           {slot.label}
                         </span>
                         {slot.required && (
-                          <span className="text-[10px] font-mono text-zinc-500 uppercase">Required</span>
+                          <span className="text-[10px] font-mono text-zinc-400 uppercase">Required</span>
                         )}
                       </div>
-                      <p className="text-xs text-zinc-500 mt-0.5">{slot.sublabel}</p>
+                      <p className="text-xs text-zinc-400 mt-0.5">{slot.sublabel}</p>
                     </div>
                   )}
                 </div>
 
                 {/* Right controls: Price, Choose/Change, Remove */}
-                <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-[#262626]">
+                <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-[#26365a]">
                   {product ? (
                     <div className="text-right">
                       <span className={`text-base font-mono font-bold block ${isOutOfStock ? 'text-zinc-500' : 'text-white'}`}>
@@ -572,7 +572,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                       </span>
                     </div>
                   ) : (
-                    <span className="text-xs font-mono text-zinc-500">Unselected</span>
+                    <span className="text-xs font-mono text-zinc-400">Unselected</span>
                   )}
 
                   <div className="flex items-center gap-2">
@@ -580,7 +580,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                       onClick={() => setActivePickerSlot(slot.category)}
                       className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 ${
                         product
-                          ? 'bg-[#151515] hover:bg-[#202020] text-zinc-200 border border-[#262626] hover:border-zinc-500'
+                          ? 'bg-[#1e2d4f] hover:bg-[#233359] text-zinc-200 border border-[#26365a] hover:border-zinc-400'
                           : 'bg-[#FCA311]/10 hover:bg-[#FCA311] hover:text-black text-[#FCA311] border border-[#FCA311]/40'
                       }`}
                     >
@@ -597,7 +597,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
                     {product && (
                       <button
                         onClick={() => removeSlot(slot.category)}
-                        className="p-2 rounded-xl text-zinc-500 hover:text-red-400 hover:bg-[#151515] transition-colors"
+                        className="p-2 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-[#1e2d4f] transition-colors"
                         title="Remove component from slot"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -612,7 +612,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
       </div>
 
       {/* Mobile Sticky Bottom Action Bar */}
-      <div className="fixed md:hidden bottom-0 left-0 right-0 z-40 bg-[#0D0D0D]/95 backdrop-blur-xl border-t border-[#262626] p-3 px-4 shadow-2xl flex items-center justify-between gap-3">
+      <div className="fixed md:hidden bottom-0 left-0 right-0 z-40 bg-[#131d38]/95 backdrop-blur-xl border-t border-[#26365a] p-3 px-4 shadow-2xl flex items-center justify-between gap-3">
         <div>
           <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
             {selectedCount} / 8 Parts
@@ -628,7 +628,7 @@ export const BuilderPage: React.FC<BuilderPageProps> = ({ onNotification }) => {
           className={`px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all active:scale-95 min-h-[44px] ${
             selectedCount > 0 && !hasErrors
               ? 'bg-[#FCA311] hover:bg-[#e5920a] text-black shadow-glow-orange cursor-pointer'
-              : 'bg-[#151515] text-zinc-500 cursor-not-allowed border border-[#262626]'
+              : 'bg-[#1e2d4f] text-zinc-500 cursor-not-allowed border border-[#26365a]'
           }`}
         >
           <ShoppingCart className="w-4 h-4" />

@@ -7,9 +7,9 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
-    <footer className="border-t border-[#262626] bg-[#050505] text-zinc-400 mt-20">
+    <footer className="border-t border-[#26365a] bg-[#0b1329] text-zinc-400 mt-20">
       {/* Guarantees bar */}
-      <div className="border-b border-[#262626] py-8 bg-[#0D0D0D]/60">
+      <div className="border-b border-[#26365a] py-8 bg-[#131d38]/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-[#FCA311]/10 text-[#FCA311] flex items-center justify-center border border-[#FCA311]/25 flex-shrink-0">
@@ -17,7 +17,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white">100% Genuine Silicon</h4>
-              <p className="text-xs text-zinc-500">Authorized direct Indian distributor warranty</p>
+              <p className="text-xs text-zinc-400">Authorized direct Indian distributor warranty</p>
             </div>
           </div>
 
@@ -27,7 +27,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white">Compatibility Guarantee</h4>
-              <p className="text-xs text-zinc-500">Zero socket or DDR mismatch policy</p>
+              <p className="text-xs text-zinc-400">Zero socket or DDR mismatch policy</p>
             </div>
           </div>
 
@@ -37,7 +37,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white">Insured Freight</h4>
-              <p className="text-xs text-zinc-500">BlueDart shock-absorbing crating</p>
+              <p className="text-xs text-zinc-400">BlueDart shock-absorbing crating</p>
             </div>
           </div>
 
@@ -47,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white">30-Day Hassle-Free Returns</h4>
-              <p className="text-xs text-zinc-500">Fast RMA support with zero restock fee</p>
+              <p className="text-xs text-zinc-400">Fast RMA support with zero restock fee</p>
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 RIG<span className="text-[#FCA311]">FORGE</span>
               </span>
             </div>
-            <p className="text-xs leading-relaxed text-zinc-400">
+            <p className="text-xs leading-relaxed text-zinc-300">
               RigForge is India's premier custom computer hardware configuration platform, engineered for gamers, creators, and AI researchers.
             </p>
             <div className="flex items-center gap-2 text-xs font-mono text-[#FCA311]">
@@ -139,21 +139,21 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h5 className="text-xs font-mono uppercase tracking-wider text-zinc-200 font-semibold mb-3">
               RigForge Guarantee
             </h5>
-            <p className="text-xs leading-relaxed text-zinc-400 mb-3">
+            <p className="text-xs leading-relaxed text-zinc-300 mb-3">
               All configured systems undergo stringent automated power budget verification and physical pin-compatibility checks before checkout.
             </p>
-            <div className="p-3.5 rounded-2xl bg-[#111111] border border-[#262626] text-[11px] text-zinc-400">
+            <div className="p-3.5 rounded-2xl bg-[#16223f] border border-[#26365a] text-[11px] text-zinc-300">
               Need custom enterprise workstation advice? Our technical architects are available 24/7.
             </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-[#262626] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+        <div className="mt-12 pt-6 border-t border-[#26365a] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
           <p>© {new Date().getFullYear()} RigForge Technologies India. All rights reserved.</p>
           <div className="flex gap-6">
-            <span className="hover:text-zinc-300 cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-zinc-300 cursor-pointer">Terms of Service</span>
-            <span className="hover:text-zinc-300 cursor-pointer">Warranty Documentation</span>
+            <span className="hover:text-zinc-200 cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-zinc-200 cursor-pointer">Terms of Service</span>
+            <span className="hover:text-zinc-200 cursor-pointer">Warranty Documentation</span>
           </div>
         </div>
       </div>

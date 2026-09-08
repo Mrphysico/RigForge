@@ -64,6 +64,14 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     const { isInMemoryFallback } = getDbStatus();
 
+    if (process.env.NODE_ENV === 'production' && isInMemoryFallback) {
+      res.status(503).json({
+        success: false,
+        message: 'Authentication service temporarily unavailable. Please try again later.',
+      });
+      return;
+    }
+
     // Check if user already exists
     if (!isInMemoryFallback) {
       try {
@@ -176,6 +184,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const cleanEmail = email.trim().toLowerCase();
     const { isInMemoryFallback } = getDbStatus();
 
+    if (process.env.NODE_ENV === 'production' && isInMemoryFallback) {
+      res.status(503).json({
+        success: false,
+        message: 'Authentication service temporarily unavailable. Please try again later.',
+      });
+      return;
+    }
+
     let userObj: { id: string; name: string; email: string; password?: string; role: string } | null = null;
 
     if (!isInMemoryFallback) {
@@ -191,19 +207,19 @@ export const login = async (req: Request, res: Response): Promise<void> => {
           };
         }
       } catch {
-        // Fallback to memory search
+        // Fallback to in-memory store in development
       }
     }
 
     if (!userObj) {
-      const memoryMatch = inMemoryUsers.find((u) => u.email.toLowerCase() === cleanEmail);
-      if (memoryMatch) {
+      const memoryUser = inMemoryUsers.find((u) => u.email.toLowerCase() === cleanEmail);
+      if (memoryUser) {
         userObj = {
-          id: memoryMatch.id,
-          name: memoryMatch.name,
-          email: memoryMatch.email,
-          password: memoryMatch.password,
-          role: memoryMatch.role,
+          id: memoryUser.id,
+          name: memoryUser.name,
+          email: memoryUser.email,
+          password: memoryUser.password,
+          role: memoryUser.role,
         };
       }
     }
@@ -216,8 +232,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Strict bcrypt comparison only - NO backdoor credentials allowed
+    // Strictly compare hashed password
     const isMatch = await bcrypt.compare(password, userObj.password);
+
     if (!isMatch) {
       res.status(401).json({
         success: false,
@@ -239,6 +256,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     );
 
     console.log(`🔑 [User Logged In] ID: ${userObj.id} | Email: ${userObj.email}`);
+
+    res.cookie('rigforge_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 60 * 1000,
+    });
 
     res.json({
       success: true,
@@ -544,6 +568,14 @@ export const googleAuth = async (req: Request, res: Response): Promise<void> => 
       || `https://api.dicebear.com/7.x/identicon/svg?seed=${cleanSub}`;
 
     const { isInMemoryFallback } = getDbStatus();
+
+    if (process.env.NODE_ENV === 'production' && isInMemoryFallback) {
+      res.status(503).json({
+        success: false,
+        message: 'Authentication service temporarily unavailable. Please try again later.',
+      });
+      return;
+    }
     let matchedUser: any = null;
     let isNewUser = false;
 
@@ -639,6 +671,13 @@ export const googleAuth = async (req: Request, res: Response): Promise<void> => 
 
     console.log(`🌐 [Google OAuth Success] User: ${userId} | Sub: ${cleanSub} | Email: ${userEmail}`);
 
+    res.cookie('rigforge_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 60 * 1000,
+    });
+
     res.json({
       success: true,
       message: isNewUser ? 'Google account created and verified.' : 'Google authentication verified.',
@@ -662,5 +701,13 @@ export const googleAuth = async (req: Request, res: Response): Promise<void> => 
       message: 'Google authentication failed on server. Please try again.',
     });
   }
+};
+
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  res.clearCookie('rigforge_token');
+  res.json({
+    success: true,
+    message: 'Logged out successfully.',
+  });
 };
 

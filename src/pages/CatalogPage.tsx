@@ -127,7 +127,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#262626]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#26365a]">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#FCA311] font-bold mb-1">
             <Layers className="w-4 h-4" />
@@ -144,7 +144,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
         {/* Mobile Filter Drawer Trigger */}
         <button
           onClick={() => setMobileFilterOpen(true)}
-          className="lg:hidden flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#111111] border border-[#262626] text-xs font-bold text-[#FCA311] self-start sm:self-auto shadow-sm"
+          className="lg:hidden flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#16223f] border border-[#26365a] text-xs font-bold text-[#FCA311] self-start sm:self-auto shadow-sm"
         >
           <SlidersHorizontal className="w-4 h-4" />
           <span>Filters ({filteredProducts.length})</span>
@@ -242,7 +242,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Desktop Filter Sidebar */}
         <div className="hidden lg:block">
-          <div className="sticky top-24 p-5 rounded-2xl bg-[#111111] border border-[#262626] backdrop-blur-md">
+          <div className="sticky top-24 p-5 rounded-2xl bg-[#16223f] border border-[#26365a] backdrop-blur-md">
             <FilterSidebar
               filters={filters}
               onFilterChange={handleFilterChange}
@@ -254,9 +254,9 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
 
         {/* Mobile Filter Modal */}
         {mobileFilterOpen && (
-          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md p-4 lg:hidden animate-fadeIn">
-            <div className="p-6 rounded-3xl bg-[#111111] border border-[#262626] space-y-4 max-w-lg mx-auto max-h-[92vh] overflow-y-auto">
-              <div className="flex justify-between items-center pb-3 border-b border-[#262626]">
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md p-4 lg:hidden animate-fadeIn">
+            <div className="p-6 rounded-3xl bg-[#16223f] border border-[#26365a] space-y-4 max-w-lg mx-auto max-h-[92vh] overflow-y-auto">
+              <div className="flex justify-between items-center pb-3 border-b border-[#26365a]">
                 <h3 className="font-bold text-base text-white">Catalog Filters</h3>
                 <button
                   onClick={() => setMobileFilterOpen(false)}
@@ -287,8 +287,8 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
         <div className="flex-1">
           {filteredProducts.length === 0 ? (
             /* Explicit Indian Inventory Not Found State */
-            <div className="py-16 text-center rounded-2xl bg-[#111111]/40 border border-dashed border-[#262626] p-8 space-y-4">
-              <div className="w-16 h-16 rounded-2xl bg-[#111111] border border-[#262626] flex items-center justify-center text-zinc-500 mx-auto">
+            <div className="py-16 text-center rounded-2xl bg-[#16223f]/40 border border-dashed border-[#26365a] p-8 space-y-4">
+              <div className="w-16 h-16 rounded-2xl bg-[#16223f] border border-[#26365a] flex items-center justify-center text-zinc-400 mx-auto">
                 <Search className="w-8 h-8" />
               </div>
 
@@ -304,7 +304,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                 <button
                   onClick={handleResetFilters}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#151515] hover:bg-[#1F1F1F] text-white border border-[#262626] transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#1e2d4f] hover:bg-[#233359] text-white border border-[#26365a] transition-colors"
                 >
                   Reset Filters &amp; Show All
                 </button>

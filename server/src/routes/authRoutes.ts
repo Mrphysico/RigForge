@@ -6,7 +6,8 @@ import {
   updateProfile,
   forgotPassword, 
   resetPassword,
-  googleAuth 
+  googleAuth,
+  logout
 } from '../controllers/authController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
@@ -15,6 +16,7 @@ const router = Router();
 router.post('/register', register);
 router.post('/login', login);
 router.post('/google', googleAuth);
+router.post('/logout', logout);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
 router.get('/profile', authenticateToken, getProfile);

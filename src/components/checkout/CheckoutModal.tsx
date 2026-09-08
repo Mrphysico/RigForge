@@ -173,18 +173,18 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
       <div 
         onClick={step === 4 ? handleFinish : onClose} 
         className="fixed inset-0"
       />
 
-      <div className="relative w-full max-w-2xl bg-[#0D0D0D] border border-[#262626] rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[92vh]">
+      <div className="relative w-full max-w-2xl bg-[#131d38] border border-[#26365a] rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[92vh]">
         {/* Neon top accent */}
         <div className="h-1 w-full bg-gradient-to-r from-amber-500 via-[#FCA311] to-amber-600" />
 
         {/* Modal Header */}
-        <div className="p-5 border-b border-[#262626] bg-[#111111] flex items-center justify-between">
+        <div className="p-5 border-b border-[#26365a] bg-[#16223f] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-[#FCA311]/15 text-[#FCA311] border border-[#FCA311]/30 flex items-center justify-center font-bold">
               <QrCode className="w-4 h-4" />
@@ -204,7 +204,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
           <button
             onClick={step === 4 ? handleFinish : onClose}
-            className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-[#151515] transition-colors"
+            className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-[#1e2d4f] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -223,7 +223,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               </div>
 
               {/* Items List */}
-              <div className="max-h-56 overflow-y-auto divide-y divide-[#262626] rounded-2xl border border-[#262626] bg-[#111111] p-2">
+              <div className="max-h-56 overflow-y-auto divide-y divide-[#26365a] rounded-2xl border border-[#26365a] bg-[#16223f] p-2">
                 {items.length === 0 ? (
                   <div className="py-8 text-center text-xs text-zinc-400">
                     No components in cart. Please configure or select parts first.
@@ -235,7 +235,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         <img
                           src={item.product.image}
                           alt={item.product.name}
-                          className="w-10 h-10 rounded-xl object-cover border border-[#262626] bg-black flex-shrink-0"
+                          className="w-10 h-10 rounded-xl object-cover border border-[#26365a] bg-[#0b1329] flex-shrink-0"
                         />
                         <div className="min-w-0">
                           <div className="font-bold text-white truncate max-w-sm">{item.product.name}</div>
@@ -253,7 +253,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               </div>
 
               {/* Bill Details */}
-              <div className="p-4 rounded-2xl bg-[#111111] border border-[#262626] space-y-2 text-xs">
+              <div className="p-4 rounded-2xl bg-[#16223f] border border-[#26365a] space-y-2 text-xs">
                 <div className="flex justify-between text-zinc-300">
                   <span>Subtotal (Inclusive of 18% GST)</span>
                   <span className="font-mono text-white font-medium">{formatINR(subtotal)}</span>
@@ -268,7 +268,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     {subtotal >= FREE_SHIPPING_THRESHOLD_INR ? 'FREE' : formatINR(shippingFee)}
                   </span>
                 </div>
-                <div className="pt-2 border-t border-[#262626] flex justify-between text-base font-extrabold text-white">
+                <div className="pt-2 border-t border-[#26365a] flex justify-between text-base font-extrabold text-white">
                   <span>Total Payable</span>
                   <span className="font-mono text-[#FCA311] text-lg font-bold">{formatINR(grandTotal)}</span>
                 </div>
@@ -276,7 +276,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
               {/* Customer Contact & Delivery Info */}
               {user ? (
-                <div className="p-3 rounded-2xl bg-[#111111] border border-[#262626] text-xs flex items-center justify-between">
+                <div className="p-3 rounded-2xl bg-[#16223f] border border-[#26365a] text-xs flex items-center justify-between">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <div className="w-8 h-8 rounded-full bg-[#FCA311] text-black font-bold flex items-center justify-center flex-shrink-0 text-xs">
                       {user.name.charAt(0).toUpperCase()}
@@ -291,7 +291,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   </span>
                 </div>
               ) : (
-                <div className="p-3.5 rounded-2xl bg-[#111111] border border-[#262626] text-xs space-y-2.5">
+                <div className="p-3.5 rounded-2xl bg-[#16223f] border border-[#26365a] text-xs space-y-2.5">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white flex items-center gap-1.5 uppercase font-mono text-[10px] tracking-wider">
                       <User className="w-3.5 h-3.5 text-[#FCA311]" />
@@ -321,7 +321,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                           if (guestError) setGuestError(null);
                         }}
                         placeholder="Recipient full name"
-                        className="w-full px-3 py-2 text-xs bg-[#151515] text-white placeholder-zinc-500 rounded-xl border border-[#262626] focus:outline-none focus:border-[#FCA311]"
+                        className="w-full px-3 py-2 text-xs bg-[#1e2d4f] text-white placeholder-zinc-400 rounded-xl border border-[#26365a] focus:outline-none focus:border-[#FCA311]"
                       />
                     </div>
                     <div>
@@ -337,7 +337,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                           if (guestError) setGuestError(null);
                         }}
                         placeholder="name@example.com"
-                        className="w-full px-3 py-2 text-xs bg-[#151515] text-white placeholder-zinc-500 rounded-xl border border-[#262626] focus:outline-none focus:border-[#FCA311]"
+                        className="w-full px-3 py-2 text-xs bg-[#1e2d4f] text-white placeholder-zinc-400 rounded-xl border border-[#26365a] focus:outline-none focus:border-[#FCA311]"
                       />
                     </div>
                   </div>
@@ -380,7 +380,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         (e.target as HTMLImageElement).src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=upi://pay?pa=9819319689@nyes%26pn=Arth%20Rakesh%20Jadav%26cu=INR%26am=${grandTotal}`;
                       }}
                     />
-                    <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#0D0D0D] text-[#FCA311] text-[10px] font-mono font-bold border border-[#FCA311] shadow-md whitespace-nowrap">
+                    <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#131d38] text-[#FCA311] text-[10px] font-mono font-bold border border-[#FCA311] shadow-md whitespace-nowrap">
                       SCAN VIA ANY UPI APP
                     </div>
                   </div>
@@ -388,7 +388,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
                 {/* Merchant Verified Info */}
                 <div className="sm:col-span-6 space-y-3">
-                  <div className="p-3.5 rounded-2xl bg-[#111111] border border-[#262626] space-y-1.5">
+                  <div className="p-3.5 rounded-2xl bg-[#16223f] border border-[#26365a] space-y-1.5">
                     <div className="flex items-center gap-2 text-xs text-zinc-400">
                       <User className="w-3.5 h-3.5 text-[#FCA311]" />
                       <span>Beneficiary Name</span>
@@ -398,7 +398,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="p-3.5 rounded-2xl bg-[#111111] border border-[#262626] space-y-1.5">
+                  <div className="p-3.5 rounded-2xl bg-[#16223f] border border-[#26365a] space-y-1.5">
                     <div className="flex items-center justify-between text-xs text-zinc-400">
                       <span>UPI ID / VPA</span>
                       <span className="text-[10px] text-emerald-400 font-mono">NPCI Verified</span>
@@ -409,7 +409,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       </span>
                       <button
                         onClick={handleCopyUpi}
-                        className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#151515] hover:bg-[#FCA311] hover:text-black text-zinc-300 flex items-center gap-1 transition-colors border border-[#262626]"
+                        className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#1e2d4f] hover:bg-[#FCA311] hover:text-black text-zinc-300 flex items-center gap-1 transition-colors border border-[#26365a]"
                       >
                         {copiedUpi ? (
                           <>
@@ -426,7 +426,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="p-3.5 rounded-2xl bg-[#111111] border border-[#262626] flex items-center gap-2.5 text-xs text-zinc-300">
+                  <div className="p-3.5 rounded-2xl bg-[#16223f] border border-[#26365a] flex items-center gap-2.5 text-xs text-zinc-300">
                     <Building2 className="w-4 h-4 text-[#FCA311]" />
                     <div>
                       <span className="text-zinc-400 block text-[10px]">Settlement Bank:</span>
@@ -440,10 +440,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       Accepted Payment Apps:
                     </span>
                     <div className="grid grid-cols-4 gap-1.5 text-center text-[10px] font-bold text-zinc-200 font-mono">
-                      <div className="p-1.5 rounded-xl bg-[#111111] border border-[#262626]">GPay</div>
-                      <div className="p-1.5 rounded-xl bg-[#111111] border border-[#262626]">PhonePe</div>
-                      <div className="p-1.5 rounded-xl bg-[#111111] border border-[#262626]">Paytm</div>
-                      <div className="p-1.5 rounded-xl bg-[#111111] border border-[#262626]">BHIM</div>
+                      <div className="p-1.5 rounded-xl bg-[#16223f] border border-[#26365a]">GPay</div>
+                      <div className="p-1.5 rounded-xl bg-[#16223f] border border-[#26365a]">PhonePe</div>
+                      <div className="p-1.5 rounded-xl bg-[#16223f] border border-[#26365a]">Paytm</div>
+                      <div className="p-1.5 rounded-xl bg-[#16223f] border border-[#26365a]">BHIM</div>
                     </div>
                   </div>
                 </div>
@@ -454,7 +454,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="py-3 px-4 rounded-xl text-xs font-semibold bg-[#111111] hover:bg-[#151515] text-zinc-300 border border-[#262626] flex items-center justify-center gap-2 transition-colors"
+                  className="py-3 px-4 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-300 border border-[#26365a] flex items-center justify-center gap-2 transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back</span>
@@ -506,7 +506,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       if (val.length === 12) setUtrError(null);
                     }}
                     placeholder="e.g. 425189012345"
-                    className="w-full py-3.5 px-4 text-base font-mono bg-[#111111] text-white placeholder-zinc-600 rounded-xl border border-[#262626] focus:outline-none focus:border-[#FCA311] tracking-widest text-center"
+                    className="w-full py-3.5 px-4 text-base font-mono bg-[#16223f] text-white placeholder-zinc-500 rounded-xl border border-[#26365a] focus:outline-none focus:border-[#FCA311] tracking-widest text-center"
                     autoFocus
                   />
                   <span className="text-[11px] text-zinc-400 block mt-1 text-right font-mono">
@@ -519,7 +519,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1.5">
                     Payment Screenshot (Optional)
                   </label>
-                  <div className="relative border-2 border-dashed border-[#262626] hover:border-[#FCA311]/50 rounded-2xl p-4 text-center cursor-pointer transition-colors bg-[#111111]/50">
+                  <div className="relative border-2 border-dashed border-[#26365a] hover:border-[#FCA311]/50 rounded-2xl p-4 text-center cursor-pointer transition-colors bg-[#16223f]/50">
                     <input
                       type="file"
                       accept="image/*"
@@ -541,7 +541,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
 
                 {/* Beneficiary Confirmation Recap */}
-                <div className="p-3.5 rounded-2xl bg-[#111111] border border-[#262626] text-xs space-y-1.5 text-zinc-400">
+                <div className="p-3.5 rounded-2xl bg-[#16223f] border border-[#26365a] text-xs space-y-1.5 text-zinc-400">
                   <div className="flex justify-between">
                     <span>Beneficiary:</span>
                     <span className="font-semibold text-white">{merchantConfig.beneficiaryName}</span>
@@ -563,7 +563,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   type="button"
                   disabled={isSubmitting}
                   onClick={() => setStep(2)}
-                  className="py-3 px-4 rounded-xl text-xs font-semibold bg-[#111111] hover:bg-[#151515] text-zinc-300 border border-[#262626] flex items-center justify-center gap-2 transition-colors"
+                  className="py-3 px-4 rounded-xl text-xs font-semibold bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-300 border border-[#26365a] flex items-center justify-center gap-2 transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to QR</span>
@@ -609,8 +609,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               </p>
 
               {/* Order Tracking Card */}
-              <div className="w-full bg-[#111111] rounded-2xl p-5 border border-[#262626] text-left text-xs space-y-2.5 my-2">
-                <div className="flex justify-between items-center pb-2 border-b border-[#262626]">
+              <div className="w-full bg-[#16223f] rounded-2xl p-5 border border-[#26365a] text-left text-xs space-y-2.5 my-2">
+                <div className="flex justify-between items-center pb-2 border-b border-[#26365a]">
                   <span className="text-zinc-400">Order Tracking ID:</span>
                   <span className="font-mono font-extrabold text-[#FCA311] text-sm">{placedOrderId}</span>
                 </div>
@@ -648,7 +648,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         </div>
 
         {/* Security footer */}
-        <div className="p-3.5 border-t border-[#262626] bg-[#111111] flex items-center justify-center gap-2 text-[11px] text-zinc-500 font-mono">
+        <div className="p-3.5 border-t border-[#26365a] bg-[#16223f] flex items-center justify-center gap-2 text-[11px] text-zinc-400 font-mono">
           <ShieldCheck className="w-3.5 h-3.5 text-[#FCA311]" />
           <span>Secured by NPCI Unified Payments Interface &amp; RigForge Escrow</span>
         </div>

@@ -35,8 +35,11 @@ export const sendWelcomeEmail = async ({
   toEmail,
   userName,
 }: WelcomeEmailParams): Promise<{ success: boolean; preview?: string; error?: string }> => {
-  const recipientName = userName || 'Arth Jadav';
-  const recipientEmail = toEmail || 'jadavarth07@gmail.com';
+  const recipientEmail = toEmail?.trim();
+  if (!recipientEmail) {
+    return { success: false, error: 'Recipient email is required' };
+  }
+  const recipientName = userName?.trim() || 'RigForge Builder';
   const fromAddress = process.env.SMTP_FROM || `"RigForge India" <${process.env.SMTP_USER || 'support@rigforge.in'}>`;
 
   const htmlContent = `

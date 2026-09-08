@@ -11,6 +11,9 @@ import { CatalogPage } from './pages/CatalogPage';
 import { BuilderPage } from './pages/BuilderPage';
 import { ComponentCategory } from './types/hardware';
 import { useAutoLogout } from './hooks/useAutoLogout';
+import { useAuthStore } from './store/useAuthStore';
+import { handleGoogleRedirectCallback } from './services/auth/googleOAuth';
+import { Cpu, Loader2 } from 'lucide-react';
 
 export function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'catalog' | 'builder'>('home');
@@ -18,8 +21,25 @@ export function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  const { isCheckingAuth, checkAuth } = useAuthStore();
+
   // 30-Minute Inactivity Auto-Logout Tracker
   const { isTimedOut, handleSignInAgain, dismissTimeoutModal } = useAutoLogout();
+
+  // Asynchronous Session Verification & Google Redirect Handler on App Startup
+  useEffect(() => {
+    // 1. Check for incoming Google OAuth redirect callback
+    handleGoogleRedirectCallback().then((result) => {
+      if (result?.success && result.user) {
+        showNotification(`Signed in with Google as ${result.user.name}!`);
+      } else if (result?.error) {
+        showNotification(result.error);
+      }
+    });
+
+    // 2. Verify server-side session credentials
+    checkAuth();
+  }, [checkAuth]);
 
   // Sync hash routing on mount and hash change
   useEffect(() => {
@@ -61,8 +81,26 @@ export function App() {
     }
   }, [toastMessage]);
 
+  // While verifying session with the server, display a sleek loading state
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-[#0b1329] flex flex-col items-center justify-center text-slate-100 space-y-4 font-sans selection:bg-[#FCA311]/30">
+        <div className="w-16 h-16 rounded-3xl bg-[#131d38] border border-[#26365a] flex items-center justify-center shadow-glow-orange animate-pulse">
+          <Cpu className="w-8 h-8 text-[#FCA311]" />
+        </div>
+        <div className="text-xl font-black font-mono tracking-wider">
+          RIG<span className="text-[#FCA311]">FORGE</span>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+          <Loader2 className="w-4 h-4 animate-spin text-[#FCA311]" />
+          <span>Checking your session...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#050505] text-zinc-100 bg-grid-pattern selection:bg-[#FCA311]/30 selection:text-[#FCA311]">
+    <div className="min-h-screen flex flex-col bg-[#0b1329] text-slate-100 bg-grid-pattern selection:bg-[#FCA311]/30 selection:text-[#FCA311]">
       {/* Top Navigation */}
       <Navbar
         currentPage={currentPage}

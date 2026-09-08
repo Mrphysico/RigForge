@@ -48,12 +48,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
   return (
     <div className="space-y-20 pb-16">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-20 border-b border-[#262626] bg-radial-glow">
+      <section className="relative overflow-hidden pt-12 pb-20 border-b border-[#26365a] bg-radial-glow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#111111] border border-[#262626] text-[#FCA311] text-xs font-mono font-semibold">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#16223f] border border-[#26365a] text-[#FCA311] text-xs font-mono font-semibold">
                 <Sparkles className="w-3.5 h-3.5 text-[#FCA311]" />
                 <span>India’s Premier Custom PC Architecture Platform</span>
               </div>
@@ -82,14 +82,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
 
                 <button
                   onClick={() => onNavigate('catalog')}
-                  className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-sm bg-[#111111] hover:bg-[#151515] text-zinc-200 hover:text-white border border-[#262626] hover:border-[#FCA311]/40 transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-sm bg-[#16223f] hover:bg-[#1e2d4f] text-zinc-200 hover:text-white border border-[#26365a] hover:border-[#FCA311]/40 transition-all flex items-center justify-center gap-2"
                 >
                   <span>Browse Indian Catalog</span>
                 </button>
               </div>
 
               {/* Trust Indicators */}
-              <div className="grid grid-cols-3 gap-4 pt-6 border-t border-[#262626] max-w-lg mx-auto lg:mx-0 text-left">
+              <div className="grid grid-cols-3 gap-4 pt-6 border-t border-[#26365a] max-w-lg mx-auto lg:mx-0 text-left">
                 <div>
                   <div className="text-xl font-extrabold font-mono text-[#FCA311]">100%</div>
                   <div className="text-xs text-[#A0A0A0]">Genuine Indian Stock</div>
@@ -107,10 +107,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
 
             {/* Right Rig Showcase */}
             <div className="lg:col-span-5 relative">
-              <div className="relative rounded-3xl p-6 bg-[#111111] border border-[#262626] shadow-2xl backdrop-blur-xl">
+              <div className="relative rounded-3xl p-6 bg-[#16223f] border border-[#26365a] shadow-2xl backdrop-blur-xl">
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#FCA311]/15 to-transparent rounded-3xl blur-xl -z-10" />
 
-                <div className="flex items-center justify-between pb-4 border-b border-[#262626]">
+                <div className="flex items-center justify-between pb-4 border-b border-[#26365a]">
                   <div className="flex items-center gap-2">
                     <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping" />
                     <span className="text-xs font-mono font-semibold text-emerald-400">INDIAN RETAIL BENCHMARK</span>
@@ -119,13 +119,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
                 </div>
 
                 {/* Hero Graphic Card preview */}
-                <div className="relative my-4 aspect-[16/10] rounded-2xl overflow-hidden border border-[#262626]">
+                <div className="relative my-4 aspect-[16/10] rounded-2xl overflow-hidden border border-[#26365a]">
                   <img
                     src="https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=800&q=80"
                     alt="Custom Gaming Rig India"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0b1329] via-[#0b1329]/40 to-transparent" />
                   <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
                     <div>
                       <div className="text-xs font-mono text-[#FCA311] font-bold">COMMUNITY SWEET-SPOT</div>
@@ -139,15 +139,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
 
                 {/* Quick Spec list */}
                 <div className="space-y-2 mb-5 text-xs font-mono text-zinc-300">
-                  <div className="flex justify-between p-2.5 rounded-xl bg-[#0D0D0D] border border-[#262626]">
+                  <div className="flex justify-between p-2.5 rounded-xl bg-[#131d38] border border-[#26365a]">
                     <span className="text-[#A0A0A0]">Processor</span>
                     <span className="text-white font-semibold">AMD Ryzen 7 7800X3D (AM5)</span>
                   </div>
-                  <div className="flex justify-between p-2.5 rounded-xl bg-[#0D0D0D] border border-[#262626]">
+                  <div className="flex justify-between p-2.5 rounded-xl bg-[#131d38] border border-[#26365a]">
                     <span className="text-[#A0A0A0]">Graphics Card</span>
                     <span className="text-[#FCA311] font-semibold">GeForce RTX 4070 Super 12GB</span>
                   </div>
-                  <div className="flex justify-between p-2.5 rounded-xl bg-[#0D0D0D] border border-[#262626]">
+                  <div className="flex justify-between p-2.5 rounded-xl bg-[#131d38] border border-[#26365a]">
                     <span className="text-[#A0A0A0]">Power Delivery</span>
                     <span className="text-zinc-300">Corsair RM850e 80+ Gold (ATX 3.0)</span>
                   </div>
@@ -155,7 +155,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
 
                 <button
                   onClick={handleLaunchFlagshipPreset}
-                  className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#151515] hover:bg-[#FCA311] hover:text-zinc-950 text-[#FCA311] border border-[#FCA311]/40 hover:border-[#FCA311] transition-all flex items-center justify-center gap-2 group shadow-glow-orange"
+                  className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#1e2d4f] hover:bg-[#FCA311] hover:text-zinc-950 text-[#FCA311] border border-[#FCA311]/40 hover:border-[#FCA311] transition-all flex items-center justify-center gap-2 group shadow-glow-orange"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Load 1440p King Build in PC Configurator</span>
@@ -192,10 +192,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
             <div
               key={cat.id}
               onClick={() => onNavigate('catalog', cat.id)}
-              className="p-5 rounded-2xl bg-[#111111] border border-[#262626] hover:border-[#FCA311]/50 hover:shadow-glow-orange transition-all cursor-pointer group flex flex-col justify-between"
+              className="p-5 rounded-2xl bg-[#16223f] border border-[#26365a] hover:border-[#FCA311]/50 hover:shadow-glow-orange transition-all cursor-pointer group flex flex-col justify-between"
             >
               <div>
-                <div className="w-12 h-12 rounded-xl bg-[#0D0D0D] border border-[#262626] flex items-center justify-center mb-4 group-hover:scale-110 group-hover:border-[#FCA311]/50 transition-all">
+                <div className="w-12 h-12 rounded-xl bg-[#131d38] border border-[#26365a] flex items-center justify-center mb-4 group-hover:scale-110 group-hover:border-[#FCA311]/50 transition-all">
                   {cat.icon}
                 </div>
                 <div className="font-bold text-white text-base mb-1 group-hover:text-[#FCA311] transition-colors">
@@ -206,7 +206,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-[#262626] text-xs font-mono">
+              <div className="flex items-center justify-between pt-3 border-t border-[#26365a] text-xs font-mono">
                 <span className="text-[#A0A0A0]">{cat.count}</span>
                 <span className="text-[#FCA311] flex items-center gap-0.5 group-hover:translate-x-1 transition-transform">
                   Explore <ArrowRight className="w-3 h-3" />
@@ -251,8 +251,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
       {/* Value Proposition Banners */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl bg-[#111111] border border-[#262626] flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[#151515] border border-[#262626] flex items-center justify-center text-[#FCA311] flex-shrink-0">
+          <div className="p-6 rounded-2xl bg-[#16223f] border border-[#26365a] flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-[#1e2d4f] border border-[#26365a] flex items-center justify-center text-[#FCA311] flex-shrink-0">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -263,8 +263,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
             </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-[#111111] border border-[#262626] flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[#151515] border border-[#262626] flex items-center justify-center text-[#FCA311] flex-shrink-0">
+          <div className="p-6 rounded-2xl bg-[#16223f] border border-[#26365a] flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-[#1e2d4f] border border-[#26365a] flex items-center justify-center text-[#FCA311] flex-shrink-0">
               <Zap className="w-5 h-5" />
             </div>
             <div>
@@ -275,8 +275,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
             </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-[#111111] border border-[#262626] flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[#151515] border border-[#262626] flex items-center justify-center text-[#FCA311] flex-shrink-0">
+          <div className="p-6 rounded-2xl bg-[#16223f] border border-[#26365a] flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-[#1e2d4f] border border-[#26365a] flex items-center justify-center text-[#FCA311] flex-shrink-0">
               <Award className="w-5 h-5" />
             </div>
             <div>

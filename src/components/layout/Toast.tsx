@@ -15,7 +15,7 @@ export const Toast: React.FC<ToastProps> = ({ message, type = 'success', onClose
 
   return (
     <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 max-w-sm w-[calc(100%-2.5rem)] sm:w-auto animate-fadeIn pointer-events-auto">
-      <div className={`flex items-center gap-3 py-3 px-4 rounded-2xl bg-[#111111] border text-white shadow-2xl backdrop-blur-md ${
+      <div className={`flex items-center gap-3 py-3 px-4 rounded-2xl bg-[#16223f] border text-white shadow-2xl backdrop-blur-md ${
         isError 
           ? 'border-red-500/40 shadow-[0_0_25px_-5px_rgba(239,68,68,0.25)]' 
           : isWarning
@@ -44,7 +44,7 @@ export const Toast: React.FC<ToastProps> = ({ message, type = 'success', onClose
 
         <button
           onClick={onClose}
-          className="p-1 rounded-lg text-[#A0A0A0] hover:text-white hover:bg-[#1F1F1F] transition-colors ml-auto flex-shrink-0"
+          className="p-1 rounded-lg text-[#A0A0A0] hover:text-white hover:bg-[#1e2d4f] transition-colors ml-auto flex-shrink-0"
         >
           <X className="w-3.5 h-3.5" />
         </button>

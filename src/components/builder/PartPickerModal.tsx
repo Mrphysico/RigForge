@@ -94,10 +94,10 @@ export const PartPickerModal: React.FC<PartPickerModalProps> = ({
   const currentSelectedId = slots[category]?.id;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="relative w-full max-w-3xl bg-[#111111] border border-[#262626] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="relative w-full max-w-3xl bg-[#16223f] border border-[#26365a] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-fadeIn">
         {/* Header */}
-        <div className="p-5 border-b border-[#262626] bg-[#0D0D0D] flex items-center justify-between">
+        <div className="p-5 border-b border-[#26365a] bg-[#131d38] flex items-center justify-between">
           <div>
             <div className="text-[10px] font-mono uppercase tracking-wider text-[#FCA311] font-bold">
               PC Configurator Indian Inventory
@@ -108,14 +108,14 @@ export const PartPickerModal: React.FC<PartPickerModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-[#151515] transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-[#1e2d4f] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Search input inside modal */}
-        <div className="p-4 border-b border-[#262626] bg-[#0D0D0D]/60">
+        <div className="p-4 border-b border-[#26365a] bg-[#131d38]/60">
           <div className="relative">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
             <input
@@ -123,7 +123,7 @@ export const PartPickerModal: React.FC<PartPickerModalProps> = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder={`Search ${CATEGORY_LABELS[category]} by model, brand, or spec...`}
-              className="w-full pl-10 pr-4 py-2.5 text-xs bg-[#151515] text-white placeholder-zinc-500 rounded-xl border border-[#262626] focus:outline-none focus:border-[#FCA311]"
+              className="w-full pl-10 pr-4 py-2.5 text-xs bg-[#1e2d4f] text-white placeholder-zinc-400 rounded-xl border border-[#26365a] focus:outline-none focus:border-[#FCA311]"
               autoFocus
             />
           </div>
@@ -151,11 +151,11 @@ export const PartPickerModal: React.FC<PartPickerModalProps> = ({
                   }}
                   className={`p-4 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
                     isOutOfStock
-                      ? 'opacity-60 bg-[#0D0D0D] border-[#262626] cursor-not-allowed'
+                      ? 'opacity-60 bg-[#131d38] border-[#26365a] cursor-not-allowed'
                       : isSelected
                       ? 'bg-[#FCA311]/15 border-[#FCA311] shadow-glow-orange cursor-pointer'
                       : compat.compatible
-                      ? 'bg-[#111111] border-[#262626] hover:border-[#FCA311]/40 hover:bg-[#151515] cursor-pointer'
+                      ? 'bg-[#16223f] border-[#26365a] hover:border-[#FCA311]/40 hover:bg-[#1e2d4f] cursor-pointer'
                       : 'bg-red-950/15 border-red-900/40 hover:border-red-700/60 cursor-pointer'
                   }`}
                 >
@@ -163,7 +163,7 @@ export const PartPickerModal: React.FC<PartPickerModalProps> = ({
                     <img
                       src={product.image}
                       alt={product.name}
-                      className={`w-16 h-16 rounded-lg object-cover border border-zinc-800 bg-zinc-950 flex-shrink-0 ${
+                      className={`w-16 h-16 rounded-lg object-cover border border-[#26365a] bg-[#0b1329] flex-shrink-0 ${
                         isOutOfStock ? 'grayscale' : ''
                       }`}
                     />
@@ -207,31 +207,31 @@ export const PartPickerModal: React.FC<PartPickerModalProps> = ({
 
                       <div className="flex flex-wrap items-center gap-2 mt-2">
                         {product.specs.socket && (
-                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-[#FCA311] flex items-center gap-1">
+                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-[#FCA311] border border-[#26365a] flex items-center gap-1">
                             <Cpu className="w-3 h-3" />
                             {product.specs.socket}
                           </span>
                         )}
                         {product.specs.tdp && (
-                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-amber-300 flex items-center gap-1">
+                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-amber-300 border border-[#26365a] flex items-center gap-1">
                             <Zap className="w-3 h-3" />
                             {product.specs.tdp}W TDP
                           </span>
                         )}
                         {product.specs.wattage && (
-                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-amber-300 flex items-center gap-1">
+                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-amber-300 border border-[#26365a] flex items-center gap-1">
                             <Zap className="w-3 h-3" />
                             {product.specs.wattage}W
                           </span>
                         )}
                         {product.specs.ramType && (
-                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-emerald-300 flex items-center gap-1">
+                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-emerald-300 border border-[#26365a] flex items-center gap-1">
                             <Layers className="w-3 h-3" />
                             {product.specs.ramType}
                           </span>
                         )}
                         {product.specs.vram && (
-                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-purple-300">
+                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-purple-300 border border-[#26365a]">
                             {product.specs.vram}
                           </span>
                         )}
@@ -240,7 +240,7 @@ export const PartPickerModal: React.FC<PartPickerModalProps> = ({
                   </div>
 
                   {/* Price & Selection button */}
-                  <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2 flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#262626]">
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2 flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#26365a]">
                     <span className={`text-base font-mono font-bold ${isOutOfStock ? 'text-zinc-500' : 'text-white'}`}>
                       {formatINR(product.price)}
                     </span>
@@ -249,10 +249,10 @@ export const PartPickerModal: React.FC<PartPickerModalProps> = ({
                       disabled={isOutOfStock}
                       className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 ${
                         isOutOfStock
-                          ? 'bg-[#151515] text-zinc-600 border border-[#262626] cursor-not-allowed'
+                          ? 'bg-[#1e2d4f] text-zinc-600 border border-[#26365a] cursor-not-allowed'
                           : isSelected
                           ? 'bg-[#FCA311] text-black font-bold shadow-glow-orange'
-                          : 'bg-[#1a1a1a] hover:bg-[#FCA311] hover:text-black text-zinc-200 border border-[#262626] hover:border-[#FCA311]'
+                          : 'bg-[#1e2d4f] hover:bg-[#FCA311] hover:text-black text-zinc-200 border border-[#26365a] hover:border-[#FCA311]'
                       }`}
                     >
                       {isOutOfStock ? (

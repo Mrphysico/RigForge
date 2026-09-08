@@ -5,61 +5,111 @@ import {
   setUserSession, 
   clearSession, 
   verifyCredentials, 
-  saveUserCredentials, 
-  registerSocialUser 
+  saveUserCredentials 
 } from '../credentials/userStorage';
 import { sendSuccessEmail } from '../services/mailer/emailService';
-import { authenticateWithGoogleBackend } from '../services/auth/googleOAuth';
+import { initiateRealGoogleOAuth, authenticateWithGoogleBackend, GoogleAuthProfile } from '../services/auth/googleOAuth';
 import { API_BASE_URL } from '../config/api';
 
 interface AuthState {
   user: UserSession | null;
   isAuthenticated: boolean;
+  isCheckingAuth: boolean;
   authModalOpen: boolean;
   authModalView: 'signin' | 'signup' | 'forgot';
-  accountChooserOpen: boolean;
   latestDispatchedEmail: string | null;
 
   openAuthModal: (view?: 'signin' | 'signup' | 'forgot') => void;
   closeAuthModal: () => void;
   setAuthModalView: (view: 'signin' | 'signup' | 'forgot') => void;
-  openAccountChooser: () => void;
-  closeAccountChooser: () => void;
   clearEmailAlert: () => void;
 
+  checkAuth: () => Promise<void>;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (data: { name: string; email: string; phone?: string; password: string; confirmPassword?: string }) => Promise<{ success: boolean; message?: string; error?: string }>;
-  socialLogin: (provider: 'google' | 'facebook', overrideEmail?: string, overrideName?: string) => Promise<{ success: boolean; isNewUser: boolean; message: string }>;
-  loginWithGoogle: (profile: { sub: string; email: string; name: string; avatar?: string; idToken?: string; accessToken?: string }) => Promise<{ success: boolean; isNewUser?: boolean; message: string; error?: string }>;
-  switchAccount: () => void;
+  loginWithGoogle: (profile: GoogleAuthProfile) => Promise<{ success: boolean; message?: string; error?: string }>;
+  startGoogleLogin: () => Promise<{ success: boolean; error?: string }>;
+  switchAccount: () => Promise<void>;
   updateProfile: (data: { name?: string; phone?: string }) => Promise<{ success: boolean; message: string }>;
   forgotPassword: (email: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => {
-  // Initialize with persisted session if available for THIS device
-  const existingSession = getUserSession();
-
+export const useAuthStore = create<AuthState>((set, get) => {
   return {
-    user: existingSession,
-    isAuthenticated: !!existingSession,
+    user: null,
+    isAuthenticated: false,
+    isCheckingAuth: true,
     authModalOpen: false,
     authModalView: 'signin',
-    accountChooserOpen: false,
     latestDispatchedEmail: null,
 
     openAuthModal: (view = 'signin') => set({ authModalOpen: true, authModalView: view }),
     closeAuthModal: () => set({ authModalOpen: false }),
     setAuthModalView: (view) => set({ authModalView: view }),
-    openAccountChooser: () => set({ accountChooserOpen: true, authModalOpen: false }),
-    closeAccountChooser: () => set({ accountChooserOpen: false }),
     clearEmailAlert: () => set({ latestDispatchedEmail: null }),
+
+    /**
+     * Server-side authentication check on app startup.
+     * Prevents assumption of login state without token verification.
+     */
+    checkAuth: async () => {
+      const storedSession = getUserSession();
+
+      if (!storedSession || !storedSession.token) {
+        set({ user: null, isAuthenticated: false, isCheckingAuth: false });
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+          headers: {
+            Authorization: `Bearer ${storedSession.token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.user) {
+            const verifiedSession: UserSession = {
+              ...storedSession,
+              id: data.user.id || storedSession.id,
+              name: data.user.name || storedSession.name,
+              email: data.user.email || storedSession.email,
+              role: data.user.role || storedSession.role,
+              avatar: data.user.avatar || storedSession.avatar,
+              provider: data.user.provider || storedSession.provider,
+              providerAccountId: data.user.providerAccountId || storedSession.providerAccountId,
+            };
+
+            setUserSession(verifiedSession);
+            set({
+              user: verifiedSession,
+              isAuthenticated: true,
+              isCheckingAuth: false,
+            });
+            return;
+          }
+        }
+
+        // Token rejected or expired by server
+        console.warn('Authentication token expired or invalid. Clearing session.');
+        clearSession();
+        set({ user: null, isAuthenticated: false, isCheckingAuth: false });
+      } catch (err) {
+        console.warn('Could not verify session with backend (offline/network):', err);
+        // In case backend is temporarily unreachable, preserve locally if recent (< 30 min)
+        set({
+          user: storedSession,
+          isAuthenticated: true,
+          isCheckingAuth: false,
+        });
+      }
+    },
 
     login: async (email, password) => {
       const cleanEmail = email.trim().toLowerCase();
 
-      // Primary: Authenticate against backend database
       try {
         const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
           method: 'POST',
@@ -90,10 +140,10 @@ export const useAuthStore = create<AuthState>((set) => {
           return { success: false, error: data.message || 'Invalid email or password.' };
         }
       } catch (err) {
-        console.warn('Backend server unreachable, falling back to local credential verification:', err);
+        console.warn('Backend server unreachable, trying local credentials:', err);
       }
 
-      // Resilient Fallback: Local verification if backend service is offline
+      // Offline Fallback Verification
       const localResult = verifyCredentials(cleanEmail, password);
       if (!localResult.success || !localResult.user) {
         return { success: false, error: localResult.error || 'Invalid email or password.' };
@@ -113,7 +163,6 @@ export const useAuthStore = create<AuthState>((set) => {
       const cleanEmail = data.email.trim().toLowerCase();
       const cleanName = data.name.trim();
 
-      // Primary: Register account on backend database
       try {
         const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
           method: 'POST',
@@ -136,18 +185,15 @@ export const useAuthStore = create<AuthState>((set) => {
           };
         }
 
-        // Trigger welcome email preview for the newly registered user
         try {
           const mailResult = await sendSuccessEmail({
             email: cleanEmail,
             name: cleanName,
           });
           set({ latestDispatchedEmail: mailResult.previewMessage });
-        } catch {
-          // Ignore non-blocking email preview failure
-        }
+        } catch {}
 
-        // Also save to local registry for offline resilience
+        // Persist in local storage for offline resilience
         saveUserCredentials({
           name: cleanName,
           email: cleanEmail,
@@ -156,16 +202,15 @@ export const useAuthStore = create<AuthState>((set) => {
           provider: 'local',
         });
 
-        // Do NOT automatically log in. User must log in with their credentials!
+        // Do NOT auto-login. Redirect user to Sign In!
         return {
           success: true,
           message: 'Account created successfully. Please log in.',
         };
       } catch (err) {
-        console.warn('Backend server unreachable during registration, registering locally:', err);
+        console.warn('Backend server unreachable during registration, saving locally:', err);
       }
 
-      // Offline Fallback Registration
       const localResult = saveUserCredentials({
         name: cleanName,
         email: cleanEmail,
@@ -192,36 +237,10 @@ export const useAuthStore = create<AuthState>((set) => {
       };
     },
 
-    socialLogin: async (provider, overrideEmail, overrideName) => {
-      const { session, isNewUser } = registerSocialUser(provider, overrideEmail, overrideName);
-
-      if (isNewUser) {
-        try {
-          const mailResult = await sendSuccessEmail({
-            email: session.email,
-            name: session.name,
-          });
-          set({ latestDispatchedEmail: mailResult.previewMessage });
-        } catch (e) {
-          console.error('Email dispatch error:', e);
-        }
-      }
-
-      set({
-        user: session,
-        isAuthenticated: true,
-        authModalOpen: false,
-      });
-
-      return {
-        success: true,
-        isNewUser,
-        message: `Successfully connected with ${provider === 'google' ? 'Google' : 'Facebook'}!`,
-      };
-    },
-
-    loginWithGoogle: async (profile) => {
-      // 1. Primary: Authenticate with RigForge backend for strict database/JWT isolation
+    /**
+     * Completes authentication with verified Google OAuth profile
+     */
+    loginWithGoogle: async (profile: GoogleAuthProfile) => {
       const backendResult = await authenticateWithGoogleBackend(profile);
 
       if (backendResult.success && backendResult.user) {
@@ -231,7 +250,7 @@ export const useAuthStore = create<AuthState>((set) => {
           email: backendResult.user.email,
           role: backendResult.user.role,
           provider: 'google',
-          providerAccountId: backendResult.user.providerAccountId,
+          providerAccountId: backendResult.user.providerAccountId || profile.sub,
           avatar: backendResult.user.avatar,
           token: backendResult.user.token,
         });
@@ -240,7 +259,6 @@ export const useAuthStore = create<AuthState>((set) => {
           user: session,
           isAuthenticated: true,
           authModalOpen: false,
-          accountChooserOpen: false,
         });
 
         return {
@@ -249,29 +267,50 @@ export const useAuthStore = create<AuthState>((set) => {
         };
       }
 
-      // 2. Resilient local fallback if backend is momentarily unreachable
-      const { session, isNewUser } = registerSocialUser('google', profile.email, profile.name);
-      session.providerAccountId = profile.sub;
-      session.avatar = profile.avatar;
-
-      setUserSession(session);
-      set({
-        user: session,
-        isAuthenticated: true,
-        authModalOpen: false,
-        accountChooserOpen: false,
-      });
-
       return {
-        success: true,
-        isNewUser,
-        message: `Connected with Google (${session.name})!`,
+        success: false,
+        error: backendResult.error || 'Failed to authenticate with Google.',
       };
     },
 
-    switchAccount: () => {
-      // Opens the Google account chooser without forcing full site logout first
-      set({ accountChooserOpen: true, authModalOpen: false });
+    /**
+     * Triggers real Google OAuth with prompt='select_account'
+     */
+    startGoogleLogin: async () => {
+      const result = await initiateRealGoogleOAuth();
+
+      if (result.success && result.user) {
+        const session = setUserSession({
+          id: result.user.id,
+          name: result.user.name,
+          email: result.user.email,
+          role: result.user.role,
+          provider: 'google',
+          providerAccountId: result.user.providerAccountId,
+          avatar: result.user.avatar,
+          token: result.user.token,
+        });
+
+        set({
+          user: session,
+          isAuthenticated: true,
+          authModalOpen: false,
+        });
+
+        return { success: true };
+      }
+
+      return {
+        success: false,
+        error: result.error || 'Google login was cancelled or encountered an error.',
+      };
+    },
+
+    /**
+     * Switch Account: Opens real Google account chooser directly
+     */
+    switchAccount: async () => {
+      await get().startGoogleLogin();
     },
 
     updateProfile: async (data: { name?: string; phone?: string }) => {
@@ -328,17 +367,26 @@ export const useAuthStore = create<AuthState>((set) => {
     },
 
     logout: () => {
+      const current = getUserSession();
+      if (current?.token) {
+        fetch(`${API_BASE_URL}/api/auth/logout`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${current.token}` },
+        }).catch(() => {});
+      }
+
       clearSession();
       try {
         sessionStorage.clear();
       } catch {}
+
       set({
         user: null,
         isAuthenticated: false,
         authModalOpen: false,
-        accountChooserOpen: false,
         latestDispatchedEmail: null,
       });
+
       console.log('🚪 [User Logged Out] Session cleared successfully.');
     },
   };

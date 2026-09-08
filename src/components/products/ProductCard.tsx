@@ -55,7 +55,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
 
     if (product.specs.socket) {
       badges.push(
-        <span key="socket" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#151515] text-[#FCA311] border border-[#262626]">
+        <span key="socket" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-[#FCA311] border border-[#26365a]">
           <Cpu className="w-3 h-3 text-[#FCA311]" />
           {product.specs.socket}
         </span>
@@ -64,7 +64,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
 
     if (product.specs.tdp) {
       badges.push(
-        <span key="tdp" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#151515] text-amber-300 border border-[#262626]">
+        <span key="tdp" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-amber-300 border border-[#26365a]">
           <Zap className="w-3 h-3 text-amber-400" />
           {product.specs.tdp}W TDP
         </span>
@@ -73,7 +73,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
 
     if (product.specs.wattage) {
       badges.push(
-        <span key="wattage" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#151515] text-amber-300 border border-[#262626]">
+        <span key="wattage" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-amber-300 border border-[#26365a]">
           <Zap className="w-3 h-3 text-amber-400" />
           {product.specs.wattage}W
         </span>
@@ -82,7 +82,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
 
     if (product.specs.vram) {
       badges.push(
-        <span key="vram" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#151515] text-purple-300 border border-[#262626]">
+        <span key="vram" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-purple-300 border border-[#26365a]">
           {product.specs.vram}
         </span>
       );
@@ -90,7 +90,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
 
     if (product.specs.ramType) {
       badges.push(
-        <span key="ramType" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#151515] text-emerald-300 border border-[#262626]">
+        <span key="ramType" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-emerald-300 border border-[#26365a]">
           <Layers className="w-3 h-3 text-emerald-400" />
           {product.specs.ramType}
         </span>
@@ -99,7 +99,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
 
     if (product.specs.supportedRamType) {
       badges.push(
-        <span key="supportedRam" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#151515] text-emerald-300 border border-[#262626]">
+        <span key="supportedRam" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-emerald-300 border border-[#26365a]">
           {product.specs.supportedRamType} Mobo
         </span>
       );
@@ -107,7 +107,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
 
     if (product.specs.capacity) {
       badges.push(
-        <span key="capacity" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#151515] text-[#A0A0A0] border border-[#262626]">
+        <span key="capacity" className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-[#1e2d4f] text-[#A0A0A0] border border-[#26365a]">
           <HardDrive className="w-3 h-3 text-[#A0A0A0]" />
           {product.specs.capacity}
         </span>
@@ -118,14 +118,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
   };
 
   return (
-    <div className={`group relative rounded-2xl bg-[#111111] border transition-all duration-300 flex flex-col justify-between overflow-hidden backdrop-blur-sm ${
-      isOutOfStock ? 'opacity-65 border-[#262626]' :
+    <div className={`group relative rounded-2xl bg-[#16223f] border transition-all duration-300 flex flex-col justify-between overflow-hidden backdrop-blur-sm ${
+      isOutOfStock ? 'opacity-65 border-[#26365a]' :
       isCurrentBuildSelection 
         ? 'border-[#FCA311] shadow-glow-orange ring-1 ring-[#FCA311]/50' 
-        : 'border-[#262626] hover:border-[#FCA311]/50 hover:shadow-glow-orange'
+        : 'border-[#26365a] hover:border-[#FCA311]/50 hover:shadow-glow-orange'
     }`}>
       {/* Top Banner tags */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#050505]">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#0b1329]">
         <img
           src={product.image}
           alt={product.name}
@@ -134,15 +134,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
           }`}
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#16223f] via-[#16223f]/20 to-transparent" />
 
         {/* Brand and Category badge */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#0D0D0D]/90 text-[#FCA311] border border-[#FCA311]/30 backdrop-blur-sm">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#131d38]/90 text-[#FCA311] border border-[#FCA311]/30 backdrop-blur-sm">
             {product.category}
           </span>
           {product.featured && !isOutOfStock && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-md bg-[#151515] text-[#FCA311] border border-[#FCA311]/30 backdrop-blur-sm">
+            <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-md bg-[#1e2d4f] text-[#FCA311] border border-[#FCA311]/30 backdrop-blur-sm">
               <Sparkles className="w-2.5 h-2.5" />
               Featured
             </span>
@@ -200,7 +200,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
         </div>
 
         {/* Price & Action Buttons */}
-        <div className="pt-3 border-t border-[#262626] mt-auto">
+        <div className="pt-3 border-t border-[#26365a] mt-auto">
           <div className="flex items-baseline gap-2 mb-3">
             <span className={`text-xl font-extrabold font-mono tracking-tight ${
               isOutOfStock ? 'text-zinc-500' : 'text-white'
@@ -223,8 +223,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
               disabled={isOutOfStock}
               className={`py-2 px-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 border transition-colors ${
                 isOutOfStock
-                  ? 'bg-[#0D0D0D] text-zinc-600 border-[#262626] cursor-not-allowed'
-                  : 'bg-[#151515] hover:bg-[#1F1F1F] text-zinc-200 hover:text-white border-[#262626] active:scale-95'
+                  ? 'bg-[#131d38] text-zinc-600 border-[#26365a] cursor-not-allowed'
+                  : 'bg-[#1e2d4f] hover:bg-[#233359] text-zinc-200 hover:text-white border-[#26365a] active:scale-95'
               }`}
             >
               <ShoppingCart className="w-3.5 h-3.5 text-[#A0A0A0]" />
@@ -236,7 +236,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onNotificatio
               disabled={isOutOfStock}
               className={`py-2 px-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 isOutOfStock
-                  ? 'bg-[#0D0D0D] text-zinc-600 border border-[#262626] cursor-not-allowed'
+                  ? 'bg-[#131d38] text-zinc-600 border border-[#26365a] cursor-not-allowed'
                   : isCurrentBuildSelection
                   ? 'bg-[#FCA311]/20 text-[#FCA311] border border-[#FCA311]/50 active:scale-95'
                   : 'bg-[#FCA311] hover:bg-[#E59200] text-zinc-950 font-bold shadow-glow-orange active:scale-95'

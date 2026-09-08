@@ -15,13 +15,13 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
       <div 
         onClick={onDismiss} 
         className="fixed inset-0"
       />
 
-      <div className="relative w-full max-w-md bg-[#0D0D0D] border border-[#FCA311]/40 rounded-3xl shadow-2xl p-6 text-center z-10 animate-scaleUp">
+      <div className="relative w-full max-w-md bg-[#131d38] border border-[#FCA311]/40 rounded-3xl shadow-2xl p-6 text-center z-10 animate-scaleUp">
         {/* Glow Header */}
         <div className="w-16 h-16 mx-auto rounded-2xl bg-[#FCA311]/10 border border-[#FCA311]/30 text-[#FCA311] flex items-center justify-center mb-4 ring-8 ring-[#FCA311]/5">
           <Clock className="w-8 h-8 animate-pulse" />
@@ -40,7 +40,7 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
           You have been inactive for more than <span className="text-zinc-200 font-semibold">30 minutes</span>. To safeguard your account, saved custom rigs, and order data, RigForge has automatically logged you out.
         </p>
 
-        <div className="bg-[#111111] rounded-2xl p-4 border border-[#262626] text-left text-xs text-zinc-300 space-y-2 mb-6">
+        <div className="bg-[#16223f] rounded-2xl p-4 border border-[#26365a] text-left text-xs text-zinc-300 space-y-2 mb-6">
           <div className="flex justify-between">
             <span className="text-zinc-400">Idle Duration:</span>
             <span className="font-mono text-[#FCA311] font-semibold">30 Minutes</span>
@@ -66,7 +66,7 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
 
           <button
             onClick={onDismiss}
-            className="w-full py-2.5 px-4 rounded-xl text-xs text-zinc-400 hover:text-zinc-200 hover:bg-[#151515] transition-colors"
+            className="w-full py-2.5 px-4 rounded-xl text-xs text-zinc-400 hover:text-zinc-200 hover:bg-[#1e2d4f] transition-colors"
           >
             Continue Browsing as Guest
           </button>
