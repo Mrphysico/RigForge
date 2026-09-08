@@ -5,303 +5,226 @@ import {
   Box, 
   ShoppingCart, 
   BookOpen, 
-  ChevronRight,
-  Sparkles
+  ChevronRight
 } from 'lucide-react';
-import { useAuthStore } from '../store/useAuthStore';
 import { MOCK_PRODUCTS } from '../data/mockHardware';
 import { ProductCard } from '../components/products/ProductCard';
 
 interface HomePageProps {
-  onNavigate: (page: 'home' | 'builds' | 'builder' | 'community' | 'marketplace' | 'guides' | 'support', category?: string) => void;
-  onNotification: (msg: string) => void;
+  onNavigate: (page: 'home' | 'builds' | 'builder' | 'community' | 'marketplace' | 'guides' | 'support' | 'signin', category?: string) => void;
+  onNotification?: (msg: string) => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }) => {
-  const openAuthModal = useAuthStore((state) => state.openAuthModal);
   const featuredProducts = MOCK_PRODUCTS.filter((p) => p.featured).slice(0, 6);
 
   return (
-    <div className="min-h-screen bg-[#07090E] text-slate-100 pb-20 space-y-12 select-none">
+    <div className="min-h-screen bg-[#0a0a0a] text-slate-100 pb-20 space-y-12 select-none">
+      
       {/* ========================================================= */}
-      {/* HERO SECTION — TRICOLOR DIAGONAL SLASH CANVAS & BATTLESTATION */}
+      {/* 4.2 HERO SECTION — DIAGONAL 4-COLOR CANVAS & BATTLESTATION */}
       {/* ========================================================= */}
-      <section className="relative overflow-hidden border-b border-white/[0.08] bg-[#07090E] min-h-[640px] lg:min-h-[720px] flex items-center">
-        {/* Tricolor Diagonal Slash Canvas */}
+      <section className="relative overflow-hidden bg-[#0a0a0a] min-h-[760px] lg:min-h-[880px] flex flex-col justify-between pt-10 pb-4">
+        
+        {/* Full-bleed background split into diagonal red / gray-white / blue / yellow bands */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden -z-0">
-          {/* Subtle Ambient Radial Neon Glows */}
-          <div className="absolute -top-24 left-1/4 w-96 h-96 bg-[#FF1F29]/15 blur-[120px] rounded-full" />
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-96 bg-[#0284C7]/15 blur-[140px] rounded-full" />
-          <div className="absolute -top-24 right-1/4 w-96 h-96 bg-[#F59E0B]/15 blur-[120px] rounded-full" />
-
-          {/* Left Slash (Red Band): Angled at +14deg with tactical soldier duotone silhouette */}
+          
+          {/* Red Band (Left) - angled at ~17deg */}
           <div 
-            className="absolute -top-32 -left-20 w-[42vw] min-w-[340px] h-[150%] bg-gradient-to-r from-[#FF1F29]/25 via-[#FF1F29]/10 to-transparent border-r border-[#FF1F29]/30"
-            style={{ transform: 'rotate(14deg)', transformOrigin: 'top left' }}
+            className="absolute inset-0 bg-[#e2231a]" 
+            style={{ clipPath: 'polygon(0% 0%, 25% 0%, 12% 100%, 0% 100%)' }}
           >
-            {/* Tactical Soldier Duotone Texture */}
-            <div className="absolute inset-0 opacity-25 mix-blend-screen bg-no-repeat bg-contain bg-left-bottom"
-              style={{
-                backgroundImage: `radial-gradient(ellipse at 30% 50%, rgba(255, 31, 41, 0.4) 0%, transparent 70%)`
-              }}
+            <div 
+              className="w-full h-full bg-cover bg-left-top opacity-55 mix-blend-luminosity"
+              style={{ backgroundImage: `url('/images/hero-soldier-left.jpg')` }}
             />
-            {/* Stylized tactical soldier silhouette overlay */}
-            <svg className="absolute bottom-16 left-12 w-64 h-80 opacity-20 text-[#FF1F29]" viewBox="0 0 100 120" fill="currentColor">
-              <path d="M50 10 C45 10 40 15 40 22 C40 26 42 29 45 31 C35 34 25 45 25 60 L25 90 L35 90 L35 115 L65 115 L65 90 L75 90 L75 60 C75 45 65 34 55 31 C58 29 60 26 60 22 C60 15 55 10 50 10 Z" />
-              <circle cx="50" cy="20" r="8" fill="#FF1F29" />
-              <polygon points="45,45 55,45 60,65 40,65" fill="#ffffff" opacity="0.3" />
-            </svg>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/60" />
           </div>
 
-          {/* Center Slice: Ruined battlefield / gothic warzone city skyline silhouette fading into deep slate/black */}
-          <div className="absolute bottom-0 left-0 right-0 h-48 opacity-25">
-            <svg className="w-full h-full text-slate-800" viewBox="0 0 1200 200" preserveAspectRatio="none" fill="currentColor">
-              <polygon points="0,200 0,160 30,160 35,110 45,110 50,140 80,140 90,80 100,80 105,130 140,130 160,50 170,50 175,120 220,120 240,90 260,90 280,150 320,150 340,70 350,70 360,110 400,110 430,40 440,40 450,130 490,130 520,80 540,80 560,140 620,140 650,60 660,60 670,120 720,120 750,90 770,90 800,160 850,160 880,50 890,50 900,130 950,130 980,70 1000,70 1030,140 1100,140 1140,80 1160,80 1200,160 1200,200" />
-            </svg>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#07090E] via-[#07090E]/80 to-transparent" />
-          </div>
-
-          {/* Right Slash (Yellow/Gold Band): Angled at -14deg with airdrop supply crate & parachute */}
+          {/* Gray / White Ruins Band */}
           <div 
-            className="absolute -top-32 -right-20 w-[40vw] min-w-[320px] h-[150%] bg-gradient-to-l from-[#F59E0B]/25 via-[#FACC15]/10 to-transparent border-l border-[#F59E0B]/30"
-            style={{ transform: 'rotate(-14deg)', transformOrigin: 'top right' }}
+            className="absolute inset-0 bg-[#2b2d35]" 
+            style={{ clipPath: 'polygon(25% 0%, 34% 0%, 21% 100%, 12% 100%)' }}
           >
-            {/* Airdrop Supply Crate with Parachute Amber Duotone */}
-            <div className="absolute top-36 right-20 opacity-30 text-[#FACC15]">
-              <svg className="w-40 h-52" viewBox="0 0 100 130" fill="currentColor">
-                {/* Parachute canopy */}
-                <path d="M10 45 C10 15 90 15 90 45 C80 45 75 35 65 35 C55 35 50 45 40 45 C30 45 25 35 15 35 C12 35 10 45 10 45 Z" fill="#FACC15" />
-                {/* Parachute suspension lines */}
-                <line x1="15" y1="45" x2="40" y2="90" stroke="#FACC15" strokeWidth="1.5" />
-                <line x1="38" y1="45" x2="45" y2="90" stroke="#FACC15" strokeWidth="1.5" />
-                <line x1="62" y1="45" x2="55" y2="90" stroke="#FACC15" strokeWidth="1.5" />
-                <line x1="85" y1="45" x2="60" y2="90" stroke="#FACC15" strokeWidth="1.5" />
-                {/* Supply Crate */}
-                <rect x="35" y="90" width="30" height="30" rx="3" fill="#D97706" stroke="#FACC15" strokeWidth="2" />
-                <line x1="35" y1="90" x2="65" y2="120" stroke="#FACC15" strokeWidth="1.5" />
-                <line x1="65" y1="90" x2="35" y2="120" stroke="#FACC15" strokeWidth="1.5" />
-              </svg>
-            </div>
+            <div 
+              className="w-full h-full bg-cover bg-center opacity-45 mix-blend-luminosity grayscale"
+              style={{ backgroundImage: `url('/images/hero-city-ruins.jpg')` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/80" />
           </div>
 
-          {/* Authentic High-Res Hero Artwork Overlay Blend */}
+          {/* Blue Band */}
           <div 
-            className="absolute inset-0 opacity-20 mix-blend-luminosity bg-cover bg-center pointer-events-none"
-            style={{ backgroundImage: `url('/images/hero-desktop.jpg')` }}
+            className="absolute inset-0 bg-[#1c3f8f]" 
+            style={{ clipPath: 'polygon(34% 0%, 68% 0%, 55% 100%, 21% 100%)' }}
+          >
+            <div className="w-full h-full bg-gradient-to-b from-[#1c3f8f] via-[#0f2557] to-[#0a0a0a] opacity-85" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/60" />
+          </div>
+
+          {/* Yellow / Amber Parachute Band */}
+          <div 
+            className="absolute inset-0 bg-[#f2b705]" 
+            style={{ clipPath: 'polygon(68% 0%, 92% 0%, 79% 100%, 55% 100%)' }}
+          >
+            <div 
+              className="w-full h-full bg-cover bg-right-top opacity-55 mix-blend-multiply"
+              style={{ backgroundImage: `url('/images/hero-parachute-drop.jpg')` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-black/70 via-transparent to-black/60" />
+          </div>
+
+          {/* Far Right Dark Skyline Band */}
+          <div 
+            className="absolute inset-0 bg-[#0a0a0a]" 
+            style={{ clipPath: 'polygon(92% 0%, 100% 0%, 100% 100%, 79% 100%)' }}
+          >
+            <div className="w-full h-full bg-gradient-to-l from-black via-[#0d162c] to-transparent" />
+          </div>
+
+          {/* Authentic High-Res Reference Artwork Overlay Blend */}
+          <div 
+            className="absolute inset-0 opacity-40 mix-blend-lighten bg-cover bg-center pointer-events-none"
+            style={{ backgroundImage: `url('/images/media_home.jpg')` }}
           />
         </div>
 
         {/* ========================================================= */}
-        {/* DECORATIVE FRAMING TEXT */}
+        {/* DECORATIVE FRAMING TEXT (LEFT & RIGHT EDGES) */}
         {/* ========================================================= */}
-        {/* Left Edge Vertical Caption */}
-        <div className="hidden xl:flex items-center gap-3 absolute left-4 top-1/2 -translate-y-1/2 -rotate-90 origin-center text-xs font-teko font-bold tracking-[0.35em] text-slate-500 uppercase z-20 pointer-events-none">
-          <span>PLAY | BUILD | CONNECT</span>
-          <span className="w-10 h-[1.5px] bg-[#FF1F29]" />
+        {/* Left Band Vertical Stacked Copy: PLAY, BUILD, CONNECT (with red underline) */}
+        <div className="absolute left-6 sm:left-10 top-1/2 -translate-y-1/2 flex flex-col items-start gap-1 z-20 pointer-events-none">
+          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
+            PLAY
+          </span>
+          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
+            BUILD
+          </span>
+          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
+            CONNECT
+          </span>
+          <div className="w-8 h-[2.5px] bg-[#e2231a] mt-1.5" />
         </div>
 
-        {/* Right Edge Vertical Caption */}
-        <div className="hidden xl:flex items-center gap-3 absolute right-4 top-1/2 -translate-y-1/2 rotate-90 origin-center text-xs font-teko font-bold tracking-[0.35em] text-slate-500 uppercase z-20 pointer-events-none">
-          <span className="w-10 h-[1.5px] bg-[#FACC15]" />
-          <span>BUILD | STREAM | GAME | REPEAT</span>
+        {/* Right Band Vertical Stacked Copy: BUILD, STREAM, GAME, REPEAT (with blue underline) */}
+        <div className="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 flex flex-col items-end gap-1 z-20 pointer-events-none">
+          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
+            BUILD
+          </span>
+          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
+            STREAM
+          </span>
+          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
+            GAME
+          </span>
+          <span className="font-barlow font-bold text-xs sm:text-sm tracking-[0.25em] text-white uppercase leading-tight">
+            REPEAT
+          </span>
+          <div className="w-8 h-[2.5px] bg-[#1c3f8f] mt-1.5" />
         </div>
 
-        {/* Floating Pill Badge near Right Angle */}
-        <div className="absolute top-6 right-6 sm:right-16 z-20 rounded-full px-4 py-1.5 bg-[#0E121C]/85 border border-[#F59E0B]/40 text-[#FACC15] text-[11px] font-mono font-bold tracking-widest uppercase shadow-[0_0_15px_rgba(245,158,11,0.3)] backdrop-blur-md flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#FACC15] animate-ping" />
-          <span>MORE THAN GAMING</span>
+        {/* Right Band Floating Eyebrow: MORE THAN GAMING (with yellow underline) */}
+        <div className="absolute top-20 right-16 sm:right-32 lg:right-48 flex flex-col items-start z-20 pointer-events-none hidden md:flex">
+          <span className="font-barlow font-bold text-xs tracking-[0.25em] text-white uppercase leading-tight">
+            MORE
+          </span>
+          <span className="font-barlow font-bold text-xs tracking-[0.25em] text-white uppercase leading-tight">
+            THAN
+          </span>
+          <span className="font-barlow font-bold text-xs tracking-[0.25em] text-white uppercase leading-tight">
+            GAMING
+          </span>
+          <div className="w-7 h-[2px] bg-[#f2b705] mt-1" />
         </div>
 
         {/* ========================================================= */}
-        {/* HERO CONTAINER: TYPOGRAPHY (LEFT) & BATTLESTATION (RIGHT) */}
+        {/* CENTER HERO CONTENT: EYEBROW, TITLE, SUBHEAD, BODY, CTAS */}
         {/* ========================================================= */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-            
-            {/* Left Column: Hero Typography & CTAs (6 cols) */}
-            <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
-              {/* Small Kicker */}
-              <div className="flex items-center justify-center lg:justify-start gap-2.5 text-xs font-mono font-bold tracking-[0.25em] text-slate-400">
-                <span className="text-[#FF1F29]">GEAR</span>
-                <span className="text-slate-600">|</span>
-                <span className="text-[#0284C7]">BUILD</span>
-                <span className="text-slate-600">|</span>
-                <span className="text-[#FACC15]">PLAY</span>
-                <span className="text-slate-600">|</span>
-                <span className="text-white">TOGETHER</span>
-              </div>
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10 pt-4 space-y-4">
+          
+          {/* 1. Small Eyebrow Line */}
+          <div className="text-xs sm:text-[13px] font-mono font-bold tracking-[0.3em] text-white/90 uppercase">
+            GEAR &nbsp;|&nbsp; BUILD &nbsp;|&nbsp; PLAY &nbsp;|&nbsp; TOGETHER
+          </div>
 
-              {/* Massive Condensed Italic Title */}
-              <div className="space-y-1">
-                <h1 className="font-teko italic font-black uppercase text-7xl sm:text-8xl lg:text-9xl leading-[0.88] tracking-tight text-white drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
-                  RIG<span className="text-[#FF1F29]">FORGE</span>
-                </h1>
-                {/* Subhead */}
-                <div className="font-teko font-bold italic uppercase tracking-wider text-2xl sm:text-4xl text-white">
-                  POWER YOUR PASSION
-                </div>
-              </div>
+          {/* 2. Giant Logo Lockup: RIGFORGE (RIG white, FORGE red) */}
+          <h1 className="font-barlow font-black text-7xl sm:text-8xl md:text-9xl uppercase italic tracking-tighter leading-none text-white drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)]">
+            RIG<span className="text-[#e2231a]">FORGE</span>
+          </h1>
 
-              {/* Paragraph */}
-              <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans">
-                A community-driven platform for gamers, creators, and PC builders. Share builds, get support, explore gear, and take your setup to the next level.
-              </p>
+          {/* 3. Subheading Line: POWER YOUR PASSION */}
+          <div className="font-barlow font-bold uppercase tracking-wider text-2xl sm:text-3xl md:text-4xl text-white">
+            POWER YOUR PASSION
+          </div>
 
-              {/* CTA Button Pair */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                {/* Primary Red Pill Button */}
-                <button
-                  onClick={() => openAuthModal('signup')}
-                  className="w-full sm:w-auto rounded-full px-8 py-3.5 bg-[#FF1F29] hover:bg-[#E01923] text-white font-bold text-sm tracking-wide shadow-[0_0_25px_rgba(255,31,41,0.6)] hover:shadow-[0_0_35px_rgba(255,31,41,0.8)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <span>Get Started</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+          {/* 4. Body Paragraph */}
+          <p className="text-xs sm:text-sm text-slate-300 max-w-[500px] mx-auto leading-relaxed font-sans">
+            A community-driven platform for gamers, creators, and PC builders. Share builds, get support, explore gear, and take your setup to the next level.
+          </p>
 
-                {/* Dark Glass Pill Button */}
-                <button
-                  onClick={() => onNavigate('builds')}
-                  className="w-full sm:w-auto rounded-full px-8 py-3.5 bg-[#0E121C]/90 hover:bg-white/10 text-slate-200 hover:text-white font-semibold text-sm border border-white/15 hover:border-white/30 transition-all flex items-center justify-center gap-2 backdrop-blur-md cursor-pointer"
-                >
-                  <span>Explore Builds</span>
-                </button>
-              </div>
+          {/* 5. Two CTA Buttons Side by Side */}
+          <div className="flex items-center justify-center gap-4 pt-2">
+            {/* Primary Red CTA: Get Started → */}
+            <button
+              onClick={() => onNavigate('signin')}
+              className="rounded-full px-8 py-3 bg-[#e2231a] hover:bg-[#b71c17] text-white font-bold text-sm tracking-wide shadow-[0_0_25px_rgba(226,35,26,0.6)] hover:shadow-[0_0_35px_rgba(226,35,26,0.8)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Get Started</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
 
-              {/* Telemetry Stat Pill Bar */}
-              <div className="grid grid-cols-4 gap-2 pt-6 border-t border-white/10 text-center max-w-lg mx-auto lg:mx-0">
-                <div className="p-2 rounded-xl bg-[#0E121C]/60 border border-white/5">
-                  <div className="text-xl sm:text-2xl font-teko font-black text-white">10K+</div>
-                  <div className="text-[10px] text-slate-400 font-mono">Builds</div>
-                </div>
-                <div className="p-2 rounded-xl bg-[#0E121C]/60 border border-white/5">
-                  <div className="text-xl sm:text-2xl font-teko font-black text-[#0284C7]">50K+</div>
-                  <div className="text-[10px] text-slate-400 font-mono">Community</div>
-                </div>
-                <div className="p-2 rounded-xl bg-[#0E121C]/60 border border-white/5">
-                  <div className="text-xl sm:text-2xl font-teko font-black text-[#FACC15]">1K+</div>
-                  <div className="text-[10px] text-slate-400 font-mono">Components</div>
-                </div>
-                <div className="p-2 rounded-xl bg-[#0E121C]/60 border border-white/5">
-                  <div className="text-xl sm:text-2xl font-teko font-black text-[#FF1F29]">24/7</div>
-                  <div className="text-[10px] text-slate-400 font-mono">Support</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Battlestation Desk Graphic Stage (6 cols) */}
-            <div className="lg:col-span-6 relative flex items-center justify-center">
-              {/* Battlestation Desk Stage Frame */}
-              <div className="relative w-full max-w-lg rounded-3xl overflow-hidden bg-[#0E121C]/90 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] p-6 group">
-                
-                {/* Dual-Tone Ambient Backlight Glow behind desk */}
-                <div className="absolute top-4 left-4 w-48 h-48 bg-[#38BDF8]/20 blur-3xl pointer-events-none" />
-                <div className="absolute bottom-4 right-4 w-48 h-48 bg-[#FF1F29]/25 blur-3xl pointer-events-none" />
-
-                {/* Main Desk Artwork Stage Container */}
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#07090E] aspect-[16/11]">
-                  
-                  {/* Visual Battlestation Render */}
-                  <img
-                    src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=900&q=85"
-                    alt="Custom RigForge Gaming Battlestation"
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                  />
-                  
-                  {/* Subtle vignette gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#07090E] via-[#07090E]/40 to-transparent" />
-
-                  {/* Curved Ultrawide Monitor Glow & On-Screen Typography Overlay */}
-                  <div className="absolute top-6 left-6 right-28 rounded-xl border border-sky-400/40 bg-black/70 backdrop-blur-sm p-3 shadow-[0_0_25px_rgba(56,189,248,0.35)] flex flex-col items-center justify-center text-center">
-                    <div className="text-[9px] font-mono tracking-widest text-sky-400 uppercase font-semibold">
-                      ULTRAWIDE 240HZ DISPLAY
-                    </div>
-                    <div className="font-teko uppercase font-bold text-lg sm:text-xl tracking-widest text-white drop-shadow-[0_0_10px_rgba(56,189,248,0.8)]">
-                      GOOD GAMES BETTER PEOPLE
-                    </div>
-                  </div>
-
-                  {/* Liquid-Cooled Vertical PC Case on Right */}
-                  <div className="absolute top-4 right-4 bottom-14 w-20 sm:w-24 rounded-xl border border-[#38BDF8]/50 bg-black/80 backdrop-blur-md p-2 flex flex-col justify-between items-center shadow-[0_0_20px_rgba(56,189,248,0.4)]">
-                    {/* 3 Circular Neon Cooling Fans (Cyan Glow) */}
-                    <div className="space-y-1.5 w-full flex flex-col items-center">
-                      {[1, 2, 3].map((fan) => (
-                        <div key={fan} className="w-8 h-8 rounded-full border-2 border-[#38BDF8] flex items-center justify-center shadow-[0_0_10px_#38BDF8] animate-spin" style={{ animationDuration: '6s' }}>
-                          <div className="w-3 h-3 rounded-full bg-[#38BDF8]/60" />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Illuminated 'R' Logo */}
-                    <div className="w-7 h-7 rounded-lg bg-[#FF1F29] text-white font-teko font-black text-sm flex items-center justify-center shadow-[0_0_15px_#FF1F29]">
-                      R
-                    </div>
-                  </div>
-
-                  {/* Gaming Chair Silhouette & Peripheral Desk Glow Below */}
-                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between z-10">
-                    <div className="space-y-0.5">
-                      <div className="text-xs font-teko uppercase tracking-wider font-bold text-white flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-[#FF1F29]" />
-                        <span>FLAGSHIP BATTLE RIG</span>
-                      </div>
-                      <div className="text-[10px] text-slate-400 font-mono">
-                        AM5 · Ryzen 7800X3D · RTX 4080 · 360mm AIO
-                      </div>
-                    </div>
-
-                    {/* Slogan Marker */}
-                    <div className="rounded-lg px-2.5 py-1 bg-[#0E121C]/90 border border-[#F59E0B]/40 text-[#FACC15] text-[9px] font-mono font-bold tracking-widest uppercase">
-                      BUILT FOR A BETTER TOMORROW
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Peripheral RGB Desk Underglow Strip */}
-                <div className="mt-3 flex items-center justify-between text-[11px] font-mono text-slate-400 pt-2 border-t border-white/10">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#38BDF8] shadow-[0_0_8px_#38BDF8]" />
-                    <span>RGB Mechanical Deck</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#FF1F29] shadow-[0_0_8px_#FF1F29]" />
-                    <span>Wireless Laser Optic</span>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
+            {/* Dark Outlined CTA: Explore Builds */}
+            <button
+              onClick={() => onNavigate('builds')}
+              className="rounded-full px-8 py-3 bg-black/60 hover:bg-white hover:text-black text-white font-semibold text-sm border border-white/30 hover:border-white transition-all flex items-center justify-center gap-2 backdrop-blur-md cursor-pointer"
+            >
+              <span>Explore Builds</span>
+            </button>
           </div>
         </div>
+
+        {/* ========================================================= */}
+        {/* 6. GAMING DESK SETUP HERO STAGE (OVERLAPPING COLOR BANDS) */}
+        {/* ========================================================= */}
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 pt-6 sm:pt-8 flex justify-center">
+          <div className="relative w-full rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.95)]">
+            <img
+              src="/images/hero-desk-setup.jpg"
+              alt="RigForge Custom Battlestation Desk Setup"
+              className="w-full h-auto object-cover rounded-2xl border border-white/10"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-40 pointer-events-none" />
+          </div>
+        </div>
+
       </section>
 
       {/* ========================================================= */}
-      {/* 4-PILLAR FEATURE BAR (GRID OF 4 QUICK-ACCESS FEATURES) */}
+      {/* 4.3 FEATURE STRIP (BLACK BACKGROUND, 4 COLUMNS) */}
       {/* ========================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
-          {/* 1. Join Community (Red circular icon: users) */}
+          {/* 1. Red circle icon: Join Community */}
           <div
             onClick={() => onNavigate('community')}
-            className="group p-5 rounded-2xl bg-[#0E121C]/85 hover:bg-[#121622] border border-white/[0.08] hover:border-[#FF1F29]/60 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
+            className="group p-5 rounded-2xl bg-[#0f1117] hover:bg-[#151922] border border-white/[0.08] hover:border-[#e2231a]/60 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
           >
-            <div className="w-12 h-12 rounded-full bg-[#FF1F29] text-white flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(255,31,41,0.4)] group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-full bg-[#e2231a] text-white flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(226,35,26,0.4)] group-hover:scale-110 transition-transform">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-sm text-white group-hover:text-[#FF1F29] transition-colors">
+              <h3 className="font-bold text-sm text-white group-hover:text-[#e2231a] transition-colors">
                 Join Community
               </h3>
               <p className="text-xs text-slate-400">Connect with gamers &amp; builders</p>
             </div>
           </div>
 
-          {/* 2. Share Your Build (White circular icon: cube/box) */}
+          {/* 2. White/outline circle icon: Share Your Build */}
           <div
             onClick={() => onNavigate('builds')}
-            className="group p-5 rounded-2xl bg-[#0E121C]/85 hover:bg-[#121622] border border-white/[0.08] hover:border-white/30 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
+            className="group p-5 rounded-2xl bg-[#0f1117] hover:bg-[#151922] border border-white/[0.08] hover:border-white/30 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
           >
             <div className="w-12 h-12 rounded-full bg-white text-slate-950 flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-110 transition-transform">
               <Box className="w-5 h-5" />
@@ -314,32 +237,32 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
             </div>
           </div>
 
-          {/* 3. Explore Gear (Blue circular icon: shopping-cart) */}
+          {/* 3. Blue circle icon: Explore Gear */}
           <div
             onClick={() => onNavigate('marketplace')}
-            className="group p-5 rounded-2xl bg-[#0E121C]/85 hover:bg-[#121622] border border-white/[0.08] hover:border-[#0284C7]/60 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
+            className="group p-5 rounded-2xl bg-[#0f1117] hover:bg-[#151922] border border-white/[0.08] hover:border-[#1c3f8f]/60 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
           >
-            <div className="w-12 h-12 rounded-full bg-[#0284C7] text-white flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(2,132,199,0.4)] group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-full bg-[#1c3f8f] text-white flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(28,63,143,0.4)] group-hover:scale-110 transition-transform">
               <ShoppingCart className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-sm text-white group-hover:text-[#0284C7] transition-colors">
+              <h3 className="font-bold text-sm text-white group-hover:text-[#3b82f6] transition-colors">
                 Explore Gear
               </h3>
               <p className="text-xs text-slate-400">Find the best components</p>
             </div>
           </div>
 
-          {/* 4. Learn & Grow (Yellow circular icon: book-open) */}
+          {/* 4. Yellow circle icon: Learn & Grow */}
           <div
             onClick={() => onNavigate('guides')}
-            className="group p-5 rounded-2xl bg-[#0E121C]/85 hover:bg-[#121622] border border-white/[0.08] hover:border-[#F59E0B]/60 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
+            className="group p-5 rounded-2xl bg-[#0f1117] hover:bg-[#151922] border border-white/[0.08] hover:border-[#f2b705]/60 shadow-lg cursor-pointer transition-all duration-300 flex items-center gap-4"
           >
-            <div className="w-12 h-12 rounded-full bg-[#F59E0B] text-slate-950 flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(245,158,11,0.4)] group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-full bg-[#f2b705] text-slate-950 flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(242,183,5,0.4)] group-hover:scale-110 transition-transform">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-sm text-white group-hover:text-[#FACC15] transition-colors">
+              <h3 className="font-bold text-sm text-white group-hover:text-[#f2b705] transition-colors">
                 Learn &amp; Grow
               </h3>
               <p className="text-xs text-slate-400">Guides, tips and support</p>
@@ -350,90 +273,87 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
       </section>
 
       {/* ========================================================= */}
-      {/* BOTTOM SHOWCASE CARDS (3 COLUMNS) */}
+      {/* 4.4 THREE FEATURED CARDS (BOTTOM ROW, EQUAL-WIDTH) */}
       {/* ========================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* Card 1: Featured Builds (Red Theme) */}
+          {/* Card 1: Red Card — FEATURED BUILDS / INSANE SETUPS */}
           <div
             onClick={() => onNavigate('builds')}
-            className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#1a080c] via-[#0E121C] to-[#07090E] border border-[#FF1F29]/30 hover:border-[#FF1F29] p-6 sm:p-8 cursor-pointer shadow-xl transition-all duration-300 flex flex-col justify-between min-h-[270px]"
+            className="group relative rounded-2xl overflow-hidden border border-[#e2231a]/40 hover:border-[#e2231a] cursor-pointer shadow-xl transition-all duration-300 min-h-[220px] bg-cover bg-center flex flex-col justify-between p-6 sm:p-7 hover:scale-[1.025]"
+            style={{ backgroundImage: `url('/images/card-pc-build-red.jpg')` }}
           >
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[#FF1F29]/15 blur-3xl pointer-events-none" />
-            
-            <div className="relative z-10 space-y-2">
-              <span className="text-xs font-mono tracking-widest font-bold text-[#FF1F29] uppercase">
+            {/* Dark gradient overlay bottom-to-top */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40 group-hover:bg-black/60 transition-colors duration-400" />
+
+            <div className="relative z-10 space-y-1">
+              <span className="text-[11px] font-mono tracking-widest font-bold text-[#e2231a] uppercase">
                 FEATURED BUILDS
               </span>
-              <h3 className="font-teko text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
+              <h3 className="font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
                 INSANE<br />SETUPS
               </h3>
             </div>
 
-            <div className="relative z-10 flex items-end justify-between mt-6 pt-4 border-t border-white/5">
-              <div className="space-y-0.5">
-                <div className="text-xs font-bold text-slate-200">Apex Performance Rigs</div>
-                <div className="text-[11px] text-slate-400 font-mono">Custom Loop Overclocks</div>
-              </div>
-
-              <div className="w-10 h-10 rounded-full bg-[#FF1F29] text-white flex items-center justify-center shadow-[0_0_15px_rgba(255,31,41,0.5)] group-hover:translate-x-1 group-hover:scale-105 transition-all">
+            <div className="relative z-10 flex items-center justify-between pt-4">
+              <div className="w-9 h-9 rounded-full bg-[#e2231a] text-white flex items-center justify-center shadow-[0_0_15px_rgba(226,35,26,0.6)] group-hover:translate-x-1 transition-transform">
                 <ArrowRight className="w-4 h-4" />
               </div>
             </div>
           </div>
 
-          {/* Card 2: Community (Blue/Slate Theme) */}
+          {/* Card 2: Gray/Blue Card — COMMUNITY / REAL PEOPLE */}
           <div
             onClick={() => onNavigate('community')}
-            className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#08152e] via-[#0E121C] to-[#07090E] border border-[#0284C7]/30 hover:border-[#0284C7] p-6 sm:p-8 cursor-pointer shadow-xl transition-all duration-300 flex flex-col justify-between min-h-[270px]"
+            className="group relative rounded-2xl overflow-hidden border border-white/20 hover:border-white/40 cursor-pointer shadow-xl transition-all duration-300 min-h-[220px] bg-cover bg-center flex flex-col justify-between p-6 sm:p-7 hover:scale-[1.025]"
+            style={{ backgroundImage: `url('/images/card-community-soldier.jpg')` }}
           >
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[#0284C7]/15 blur-3xl pointer-events-none" />
+            {/* Dark gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40 group-hover:bg-black/60 transition-colors duration-400" />
 
-            <div className="relative z-10 space-y-2">
-              <span className="text-xs font-mono tracking-widest font-bold text-[#38BDF8] uppercase">
+            <div className="relative z-10 space-y-1">
+              <span className="text-[11px] font-mono tracking-widest font-bold text-slate-300 uppercase">
                 COMMUNITY
               </span>
-              <h3 className="font-teko text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
-                REAL<br />PEOPLE
+              <h3 className="font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
+                REAL PEOPLE
               </h3>
+              <p className="text-xs text-slate-300 font-sans pt-1">
+                Real Builds. Real Stories.
+              </p>
             </div>
 
-            <div className="relative z-10 flex items-end justify-between mt-6 pt-4 border-t border-white/5">
-              <div className="space-y-0.5">
-                <div className="text-xs font-bold text-slate-200">Real Builds. Real Stories.</div>
-                <div className="text-[11px] text-slate-400 font-mono">50K+ Active Indian Builders</div>
-              </div>
-
-              <div className="w-10 h-10 rounded-full bg-[#0284C7] text-white flex items-center justify-center shadow-[0_0_15px_rgba(2,132,199,0.5)] group-hover:translate-x-1 group-hover:scale-105 transition-all">
+            <div className="relative z-10 flex items-center justify-between pt-4">
+              <div className="w-9 h-9 rounded-full bg-slate-900/90 border border-white/20 text-white flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform">
                 <ArrowRight className="w-4 h-4" />
               </div>
             </div>
           </div>
 
-          {/* Card 3: Guides (Gold/Yellow Theme) */}
+          {/* Card 3: Yellow Card — GUIDES / LEVEL UP YOUR KNOWLEDGE */}
           <div
             onClick={() => onNavigate('guides')}
-            className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#1c1806] via-[#0E121C] to-[#07090E] border border-[#F59E0B]/30 hover:border-[#FACC15] p-6 sm:p-8 cursor-pointer shadow-xl transition-all duration-300 flex flex-col justify-between min-h-[270px]"
+            className="group relative rounded-2xl overflow-hidden border border-[#f2b705]/40 hover:border-[#f2b705] cursor-pointer shadow-xl transition-all duration-300 min-h-[220px] bg-cover bg-center flex flex-col justify-between p-6 sm:p-7 hover:scale-[1.025]"
+            style={{ backgroundImage: `url('/images/card-guides-soldier-gun.jpg')` }}
           >
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[#FACC15]/15 blur-3xl pointer-events-none" />
+            {/* Warm yellow gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-[#f2b705]/20 group-hover:bg-black/60 transition-colors duration-400" />
 
-            <div className="relative z-10 space-y-2">
-              <span className="text-xs font-mono tracking-widest font-bold text-[#FACC15] uppercase">
+            <div className="relative z-10 space-y-1">
+              <span className="text-[11px] font-mono tracking-widest font-bold text-[#f2b705] uppercase">
                 GUIDES
               </span>
-              <h3 className="font-teko text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
+              <h3 className="font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-none">
                 LEVEL UP<br />YOUR KNOWLEDGE
               </h3>
+              <p className="text-xs text-slate-300 font-sans pt-1">
+                Build Smarter. Game Better.
+              </p>
             </div>
 
-            <div className="relative z-10 flex items-end justify-between mt-6 pt-4 border-t border-white/5">
-              <div className="space-y-0.5">
-                <div className="text-xs font-bold text-slate-200">Build Smarter. Game Better.</div>
-                <div className="text-[11px] text-slate-400 font-mono">Step-by-step assembly tips</div>
-              </div>
-
-              <div className="w-10 h-10 rounded-full bg-[#F59E0B] text-slate-950 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.5)] group-hover:translate-x-1 group-hover:scale-105 transition-all">
+            <div className="relative z-10 flex items-center justify-between pt-4">
+              <div className="w-9 h-9 rounded-full bg-slate-900/90 border border-[#f2b705]/40 text-white flex items-center justify-center shadow-md group-hover:translate-x-1 transition-transform">
                 <ArrowRight className="w-4 h-4" />
               </div>
             </div>
@@ -448,15 +368,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onNotification }
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
           <div>
-            <span className="text-xs font-mono font-bold text-[#FF1F29] uppercase tracking-wider">HOT DEALS</span>
-            <h2 className="font-teko text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+            <span className="text-xs font-mono font-bold text-[#e2231a] uppercase tracking-wider">HOT DEALS</span>
+            <h2 className="font-barlow text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
               FEATURED HARDWARE
             </h2>
           </div>
 
           <button
             onClick={() => onNavigate('marketplace')}
-            className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#FF1F29] hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#e2231a] hover:text-white transition-colors cursor-pointer"
           >
             <span>View All Components</span>
             <ChevronRight className="w-4 h-4" />

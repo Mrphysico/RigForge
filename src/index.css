@@ -3,12 +3,22 @@
 @tailwind utilities;
 
 :root {
+  --rf-black:      #0a0a0a;   /* base background */
+  --rf-red:        #e2231a;   /* primary accent / CTA */
+  --rf-red-dark:   #b71c17;
+  --rf-blue:       #1c3f8f;   /* secondary accent */
+  --rf-blue-dark:  #14306e;
+  --rf-yellow:     #f2b705;   /* tertiary accent */
+  --rf-white:      #ffffff;
+  --rf-gray-100:   #f4f4f6;   /* light panel background (sign-in form side) */
+  --rf-gray-400:   #9ca3af;   /* muted placeholder text */
+  --rf-overlay:    rgba(0,0,0,0.55); /* image darkening overlay */
   color-scheme: dark;
 }
 
 body {
   margin: 0;
-  background-color: #050a14;
+  background-color: var(--rf-black);
   color: #f1f5f9;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;

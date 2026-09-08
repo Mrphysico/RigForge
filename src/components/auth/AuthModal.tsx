@@ -4,7 +4,7 @@ import {
   Users, 
   BarChart3, 
   Gamepad2, 
-  Cpu
+  Settings
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { SignInForm } from './SignInForm';
@@ -71,58 +71,52 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onNotification }) => {
         </button>
 
         {/* ========================================================= */}
-        {/* LEFT COLUMN: DARK CYBER/GAMING DISPLAY (6 COLS) */}
+        {/* LEFT COLUMN: DARK CYBER DISPLAY (~45% WIDTH, 6 COLS) */}
         {/* ========================================================= */}
-        <div className="hidden md:flex md:col-span-6 flex-col justify-between p-8 sm:p-10 bg-gradient-to-b from-[#0E121C] via-[#07090E] to-[#040810] text-white relative overflow-hidden">
-          {/* Subtle Ambient Glows */}
-          <div className="absolute -top-10 -left-10 w-48 h-48 bg-[#FF1F29]/20 blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#0284C7]/20 blur-3xl pointer-events-none" />
+        <div className="hidden md:flex md:col-span-6 flex-col justify-between p-8 sm:p-10 bg-[#0a0a0a] text-white relative overflow-hidden">
+          {/* PC Tower Background Artwork Bleeding in from right edge */}
+          <div 
+            className="absolute -top-10 -right-10 w-80 h-full bg-no-repeat bg-cover bg-center opacity-65 pointer-events-none mix-blend-screen"
+            style={{
+              backgroundImage: `url('/images/login-pc-tower.jpg')`,
+              maskImage: 'linear-gradient(to right, transparent 0%, black 50%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 50%)'
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent pointer-events-none" />
 
           {/* Top Brand Header */}
           <div className="relative z-10 space-y-1">
             <div className="flex items-center gap-2">
-              <span className="font-teko italic font-bold text-3xl tracking-wider uppercase">
-                RIG<span className="text-[#FF1F29]">FORGE</span>
+              <span className="font-barlow italic font-black text-3xl tracking-wider uppercase">
+                RIG<span className="text-[#e2231a]">FORGE</span>
               </span>
             </div>
-            <div className="text-[11px] font-mono tracking-[0.18em] text-slate-400 font-semibold uppercase">
-              RIGFORGE | GEAR · BUILD · PLAY · TOGETHER
+            <div className="text-[10px] font-mono tracking-[0.2em] text-slate-400 font-semibold uppercase pt-0.5">
+              GEAR | BUILD | PLAY | TOGETHER
             </div>
           </div>
 
           {/* Hero Content */}
-          <div className="relative z-10 my-4 space-y-4">
-            <div className="font-teko font-black tracking-tight leading-[0.9] uppercase text-6xl lg:text-7xl">
-              <span className="text-white block">BUILD</span>
-              <span className="text-[#0284C7] block">YOUR</span>
-              <span className="text-[#FACC15] block">LEGACY</span>
+          <div className="relative z-10 my-4 space-y-3.5 max-w-sm">
+            <div className="font-barlow font-black tracking-tight leading-[0.88] uppercase text-5xl lg:text-6xl">
+              <span className="text-[#ffffff] block">BUILD</span>
+              <span className="text-[#1c3f8f] block drop-shadow-[0_0_12px_rgba(28,63,143,0.8)]">YOUR</span>
+              <span className="text-[#f2b705] block drop-shadow-[0_0_12px_rgba(242,183,5,0.6)]">LEGACY</span>
             </div>
 
-            <p className="text-xs text-slate-300 max-w-sm leading-relaxed">
-              Join a growing community of gamers, creators, and PC builders. Manage your rigs, connect with others, and take your setup to the next level.
+            <p className="text-xs text-slate-300 leading-relaxed font-sans">
+              Join a growing community of gamers, creators and builders. Manage your rigs, connect with others and take your setup to the next level.
             </p>
 
-            {/* Glowing Custom PC Rig Showcase */}
-            <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 bg-[#07090E] shadow-2xl">
-              <img
-                src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=700&q=80"
-                alt="RigForge Battle Rig"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#07090E] via-transparent to-transparent opacity-80" />
-              <div className="absolute bottom-3 right-3 text-sm font-black font-teko italic text-[#FF1F29] bg-[#07090E]/80 px-2 py-0.5 rounded-lg border border-[#FF1F29]/30">
-                R
-              </div>
-            </div>
-
-            {/* Icon Row: MANAGE RIG, JOIN TEAM, TRACK RIG, EXPLORE */}
+            {/* Icon Row: MANAGE YOUR RIG, JOIN COMMUNITY, TRACK PROGRESS, EXPLORE MORE */}
             <div className="grid grid-cols-4 gap-2 pt-2 text-center">
               <div className="flex flex-col items-center space-y-1">
-                <div className="w-10 h-10 rounded-full bg-[#FF1F29] text-white flex items-center justify-center shadow-[0_0_15px_rgba(255,31,41,0.5)]">
-                  <Cpu className="w-4 h-4" />
+                <div className="w-10 h-10 rounded-full bg-[#e2231a] text-white flex items-center justify-center shadow-[0_0_15px_rgba(226,35,26,0.5)]">
+                  <Settings className="w-4 h-4" />
                 </div>
-                <span className="text-[9px] font-teko font-bold tracking-wider text-slate-300 leading-tight uppercase">
-                  MANAGE<br />RIG
+                <span className="text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
+                  MANAGE<br />YOUR RIG
                 </span>
               </div>
 
@@ -130,34 +124,35 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onNotification }) => {
                 <div className="w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-md">
                   <Users className="w-4 h-4" />
                 </div>
-                <span className="text-[9px] font-teko font-bold tracking-wider text-slate-300 leading-tight uppercase">
-                  JOIN<br />TEAM
+                <span className="text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
+                  JOIN<br />COMMUNITY
                 </span>
               </div>
 
               <div className="flex flex-col items-center space-y-1">
-                <div className="w-10 h-10 rounded-full bg-[#0284C7] text-white flex items-center justify-center shadow-[0_0_15px_rgba(2,132,199,0.5)]">
+                <div className="w-10 h-10 rounded-full bg-[#1c3f8f] text-white flex items-center justify-center shadow-[0_0_15px_rgba(28,63,143,0.6)]">
                   <BarChart3 className="w-4 h-4" />
                 </div>
-                <span className="text-[9px] font-teko font-bold tracking-wider text-slate-300 leading-tight uppercase">
-                  TRACK<br />RIG
+                <span className="text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
+                  TRACK<br />PROGRESS
                 </span>
               </div>
 
               <div className="flex flex-col items-center space-y-1">
-                <div className="w-10 h-10 rounded-full bg-[#FACC15] text-slate-950 flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.5)]">
+                <div className="w-10 h-10 rounded-full bg-[#f2b705] text-slate-950 flex items-center justify-center shadow-[0_0_15px_rgba(242,183,5,0.6)]">
                   <Gamepad2 className="w-4 h-4" />
                 </div>
-                <span className="text-[9px] font-teko font-bold tracking-wider text-slate-300 leading-tight uppercase">
-                  EXPLORE
+                <span className="text-[9px] font-barlow font-bold tracking-wider text-slate-300 leading-tight uppercase">
+                  EXPLORE<br />MORE
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Lower text */}
+          {/* Lower text with rule */}
           <div className="relative z-10 pt-4 border-t border-white/10 text-[10px] font-mono tracking-wider text-slate-400 uppercase">
-            — MORE THAN A PLATFORM • A COMMUNITY
+            <div className="w-8 h-[1.5px] bg-slate-500 mb-2" />
+            <span>MORE THAN A PLATFORM / A COMMUNITY</span>
           </div>
         </div>
 

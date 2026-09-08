@@ -13,6 +13,7 @@ import { CommunityPage } from './pages/CommunityPage';
 import { CatalogPage } from './pages/CatalogPage';
 import { GuidesPage } from './pages/GuidesPage';
 import { SupportPage } from './pages/SupportPage';
+import { SignInPage } from './pages/SignInPage';
 import { ComponentCategory } from './types/hardware';
 import { useAutoLogout } from './hooks/useAutoLogout';
 import { useAuthStore } from './store/useAuthStore';
@@ -58,7 +59,8 @@ export function App() {
         hash === 'community' ||
         hash === 'marketplace' ||
         hash === 'guides' ||
-        hash === 'support'
+        hash === 'support' ||
+        hash === 'signin'
       ) {
         setCurrentPage(hash);
       }
@@ -114,8 +116,24 @@ export function App() {
     );
   }
 
+  // Full-viewport dedicated Sign In / Create Account Page (Section 5)
+  if (currentPage === 'signin') {
+    return (
+      <>
+        <SignInPage
+          onNavigate={navigateTo}
+          onNotification={showNotification}
+        />
+        <Toast
+          message={toastMessage}
+          onClose={() => setToastMessage(null)}
+        />
+      </>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#050a14] text-slate-100 bg-grid-pattern selection:bg-[#ff1e2d]/30 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#0a0a0a] text-slate-100 bg-grid-pattern selection:bg-[#e2231a]/30 selection:text-white">
       {/* Top Navigation */}
       <Navbar
         currentPage={currentPage}

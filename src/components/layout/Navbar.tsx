@@ -5,7 +5,6 @@ import {
   Search, 
   Menu, 
   X, 
-  Sparkles, 
   LogOut, 
   ChevronDown, 
   FolderGit2, 
@@ -18,7 +17,7 @@ import { MOCK_PRODUCTS } from '../../data/mockHardware';
 import { formatINR } from '../../utils/formatCurrency';
 import { Product } from '../../types/hardware';
 
-export type AppPage = 'home' | 'builds' | 'builder' | 'community' | 'marketplace' | 'guides' | 'support';
+export type AppPage = 'home' | 'builds' | 'builder' | 'community' | 'marketplace' | 'guides' | 'support' | 'signin';
 
 interface NavbarProps {
   currentPage: AppPage;
@@ -85,32 +84,20 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#1e2d4f] bg-[#050a14]/95 backdrop-blur-md">
-      {/* Top India Announcement Bar */}
-      <div className="bg-[#08111f] px-4 py-1 text-center text-xs font-medium text-slate-300 border-b border-[#1e2d4f] flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-[#ff1e2d] animate-pulse" />
-        <span className="text-[11px] sm:text-xs">
-          Pan-India Insured Courier via BlueDart &amp; Delhivery | Free Shipping on orders over ₹10,000 | GST Invoice included
-        </span>
-      </div>
-
+    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#0a0a0a] backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
-          {/* Brand Logo with Slanted Geometric 'R' Icon */}
+          {/* Brand Logo with Red 'R' Icon and RIGFORGE wordmark */}
           <div 
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3 cursor-pointer group select-none flex-shrink-0"
+            className="flex items-center gap-2.5 cursor-pointer group select-none flex-shrink-0"
           >
-            <div className="relative -skew-x-12 w-9 h-9 rounded-lg bg-gradient-to-br from-[#FF1F29] via-[#E01923] to-[#99000B] flex items-center justify-center shadow-[0_0_20px_rgba(255,31,41,0.5)] transition-transform group-hover:scale-105 border border-white/20">
-              <span className="skew-x-12 font-teko font-black text-white text-2xl tracking-tighter">
-                R
-              </span>
+            <div className="w-9 h-9 rounded-xl bg-[#e2231a] flex items-center justify-center font-barlow font-black text-white text-2xl shadow-[0_0_15px_rgba(226,35,26,0.5)] transition-transform group-hover:scale-105">
+              R
             </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-teko text-3xl font-bold tracking-wider italic uppercase text-white group-hover:text-[#FF1F29] transition-colors">
-                RIG<span className="text-[#FF1F29]">FORGE</span>
-              </span>
-            </div>
+            <span className="font-barlow font-black text-2xl tracking-wider uppercase italic text-white group-hover:text-[#e2231a] transition-colors">
+              RIG<span className="text-[#e2231a]">FORGE</span>
+            </span>
           </div>
 
           {/* Desktop Center Nav Links with active red indicator pill */}
@@ -128,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   <span>{label}</span>
                   {isActive && (
-                    <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-6 h-1 bg-[#FF1F29] rounded-full shadow-[0_0_10px_#FF1F29]" />
+                    <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-6 h-[2.5px] bg-[#e2231a] rounded-full shadow-[0_0_8px_#e2231a]" />
                   )}
                 </button>
               );
@@ -251,14 +238,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               ) : (
                 <div className="flex items-center gap-2 sm:gap-2.5">
                   <button
-                    onClick={() => openAuthModal('signin')}
-                    className="rounded-full px-4 py-1.5 text-xs font-semibold text-slate-300 hover:text-white border border-white/10 hover:border-white/25 bg-transparent hover:bg-white/5 transition-all"
+                    onClick={() => {
+                      openAuthModal('signin');
+                      handleNavClick('signin');
+                    }}
+                    className="rounded-full px-5 py-1.5 text-xs font-semibold text-white border border-white/30 hover:border-white hover:bg-white/10 transition-all cursor-pointer"
                   >
                     Sign In
                   </button>
                   <button
-                    onClick={() => openAuthModal('signup')}
-                    className="rounded-full px-4 py-1.5 text-xs font-bold text-white bg-[#FF1F29] hover:bg-[#E01923] shadow-[0_0_20px_rgba(255,31,41,0.5)] hover:shadow-[0_0_25px_rgba(255,31,41,0.7)] transition-all transform hover:scale-105"
+                    onClick={() => {
+                      openAuthModal('signup');
+                      handleNavClick('signin');
+                    }}
+                    className="rounded-full px-5 py-1.5 text-xs font-bold text-white bg-[#e2231a] hover:bg-[#b71c17] shadow-[0_0_18px_rgba(226,35,26,0.5)] transition-all transform hover:scale-105 cursor-pointer"
                   >
                     Create Account
                   </button>
