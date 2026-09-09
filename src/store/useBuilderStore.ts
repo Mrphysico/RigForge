@@ -27,6 +27,16 @@ const initialSlots: Record<ComponentCategory, Product | null> = {
   case: null,
   psu: null,
   peripherals: null,
+  nvme_ssd: null,
+  sata_ssd: null,
+  hdd: null,
+  air_cooler: null,
+  aio_cooler: null,
+  case_fans: null,
+  thermal_paste: null,
+  monitor: null,
+  keyboard: null,
+  mouse: null,
 };
 
 export const useBuilderStore = create<BuilderState>((set, get) => ({
@@ -72,6 +82,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
 
       set({
         slots: {
+          ...initialSlots,
           cpu,
           cooler,
           motherboard: mobo,
@@ -97,6 +108,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
 
       set({
         slots: {
+          ...initialSlots,
           cpu,
           cooler,
           motherboard: mobo,

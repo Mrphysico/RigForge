@@ -1,12 +1,23 @@
 export type ComponentCategory =
   | 'cpu'
-  | 'cooler'
+  | 'gpu'
   | 'motherboard'
   | 'ram'
-  | 'storage'
-  | 'gpu'
-  | 'case'
+  | 'nvme_ssd'
+  | 'sata_ssd'
+  | 'hdd'
   | 'psu'
+  | 'case'
+  | 'air_cooler'
+  | 'aio_cooler'
+  | 'case_fans'
+  | 'thermal_paste'
+  | 'monitor'
+  | 'keyboard'
+  | 'mouse'
+  // Legacy aliases for backward compatibility with PC Builder & older cart state:
+  | 'cooler'
+  | 'storage'
   | 'peripherals';
 
 export interface HardwareSpecs {
@@ -44,6 +55,9 @@ export interface Product {
   category: ComponentCategory;
   price: number;
   originalPrice?: number;
+  mrp?: number;
+  seller?: string;
+  warranty?: string;
   rating: number;
   reviewsCount: number;
   inStock: boolean;
@@ -52,6 +66,8 @@ export interface Product {
   description: string;
   featured?: boolean;
   tags?: string[];
+  catalogueDetails?: Record<string, any>;
+  keySpecsSummary?: string[];
 }
 
 export interface CartItem {
