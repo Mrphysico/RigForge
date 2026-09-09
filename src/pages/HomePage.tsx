@@ -18,6 +18,39 @@ export const HomePage: React.FC<HomePageProps> = ({
 }) => {
   const { user, isAuthenticated, isCheckingAuth, openAuthModal } = useAuthStore();
 
+  // Scroll-triggered animations via IntersectionObserver (threshold 0.3, fires once only)
+  React.useEffect(() => {
+    const targets = document.querySelectorAll(
+      '.pill-card, .card-insane-setups, .card-real-people, .card-level-up'
+    );
+    if (!targets.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.3,
+      }
+    );
+
+    targets.forEach((el) => observer.observe(el));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const handleGetStarted = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
     if (isCheckingAuth) return;

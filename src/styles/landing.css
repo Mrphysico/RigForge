@@ -1,5 +1,5 @@
 /* =========================================================================
-   RIGFORGE LANDING PAGE STYLESHEET (EXACT USER SPECIFICATION)
+   RIGFORGE LANDING PAGE STYLESHEET (WITH PURPOSEFUL ANIMATIONS)
    ========================================================================= */
 
 :root {
@@ -11,6 +11,7 @@
   --card-bg: rgba(14, 18, 27, 0.85);
   --border-line: rgba(255, 255, 255, 0.08);
   --text-muted: #8b99ad;
+  --battlestation-scale: 1;
 }
 
 .landing-page-root {
@@ -27,7 +28,7 @@
 }
 
 /* =========================================================================
-   BACKGROUND SPLIT COLOR SECTIONS (RED / DARK / GOLD / CYAN)
+   2. HERO BACKGROUND — CONTINUOUS SUBTLE MOTION
    ========================================================================= */
 .viewport-bg {
   position: absolute;
@@ -35,6 +36,18 @@
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+}
+
+@keyframes sliceGradientShift {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
 }
 
 /* Left Crimson Slant with soldier artwork texture */
@@ -45,7 +58,9 @@
   width: 45%;
   height: 80%;
   background: linear-gradient(135deg, rgba(215, 10, 25, 0.95) 0%, rgba(120, 5, 12, 0.88) 50%, rgba(10, 5, 8, 0.95) 100%);
+  background-size: 140% 140%;
   clip-path: polygon(0 0, 100% 0, 68% 100%, 0 100%);
+  animation: sliceGradientShift 14s ease-in-out infinite;
 }
 
 .bg-slice-left::before {
@@ -78,7 +93,9 @@
   width: 25%;
   height: 72%;
   background: linear-gradient(170deg, rgba(255, 180, 0, 0.92) 0%, rgba(210, 130, 0, 0.75) 50%, rgba(7, 9, 14, 0) 100%);
+  background-size: 140% 140%;
   clip-path: polygon(32% 0, 100% 0, 72% 100%, 0% 100%);
+  animation: sliceGradientShift 16s ease-in-out infinite reverse;
 }
 
 /* Far right Cyan/Blue slant */
@@ -89,10 +106,24 @@
   width: 17%;
   height: 78%;
   background: linear-gradient(190deg, #0b3160 0%, #081a33 50%, #07090e 100%);
+  background-size: 140% 140%;
   clip-path: polygon(45% 0, 100% 0, 100% 100%, 0% 100%);
+  animation: sliceGradientShift 18s ease-in-out infinite;
 }
 
-/* Airdrop Parachute SVG in the yellow section */
+/* Airdrop Parachute SVG in the yellow section with gentle continuous sway */
+@keyframes parachuteSway {
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
+}
+
 .airdrop-crate {
   position: absolute;
   top: 85px;
@@ -102,10 +133,12 @@
   opacity: 0.55;
   pointer-events: none;
   filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.6));
+  transform-origin: 50% 15%;
+  animation: parachuteSway 4s ease-in-out infinite;
 }
 
 /* =========================================================================
-   NAVIGATION BAR
+   NAVIGATION BAR & BUTTON INTERACTIONS
    ========================================================================= */
 .navbar {
   width: 100%;
@@ -157,7 +190,7 @@
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.4px;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 
 .nav-links a.active, .nav-links a:hover {
@@ -199,6 +232,7 @@
   color: #6d7b93;
 }
 
+/* Button hover/active interactions */
 .btn-signin {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -208,11 +242,17 @@
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .btn-signin:hover {
   background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: scale(1.02);
+}
+
+.btn-signin:active {
+  transform: scale(0.98);
 }
 
 .btn-create {
@@ -225,16 +265,107 @@
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(255, 30, 39, 0.4);
-  transition: 0.2s;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-create:hover {
   background: var(--red-hover);
+  transform: scale(1.03);
+}
+
+.btn-create:active {
+  transform: scale(0.97);
 }
 
 /* =========================================================================
-   HERO SECTION
+   1. PAGE LOAD SEQUENCE (HERO ONLY, PLAYS ONCE ON LOAD)
    ========================================================================= */
+@keyframes heroTaglineIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroTitleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes heroSubtitleIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroDescIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes heroButtonsIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sidePillLeftIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sidePillRightIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes battlestationIn {
+  from {
+    opacity: 0;
+    transform: scale(calc(var(--battlestation-scale, 1) * 0.96));
+  }
+  to {
+    opacity: 1;
+    transform: scale(var(--battlestation-scale, 1));
+  }
+}
+
 .hero-container {
   position: relative;
   width: 100%;
@@ -246,7 +377,7 @@
   z-index: 5;
 }
 
-/* Side vertical texts */
+/* Side vertical texts with directional entrance */
 .side-pill-text {
   position: absolute;
   top: 130px;
@@ -263,6 +394,7 @@
   left: 36px;
   color: rgba(255, 255, 255, 0.45);
   text-align: left;
+  animation: sidePillLeftIn 0.5s ease-out 700ms both;
 }
 .side-pill-text.left::after {
   content: "";
@@ -276,6 +408,7 @@
   right: 36px;
   color: rgba(255, 255, 255, 0.45);
   text-align: right;
+  animation: sidePillRightIn 0.5s ease-out 700ms both;
 }
 .side-pill-text.right::after {
   content: "";
@@ -307,13 +440,14 @@
   margin: 6px auto 0;
 }
 
-/* Main center typography */
+/* Main center typography with orchestrated load entrance */
 .tagline-sub {
   font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 5px;
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: 6px;
+  animation: heroTaglineIn 0.4s ease-out 0ms both;
 }
 
 .hero-title-group {
@@ -322,6 +456,7 @@
   gap: 12px;
   line-height: 0.85;
   margin-bottom: 6px;
+  animation: heroTitleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
 }
 
 .hero-title-group h1 {
@@ -349,6 +484,7 @@
   text-transform: uppercase;
   color: #ffffff;
   margin-bottom: 12px;
+  animation: heroSubtitleIn 0.4s ease-out 350ms both;
 }
 
 .hero-desc {
@@ -359,6 +495,7 @@
   line-height: 1.6;
   margin-bottom: 22px;
   font-weight: 500;
+  animation: heroDescIn 0.4s ease-out 500ms both;
 }
 
 .hero-buttons {
@@ -366,6 +503,7 @@
   gap: 14px;
   margin-bottom: 25px;
   z-index: 10;
+  animation: heroButtonsIn 0.4s ease-out 650ms both;
 }
 
 .hero-btn-red {
@@ -381,11 +519,14 @@
   align-items: center;
   gap: 8px;
   box-shadow: 0 4px 20px rgba(255, 30, 39, 0.5);
-  transition: 0.2s;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 .hero-btn-red:hover {
   background: var(--red-hover);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.03);
+}
+.hero-btn-red:active {
+  transform: translateY(0) scale(0.97);
 }
 
 .hero-btn-dark {
@@ -398,11 +539,15 @@
   border: 1px solid rgba(255, 255, 255, 0.16);
   cursor: pointer;
   backdrop-filter: blur(10px);
-  transition: 0.2s;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 .hero-btn-dark:hover {
   background: rgba(35, 45, 66, 0.9);
-  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-2px) scale(1.02);
+}
+.hero-btn-dark:active {
+  transform: translateY(0) scale(0.98);
 }
 
 /* =========================================================================
@@ -417,6 +562,7 @@
   align-items: flex-end;
   justify-content: center;
   margin-top: -10px;
+  animation: battlestationIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 800ms both;
 }
 
 .desk-mat-base {
@@ -463,11 +609,25 @@
   position: relative;
 }
 
+/* 4. MONITOR SCREEN — LIGHT SWEEP */
+@keyframes monitorSweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 .monitor-screen::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.06) 50%, transparent 60%);
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.09) 50%, transparent 65%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: monitorSweep 3s linear infinite;
+  pointer-events: none;
 }
 
 .screen-quote {
@@ -604,6 +764,16 @@
   align-items: center;
 }
 
+/* 3. RGB FANS — CONTINUOUS PULSING GLOW */
+@keyframes rgbFanGlow {
+  0%, 100% {
+    box-shadow: 0 0 14px #0088ff, inset 0 0 10px #0088ff;
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(0, 136, 255, 0.95), inset 0 0 16px rgba(0, 136, 255, 0.85);
+  }
+}
+
 .rgb-fan {
   width: 60px;
   height: 60px;
@@ -611,6 +781,7 @@
   border: 4px solid #0088ff;
   box-shadow: 0 0 16px #0088ff, inset 0 0 12px #0088ff;
   position: relative;
+  animation: rgbFanGlow 2s ease-in-out infinite;
 }
 .rgb-fan::before {
   content: "";
@@ -657,7 +828,7 @@
 }
 
 /* =========================================================================
-   ACTION BAR (4 ICONS)
+   6. QUICK ACTION PILLS — SCROLL-TRIGGERED STAGGER
    ========================================================================= */
 .action-pill-bar {
   width: 100%;
@@ -680,13 +851,26 @@
   backdrop-filter: blur(10px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   cursor: pointer;
-  transition: border-color 0.2s, transform 0.2s;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.45s ease-out, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
 }
 
-.pill-card:hover {
+.pill-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pill-card.is-visible:hover {
   border-color: rgba(255, 255, 255, 0.22);
   transform: translateY(-2px);
 }
+
+/* Stagger 80ms apart in DOM order */
+.pill-card:nth-child(1) { transition-delay: 0ms; }
+.pill-card:nth-child(2) { transition-delay: 80ms; }
+.pill-card:nth-child(3) { transition-delay: 160ms; }
+.pill-card:nth-child(4) { transition-delay: 240ms; }
 
 .pill-icon {
   width: 40px;
@@ -698,6 +882,28 @@
   font-size: 16px;
   flex-shrink: 0;
 }
+
+/* Slight scale bounce (0.7 to 1.08 to 1) synced with entrance */
+@keyframes pillIconBounce {
+  0% {
+    transform: scale(0.7);
+  }
+  65% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pill-card.is-visible .pill-icon {
+  animation: pillIconBounce 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.pill-card:nth-child(1).is-visible .pill-icon { animation-delay: 0ms; }
+.pill-card:nth-child(2).is-visible .pill-icon { animation-delay: 80ms; }
+.pill-card:nth-child(3).is-visible .pill-icon { animation-delay: 160ms; }
+.pill-card:nth-child(4).is-visible .pill-icon { animation-delay: 240ms; }
 
 .pill-icon.red {
   background: var(--red-accent);
@@ -734,7 +940,7 @@
 }
 
 /* =========================================================================
-   BOTTOM 3 CARDS (WITH THE EXACT INSANE SETUPS CARD)
+   7. BOTTOM CARDS — SCROLL-TRIGGERED ENTRANCE & ARROW MICRO-INTERACTIONS
    ========================================================================= */
 .bottom-cards-row {
   width: 100%;
@@ -744,6 +950,35 @@
   gap: 18px;
   margin-bottom: 45px;
   z-index: 10;
+}
+
+/* 8. Arrow sliding micro-interaction (sliding 3px to the right and back) */
+@keyframes arrowSlideMicro {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.red-circle-btn svg,
+.btn-arrow-subtle i,
+.btn-arrow-gold i {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.red-circle-btn:hover svg,
+.card-insane-setups:hover .red-circle-btn svg,
+.btn-arrow-subtle:hover i,
+.card-real-people:hover .btn-arrow-subtle i,
+.btn-arrow-gold:hover i,
+.card-level-up:hover .btn-arrow-gold i {
+  animation: arrowSlideMicro 0.4s ease-in-out;
 }
 
 /* CARD 1: EXACT FEATURED BUILDS - INSANE SETUPS */
@@ -761,12 +996,21 @@
   box-shadow: 0 0 20px rgba(220, 18, 29, 0.18), inset 0 0 15px rgba(0, 0, 0, 0.8);
   cursor: pointer;
   text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  transition-delay: 0ms;
 }
 
-.card-insane-setups:hover {
+.card-insane-setups.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-insane-setups.is-visible:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 25px rgba(220, 18, 29, 0.35);
+  transition-delay: 0ms;
 }
 
 .card-insane-setups .card-bg-layer {
@@ -838,7 +1082,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 10px rgba(230, 14, 27, 0.55);
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .card-insane-setups:hover .red-circle-btn {
@@ -869,7 +1113,10 @@
   justify-content: space-between;
   padding: 20px 22px;
   text-decoration: none;
-  transition: transform 0.25s, border-color 0.25s;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  transition-delay: 100ms;
 }
 
 .card-real-people::before {
@@ -880,9 +1127,15 @@
   z-index: 1;
 }
 
-.card-real-people:hover {
+.card-real-people.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-real-people.is-visible:hover {
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.25);
+  transition-delay: 0ms;
 }
 
 .card-real-people > * {
@@ -942,7 +1195,10 @@
   justify-content: space-between;
   padding: 20px 22px;
   text-decoration: none;
-  transition: transform 0.25s, border-color 0.25s;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  transition-delay: 200ms;
 }
 
 .card-level-up::before {
@@ -953,9 +1209,15 @@
   z-index: 1;
 }
 
-.card-level-up:hover {
+.card-level-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-level-up.is-visible:hover {
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.25);
+  transition-delay: 0ms;
 }
 
 .card-level-up > * {
@@ -981,8 +1243,11 @@
    RESPONSIVENESS
    ========================================================================= */
 @media (max-width: 1200px) {
+  :root {
+    --battlestation-scale: 0.9;
+  }
   .hero-title-group h1 { font-size: 78px; }
-  .battlestation-stage { transform: scale(0.9); margin-top: -30px; }
+  .battlestation-stage { margin-top: -30px; }
 }
 @media (max-width: 992px) {
   .action-pill-bar { grid-template-columns: repeat(2, 1fr); }
@@ -990,9 +1255,48 @@
   .bg-slice-right, .airdrop-crate, .side-yellow-text, .side-pill-text { display: none; }
 }
 @media (max-width: 768px) {
+  :root {
+    --battlestation-scale: 0.75;
+  }
   .nav-links, .search-bar, .btn-signin { display: none; }
   .hero-title-group h1 { font-size: 54px; }
   .hero-subtitle { font-size: 18px; }
   .action-pill-bar { grid-template-columns: 1fr; }
-  .battlestation-stage { transform: scale(0.75); }
+}
+
+/* =========================================================================
+   ACCESSIBILITY: PREFERS REDUCED MOTION
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .tagline-sub,
+  .hero-title-group,
+  .hero-subtitle,
+  .hero-desc,
+  .hero-buttons,
+  .side-pill-text.left,
+  .side-pill-text.right,
+  .battlestation-stage,
+  .pill-card,
+  .card-insane-setups,
+  .card-real-people,
+  .card-level-up {
+    animation: none !important;
+    transition: opacity 0.3s ease !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .bg-slice-left,
+  .bg-slice-right,
+  .bg-slice-far-right,
+  .airdrop-crate,
+  .rgb-fan,
+  .monitor-screen::after,
+  .pill-icon,
+  .red-circle-btn svg,
+  .btn-arrow-subtle i,
+  .btn-arrow-gold i {
+    animation: none !important;
+    transform: none !important;
+  }
 }
