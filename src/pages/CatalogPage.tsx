@@ -66,7 +66,9 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   onNotification,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<ComponentCategory | 'all'>(initialCategory);
-  const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating' | 'discount'>('featured');
+  const [sortBy, setSortBy] = useState<
+    'featured' | 'price-asc' | 'price-desc' | 'rating' | 'discount' | 'newest' | 'popular' | 'brand-asc' | 'in-stock'
+  >('featured');
   const [selectedProductForModal, setSelectedProductForModal] = useState<CatalogueRecord | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
@@ -82,10 +84,10 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
 
   // Calculate dynamic price boundaries from all catalogue products
   const priceBounds = useMemo(() => {
-    const prices = CATALOGUE_PRODUCTS.map((p) => p.price);
+    const validPrices = CATALOGUE_PRODUCTS.map((p) => p.price).filter((p): p is number => p !== null && !isNaN(p));
     return {
-      min: Math.min(...prices, 1000),
-      max: Math.max(...prices, 250000),
+      min: validPrices.length ? Math.min(...validPrices) : 500,
+      max: validPrices.length ? Math.max(...validPrices) : 250000,
     };
   }, []);
 
@@ -152,16 +154,19 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
         return false;
       }
 
-      // 2. Search query filter
+      // 2. Search query filter across name, brand, model, series, category
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
+        const details = product.catalogueDetails as any;
         const matchesName = product.name.toLowerCase().includes(query);
         const matchesBrand = product.brand.toLowerCase().includes(query);
         const matchesCategory = product.category.toLowerCase().includes(query);
+        const matchesModel = details?.model?.toLowerCase().includes(query);
+        const matchesSeries = (details?.seriesGeneration || details?.series || details?.gpuFamily)?.toLowerCase().includes(query);
         const matchesDesc = product.description.toLowerCase().includes(query);
         const matchesSpecs = product.keySpecsSummary?.some((s) => s.toLowerCase().includes(query));
 
-        if (!matchesName && !matchesBrand && !matchesCategory && !matchesDesc && !matchesSpecs) {
+        if (!matchesName && !matchesBrand && !matchesCategory && !matchesModel && !matchesSeries && !matchesDesc && !matchesSpecs) {
           return false;
         }
       }
@@ -174,7 +179,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
       }
 
       // 4. Price range
-      if (product.price > filterState.maxPrice) {
+      if (product.price !== null && product.price > filterState.maxPrice) {
         return false;
       }
 
@@ -210,7 +215,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
             });
             if (!matches) return false;
           } else if (attrKey === 'integratedGraphics') {
-            const hasGpu = details.integratedGraphics && !details.integratedGraphics.toLowerCase().includes('discrete');
+            const hasGpu = details.integratedGraphics && !details.integratedGraphics.toLowerCase().includes('discrete') && !details.integratedGraphics.toLowerCase().includes('requires');
             const matches = selectedValues.some((v) => (v.includes('Included') ? hasGpu : !hasGpu));
             if (!matches) return false;
           } else if (attrKey === 'manufacturer') {
@@ -222,6 +227,9 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
             if (!matches) return false;
           } else if (attrKey === 'boardPartner') {
             const matches = selectedValues.some((v) => details.boardPartner?.toLowerCase().includes(v.toLowerCase()) || product.brand.toLowerCase().includes(v.toLowerCase()));
+            if (!matches) return false;
+          } else if (attrKey === 'generation') {
+            const matches = selectedValues.some((v) => details.generation?.toLowerCase().includes(v.toLowerCase()));
             if (!matches) return false;
           } else if (attrKey === 'chipset') {
             const matches = selectedValues.some((v) => details.chipset?.toLowerCase().includes(v.toLowerCase()));
@@ -235,9 +243,8 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
           } else if (attrKey === 'wattage') {
             const psuWattage = details.wattage;
             const matches = selectedValues.some((v) => {
-              if (v.includes('650W')) return psuWattage === 650;
-              if (v.includes('750W')) return psuWattage === 750;
-              if (v.includes('850W')) return psuWattage === 850;
+              if (v.includes('650W')) return psuWattage <= 650;
+              if (v.includes('750W')) return psuWattage >= 750 && psuWattage <= 850;
               if (v.includes('1000W+')) return psuWattage >= 1000;
               return true;
             });
@@ -270,23 +277,33 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
       return true;
     });
 
-    // Sorting
+    // Sorting options: Low-High, High-Low, Newest, Popular, Brand A-Z, Discount, In Stock
     switch (sortBy) {
       case 'price-asc':
-        result.sort((a, b) => a.price - b.price);
+        result.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
         break;
       case 'price-desc':
-        result.sort((a, b) => b.price - a.price);
+        result.sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity));
         break;
+      case 'newest':
+        result.sort((a, b) => (((b.catalogueDetails as any)?.launchDate ? 1 : 0) - ((a.catalogueDetails as any)?.launchDate ? 1 : 0)));
+        break;
+      case 'brand-asc':
+        result.sort((a, b) => a.brand.localeCompare(b.brand));
+        break;
+      case 'popular':
       case 'rating':
-        result.sort((a, b) => b.rating - a.rating);
+        result.sort((a, b) => b.rating - a.rating || b.reviewsCount - a.reviewsCount);
         break;
       case 'discount':
         result.sort((a, b) => {
-          const discountA = a.mrp && a.mrp > a.price ? (a.mrp - a.price) / a.mrp : 0;
-          const discountB = b.mrp && b.mrp > b.price ? (b.mrp - b.price) / b.mrp : 0;
+          const discountA = a.mrp && a.price && a.mrp > a.price ? (a.mrp - a.price) / a.mrp : 0;
+          const discountB = b.mrp && b.price && b.mrp > b.price ? (b.mrp - b.price) / b.mrp : 0;
           return discountB - discountA;
         });
+        break;
+      case 'in-stock':
+        result.sort((a, b) => (b.inStock ? 1 : 0) - (a.inStock ? 1 : 0));
         break;
       case 'featured':
       default:
@@ -304,7 +321,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   }, [selectedCategory]);
 
   return (
-    <div className="min-h-screen pb-24 bg-[#050a14] text-slate-100">
+    <div className="min-h-screen pb-24 bg-[#050a14] text-slate-100 font-sans">
       {/* Header Banner */}
       <div className="border-b border-[#1e2d4f] bg-gradient-to-b from-[#081120] to-[#050a14] py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -314,10 +331,10 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>16-CATEGORY VERIFIED HARDWARE CATALOGUE</span>
               </div>
-              <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase font-mono">
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white uppercase font-heading">
                 RIGFORGE <span className="text-[#ff1e2d]">MARKETPLACE</span>
               </h1>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+              <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl font-sans">
                 Explore real desktop hardware across all 16 component categories. Official Indian retail warranty, verified GST invoices, and live prices.
               </p>
             </div>
@@ -332,7 +349,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
             </button>
           </div>
 
-          {/* 16 Category Navigation Pills */}
+          {/* Top Quick Navigation Pills */}
           <div className="mt-8 border-t border-[#1e2d4f] pt-6">
             <div className="flex items-center gap-2 overflow-x-auto pb-3 scrollbar-thin">
               {/* All Gear Pill */}
@@ -346,14 +363,14 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>All Gear</span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
                   selectedCategory === 'all' ? 'bg-black/30 text-white' : 'bg-[#142244] text-slate-400'
                 }`}>
                   {categoryCounts['all']}
                 </span>
               </button>
 
-              {/* All 16 Hardware Categories */}
+              {/* 16 Category Navigation Pills */}
               {CATALOGUE_CATEGORIES_META.map((cat) => {
                 const count = categoryCounts[cat.id] || 0;
                 const isSelected = selectedCategory === cat.id;
@@ -382,11 +399,11 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
               })}
             </div>
 
-            {/* Category Description Banner (when a specific category is selected) */}
+            {/* Category Description Banner (when a specific category is active) */}
             {currentCategoryMeta && (
-              <div className="mt-3 py-2.5 px-4 rounded-xl bg-[#091122]/90 border border-[#1e2d4f] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+              <div className="mt-3 py-3 px-4 rounded-xl bg-[#091122]/90 border border-[#1e2d4f] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
                 <div className="flex items-center gap-2 text-slate-300">
-                  <span className="font-bold text-white uppercase font-mono">{currentCategoryMeta.name}:</span>
+                  <span className="font-bold text-white uppercase font-mono text-sm">{currentCategoryMeta.name}:</span>
                   <span className="text-slate-400">{currentCategoryMeta.description}</span>
                 </div>
                 <span className="text-[11px] font-mono text-[#ff1e2d] font-semibold flex-shrink-0">
@@ -396,9 +413,9 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
             )}
           </div>
 
-          {/* Search bar, Sort & Mobile Filter toggle */}
+          {/* Search bar, Sort & Mobile Drawer Trigger */}
           <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3">
-            {/* Search Input */}
+            {/* Search Input across Name, Brand, Model, Series, Category */}
             <div className="relative w-full sm:w-96">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -418,15 +435,15 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
               )}
             </div>
 
-            {/* Controls: Mobile Filter Button & Sort Dropdown */}
+            {/* Controls: Mobile Drawer Trigger & Sort Dropdown */}
             <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-              {/* Mobile Filter Drawer Trigger */}
+              {/* Mobile Drawer Trigger (Categories & Filters) */}
               <button
                 onClick={() => setIsMobileDrawerOpen(true)}
                 className="lg:hidden inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0b1324] hover:bg-[#142244] border border-[#1e2d4f] text-xs font-bold text-white min-h-[44px]"
               >
                 <SlidersHorizontal className="w-4 h-4 text-[#ff1e2d]" />
-                <span>Filters</span>
+                <span>Categories & Filters</span>
               </button>
 
               {/* In-Stock Fast Toggle (Desktop) */}
@@ -440,7 +457,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                 <span>In Stock Only</span>
               </label>
 
-              {/* Sort Selector */}
+              {/* Comprehensive Sort Selector */}
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono text-slate-400 hidden sm:inline">Sort:</span>
                 <select
@@ -449,10 +466,12 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                   className="px-3 py-2.5 rounded-xl bg-[#0b1324] border border-[#1e2d4f] text-xs font-semibold text-white focus:outline-none focus:border-[#ff1e2d] min-h-[44px] cursor-pointer"
                 >
                   <option value="featured">Popular / Featured</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                  <option value="rating">Top Customer Rated</option>
+                  <option value="price-asc">Price: Low → High</option>
+                  <option value="price-desc">Price: High → Low</option>
+                  <option value="newest">Newest Releases</option>
+                  <option value="brand-asc">Brand: A → Z</option>
                   <option value="discount">Biggest Discount (%)</option>
+                  <option value="in-stock">In Stock First</option>
                 </select>
               </div>
             </div>
@@ -460,12 +479,14 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
         </div>
       </div>
 
-      {/* Main Content Area: Sidebar Filters + Product Grid */}
+      {/* Main Content Area: Left Sidebar (Categories + Filters) + Product Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="flex items-start gap-8">
-          {/* Desktop Sidebar Filter */}
+          {/* Left Sidebar Category Navigation & Dynamic Filters */}
           <CatalogueFilters
             category={selectedCategory}
+            onSelectCategory={handleSelectCategory}
+            categoryCounts={categoryCounts}
             filterState={filterState}
             onFilterChange={setFilterState}
             availableBrands={availableBrands}
@@ -477,7 +498,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
           <div className="flex-1 min-w-0">
             {/* Status Line */}
             <div className="flex items-center justify-between mb-4 text-xs font-mono text-slate-400">
-              <span>Showing {filteredProducts.length} verified components</span>
+              <span>Showing {filteredProducts.length} verified hardware components</span>
               {searchQuery && <span>Search: "{searchQuery}"</span>}
             </div>
 
@@ -514,10 +535,12 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
         </div>
       </div>
 
-      {/* Mobile Filters Drawer Modal */}
+      {/* Mobile Drawer Modal (Categories & Dynamic Filters) */}
       {isMobileDrawerOpen && (
         <CatalogueFilters
           category={selectedCategory}
+          onSelectCategory={handleSelectCategory}
+          categoryCounts={categoryCounts}
           filterState={filterState}
           onFilterChange={setFilterState}
           availableBrands={availableBrands}
@@ -528,7 +551,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
         />
       )}
 
-      {/* Product Detail Modal */}
+      {/* Detailed Product Modal (Complete Schema Inspection) */}
       <ProductDetailModal
         product={selectedProductForModal}
         isOpen={!!selectedProductForModal}

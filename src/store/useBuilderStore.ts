@@ -172,8 +172,8 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
 
   getTotalPrice: () => {
     const { slots } = get();
-    return Object.values(slots).reduce((sum, item) => {
-      return sum + (item ? item.price : 0);
+    return (Object.values(slots) as (Product | null)[]).reduce((sum: number, item) => {
+      return sum + (item?.price ?? 0);
     }, 0);
   },
 

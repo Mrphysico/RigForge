@@ -151,7 +151,7 @@ export const CartDrawer: React.FC = () => {
                         {/* Price and Quantity */}
                         <div className="mt-3 flex items-center justify-between">
                           <span className="text-sm font-bold font-mono text-[#FCA311]">
-                            {formatINR(item.product.price * item.quantity)}
+                            {formatINR((item.product.price ?? 0) * item.quantity)}
                           </span>
 
                           <div className="flex items-center gap-1 bg-[#1e2d4f] border border-[#26365a] rounded-xl p-1">

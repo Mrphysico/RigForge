@@ -7,11 +7,11 @@ export interface BaseCatalogueProduct {
   manufacturer: string;
   category: ComponentCategory;
   categoryName: string;
-  currentPrice: number;
-  mrp: number;
-  lowestPrice?: number;
+  currentPrice: number | null;
+  mrp: number | null;
+  lowestPrice?: number | null;
   seller: string;
-  stockStatus: 'In Stock' | 'Limited Stock' | 'Out of Stock';
+  stockStatus: 'In Stock' | 'Limited Stock' | 'Out of Stock' | 'Unknown';
   warranty: string;
   productUrl?: string;
   image: string;
@@ -20,6 +20,7 @@ export interface BaseCatalogueProduct {
   keySpecs: string[];
   description: string;
   featured?: boolean;
+  placeholder?: boolean;
 }
 
 export interface CpuProduct extends BaseCatalogueProduct {

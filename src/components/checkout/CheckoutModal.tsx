@@ -245,7 +245,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         </div>
                       </div>
                       <div className="font-mono font-bold text-[#FCA311] flex-shrink-0">
-                        {formatINR(item.product.price * item.quantity)}
+                        {formatINR((item.product.price ?? 0) * item.quantity)}
                       </div>
                     </div>
                   ))

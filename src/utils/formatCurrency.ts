@@ -2,8 +2,8 @@
  * Formats a number to Indian Rupee (₹ / INR) currency standard with Indian numbering format:
  * e.g., 34999 -> "₹34,999", 124999 -> "₹1,24,999", 194999 -> "₹1,94,999"
  */
-export function formatINR(amount: number, includeDecimals = false): string {
-  if (isNaN(amount)) return '₹0';
+export function formatINR(amount: number | null | undefined, includeDecimals = false): string {
+  if (amount === null || amount === undefined || isNaN(amount)) return 'Price on Request';
   
   if (includeDecimals) {
     return `₹${amount.toLocaleString('en-IN', {

@@ -7,9 +7,11 @@ import {
   Check, 
   Ban, 
   Sparkles,
-  BadgePercent
+  BadgePercent,
+  HelpCircle
 } from 'lucide-react';
 import { CatalogueRecord } from '../../data/catalogue/catalogueData';
+import { ComponentCategory } from '../../types/hardware';
 import { formatINR } from '../../utils/formatCurrency';
 import { useCartStore } from '../../store/useCartStore';
 import { useBuilderStore } from '../../store/useBuilderStore';
@@ -20,6 +22,29 @@ interface MarketplaceProductCardProps {
   onNotification?: (msg: string) => void;
 }
 
+// Maps catalogue category to existing PC builder slot if applicable
+const mapCategoryToBuilderSlot = (cat: ComponentCategory): ComponentCategory => {
+  switch (cat) {
+    case 'cpu': return 'cpu';
+    case 'gpu': return 'gpu';
+    case 'motherboard': return 'motherboard';
+    case 'ram': return 'ram';
+    case 'nvme_ssd':
+    case 'sata_ssd':
+    case 'hdd': return 'storage';
+    case 'psu': return 'psu';
+    case 'case': return 'case';
+    case 'air_cooler':
+    case 'aio_cooler': return 'cooler';
+    case 'case_fans':
+    case 'thermal_paste':
+    case 'monitor':
+    case 'keyboard':
+    case 'mouse': return 'peripherals';
+    default: return cat;
+  }
+};
+
 export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
   product,
   onViewDetails,
@@ -28,19 +53,22 @@ export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
   const addItem = useCartStore((state) => state.addItem);
   const openCart = useCartStore((state) => state.openCart);
   const setSlot = useBuilderStore((state) => state.setSlot);
-  const currentSlotProduct = useBuilderStore((state) => state.slots[product.category]);
 
+  const builderSlot = mapCategoryToBuilderSlot(product.category);
+  const currentSlotProduct = useBuilderStore((state) => state.slots[builderSlot]);
   const isCurrentBuildSelection = currentSlotProduct?.id === product.id;
+
   const stockStatus = product.stockStatus || product.catalogueDetails?.stockStatus || (product.inStock ? 'In Stock' : 'Out of Stock');
   const isOutOfStock = stockStatus === 'Out of Stock' || !product.inStock;
+  const isPlaceholder = product.placeholder ?? false;
 
-  const discountPercent = product.mrp && product.mrp > product.price
+  const discountPercent = product.mrp && product.price && product.mrp > product.price
     ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
     : 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isOutOfStock) return;
+    if (isOutOfStock || product.price === null) return;
     addItem(product, 1);
     openCart();
     if (onNotification) {
@@ -51,9 +79,9 @@ export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
   const handleAddToBuild = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isOutOfStock) return;
-    setSlot(product.category, product);
+    setSlot(builderSlot, product);
     if (onNotification) {
-      onNotification(`Assigned "${product.name}" to [${product.category.toUpperCase()}] slot!`);
+      onNotification(`Assigned "${product.name}" to [${builderSlot.toUpperCase()}] slot in PC Builder!`);
     }
   };
 
@@ -72,7 +100,7 @@ export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
           : 'border-[#1e2d4f] hover:border-[#ff1e2d]/60 hover:shadow-glow-red'
       }`}
     >
-      {/* Top Banner & Image */}
+      {/* Top Banner & Hardware Photography */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#070c18]">
         <img
           src={product.image}
@@ -84,11 +112,22 @@ export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0b1326] via-[#0b1326]/20 to-transparent" />
 
-        {/* Top Badges (Brand, Discount, Featured) */}
-        <div className="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 z-10">
+        {/* Top Badges (Brand, Real vs Catalogue, Discount, Featured) */}
+        <div className="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 z-10 max-w-[80%]">
           <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#0b1326]/90 text-white border border-[#1e2d4f] backdrop-blur-sm">
             {product.brand}
           </span>
+
+          {/* Real PDF Verified vs Catalogue Entry */}
+          {isPlaceholder ? (
+            <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md bg-[#132240]/90 text-sky-300 border border-sky-500/30 backdrop-blur-sm">
+              Catalogue Entry
+            </span>
+          ) : (
+            <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md bg-emerald-950/90 text-emerald-300 border border-emerald-500/30 backdrop-blur-sm">
+              Verified Spec
+            </span>
+          )}
 
           {discountPercent > 0 && !isOutOfStock && (
             <span className="inline-flex items-center gap-0.5 text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#ff1e2d] text-white shadow-md">
@@ -125,10 +164,15 @@ export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
               Limited Stock
             </span>
-          ) : (
+          ) : stockStatus === 'Out of Stock' ? (
             <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-red-950/90 text-red-400 border border-red-500/40 backdrop-blur-sm shadow-sm">
               <Ban className="w-3 h-3" />
               Out of Stock
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-medium px-2.5 py-0.5 rounded-full bg-slate-900/90 text-slate-400 border border-slate-700 backdrop-blur-sm shadow-sm">
+              <HelpCircle className="w-3 h-3" />
+              Status: Check
             </span>
           )}
         </div>
@@ -157,7 +201,7 @@ export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
             {product.name}
           </h3>
 
-          {/* Key Specs (Extracted from 16 PDF Catalogues) */}
+          {/* Key Specs (2-3 bullet points extracted from catalogue data) */}
           <div className="space-y-1 mb-4">
             {(product.keySpecsSummary || product.catalogueDetails?.keySpecs || []).slice(0, 3).map((spec, i) => (
               <div key={i} className="flex items-center gap-1.5 text-[11px] text-slate-300 font-mono line-clamp-1">
@@ -174,9 +218,9 @@ export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
             <span className={`text-lg sm:text-xl font-black font-mono tracking-tight ${
               isOutOfStock ? 'text-slate-500' : 'text-white'
             }`}>
-              {formatINR(product.price)}
+              {product.price !== null ? formatINR(product.price) : 'Price on Request'}
             </span>
-            {product.mrp && product.mrp > product.price && (
+            {product.mrp && product.price && product.mrp > product.price && (
               <span className="text-xs font-mono text-slate-400 line-through">
                 {formatINR(product.mrp)}
               </span>
@@ -186,20 +230,20 @@ export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
             </span>
           </div>
 
-          {/* Action Button Grid */}
+          {/* Action Buttons: Add to Build + View Details + Add to Cart */}
           <div className="grid grid-cols-12 gap-2">
-            {/* View Specs Button */}
+            {/* View Details Button */}
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onViewDetails(product);
               }}
-              className="col-span-3 py-2 px-1.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 bg-[#142244] hover:bg-[#1a2c58] text-slate-200 hover:text-white border border-[#1e2d4f] transition-colors min-h-[38px]"
-              title="View full technical schema"
+              className="col-span-4 py-2 px-1.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 bg-[#142244] hover:bg-[#1a2c58] text-slate-200 hover:text-white border border-[#1e2d4f] transition-colors min-h-[38px]"
+              title="View complete specification schema"
             >
               <Eye className="w-3.5 h-3.5 text-slate-400" />
-              <span className="hidden sm:inline">Specs</span>
+              <span>Details</span>
             </button>
 
             {/* Add to Build Button */}
@@ -214,19 +258,19 @@ export const MarketplaceProductCard: React.FC<MarketplaceProductCardProps> = ({
                   ? 'bg-[#FCA311]/20 text-[#FCA311] border-[#FCA311]/50'
                   : 'bg-[#142244] hover:bg-[#1a2c58] text-[#FCA311] border-[#1e2d4f]'
               }`}
-              title="Select for PC Builder"
+              title="Assign to PC Builder slot"
             >
               <Wrench className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{isCurrentBuildSelection ? 'Selected' : '+ Build'}</span>
+              <span>{isCurrentBuildSelection ? 'Selected' : '+ Build'}</span>
             </button>
 
             {/* Add to Cart Button */}
             <button
               type="button"
               onClick={handleAddToCart}
-              disabled={isOutOfStock}
-              className={`col-span-5 py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-all min-h-[38px] ${
-                isOutOfStock
+              disabled={isOutOfStock || product.price === null}
+              className={`col-span-4 py-2 px-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-all min-h-[38px] ${
+                isOutOfStock || product.price === null
                   ? 'bg-[#10192e] text-slate-600 border border-[#1a2948] cursor-not-allowed'
                   : 'bg-[#ff1e2d] hover:bg-[#e00d1b] text-white shadow-glow-red active:scale-95'
               }`}

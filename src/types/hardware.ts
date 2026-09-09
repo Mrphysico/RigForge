@@ -53,7 +53,7 @@ export interface Product {
   name: string;
   brand: string;
   category: ComponentCategory;
-  price: number;
+  price: number | null;
   originalPrice?: number;
   mrp?: number;
   seller?: string;
@@ -61,6 +61,8 @@ export interface Product {
   rating: number;
   reviewsCount: number;
   inStock: boolean;
+  stockStatus?: 'In Stock' | 'Limited Stock' | 'Out of Stock' | 'Unknown';
+  placeholder?: boolean;
   specs: HardwareSpecs;
   image: string;
   description: string;
